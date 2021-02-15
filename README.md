@@ -1,4 +1,4 @@
-# Team Name
+# GUI Dancer
 
 Project description (~1 paragraph)
 
