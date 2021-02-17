@@ -5,6 +5,7 @@ Team members: Connor Boerma, Lucas Devries, Dylan Kuipers, Adam Prins
 # Introduction
 
 Our project will be a Unity-based arena FPS game. This game will try to mimic the general feel of arena shooters like Halo. Our goal is to have a sandbox where players can use a variety of weapons to kill each other.
+
 Our major goals include multiple weapons that players will be able to pick up and use in the arena itself. We hope to add team-based objectives such as a Team Deathmatch mode. Should there be time available, we also would like to try and add vehicles to the maps, but this is a very low priority at this point in time.
 
 # Anticipated Technologies
