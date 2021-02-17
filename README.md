@@ -4,7 +4,7 @@ This project aims to have a small arena based Halo clone with multiplayer functi
 
 ## Team Members and Roles
 
-* Connor Boerma 
+* [Connor Boerma](https://github.com/00conman/CIS350-HW2-Boerma "Named link title")
 * Member 2 (Role 3, Role 4)
 * Member 3 (Role 5, Role 6)
 
