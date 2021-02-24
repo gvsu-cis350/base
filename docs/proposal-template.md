@@ -13,6 +13,10 @@ The functionality behind the buttons will be broken down into methods that will 
 
 Additional functionality could be added after initial functionality is developed and tested. These additional functions would appear as the body part will move up and down for a duration of time. Another functionality would be the ability to move the body parts with the arrow keys of a keyboard. 
 
+A window with a viewer panel on the left and a control panel on the right. There is a stick 
+figure on the left viewer panel and multiple options to lift the stick figures.
+
+
 # Anticipated Technologies
 
 Computer - For access to development software
@@ -37,6 +41,8 @@ Incorporating basic Stick Figure control through decided method of interaction
 
 Weeks 9 - 10:
 Continue adding features and clean up for the end of semester.
+
+Basic functionality without joints in arms or legs.
 
 # Anticipated Problems
 
