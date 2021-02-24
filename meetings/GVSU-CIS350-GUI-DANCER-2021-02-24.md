@@ -8,13 +8,11 @@ Time: 10AM
 
 Discussion points: 
 
-* How to use GIT in IntelliJ
-* 
-*
+* We went over how to use Git in IntelliJ
+* Discussed the scope of the project
 
 Goals for next week (include responsibilities)
 
-*
-*
-*
+* Everyone should try to research a little about Java Graphics libraries and Basic 2D physics simulation.
+* Brainstorm more ideas regarding program functionality.
 
