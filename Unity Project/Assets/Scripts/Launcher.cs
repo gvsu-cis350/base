@@ -21,6 +21,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform PlayerListContent;
     [SerializeField] GameObject PlayerListItemPrefab;
 
+    [SerializeField] GameObject startGameButton;
+
     private void Awake()
     {
         Instance = this;
@@ -35,6 +37,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connected to Master");
         PhotonNetwork.JoinLobby();
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnJoinedLobby()
@@ -59,10 +62,22 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("Waiting");
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
         Player[] players = PhotonNetwork.PlayerList;
+
+        foreach (Transform child in PlayerListContent)
+        {
+            Destroy(child.gameObject);
+        }
         for (int i = 0; i < players.Count(); i++)
         {
             Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
         }
+
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -99,6 +114,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         for(int i = 0; i < roomList.Count; i++)
         {
+            if (roomList[i].RemovedFromList)
+                continue;
             Instantiate(roomListButtonPrefab, roomListContent).GetComponent<RoomListButton>().SetUp(roomList[i]);
         }
     }
@@ -106,5 +123,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+    }
+
+    public void StartGame()
+    {
+        PhotonNetwork.LoadLevel(1);
     }
 }
