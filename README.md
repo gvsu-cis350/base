@@ -1,4 +1,4 @@
-i# Halo Clone
+# Halo Clone
 
 This project aims to have a small arena based Halo clone with multiplayer functionality. We will be creating this game within the Unity game engine and taking freely avialable assests to enhance the overall experience of our final product.
 
