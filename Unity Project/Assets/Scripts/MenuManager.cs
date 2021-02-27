@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using Photon.Pun;
 
 public class MenuManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(Menu menu)
     {
+    //    PhotonNetwork.
         for(int i = 0; i < menus.Length; i++)
         {
             if (menus[i].open)
