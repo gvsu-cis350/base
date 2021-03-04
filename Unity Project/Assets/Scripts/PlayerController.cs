@@ -53,48 +53,53 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     void Update()
     {
+        //playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         if (!PV.IsMine)
             return;
-        Look();
-        Move();
-        Jump();
-        for (int i = 0; i < items.Length; i++)
+        if (!playerManager.pauseState)
         {
-            if (Input.GetKeyDown((i + 1).ToString())){
-                EquipItem(i);
-                break;
+            Look();
+            Move();
+            Jump();
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (Input.GetKeyDown((i + 1).ToString()))
+                {
+                    EquipItem(i);
+                    break;
+                }
+            }
+
+            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+            {
+                if (itemIndex >= items.Length - 1)
+                {
+                    EquipItem(0);
+                }
+                else
+                {
+                    EquipItem(itemIndex + 1);
+                }
+            }
+            else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+            {
+                if (itemIndex <= 0)
+                {
+                    EquipItem(items.Length - 1);
+                }
+                else
+                {
+                    EquipItem(itemIndex - 1);
+                }
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                items[itemIndex].Use();
             }
         }
 
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
-        {
-            if (itemIndex >= items.Length - 1)
-            {
-                EquipItem(0);
-            }
-            else
-            { 
-                EquipItem(itemIndex + 1);
-            }
-        }
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
-        {
-            if (itemIndex <= 0)
-            {
-                EquipItem(items.Length - 1);
-            }
-            else 
-            {
-                EquipItem(itemIndex - 1);
-            }
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            items[itemIndex].Use();
-        }
-
-        if(transform.position.y < -10f)
+        if (transform.position.y < -10f)
         {
             Die();
         }
@@ -174,7 +179,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (!PV.IsMine)
             return;
-        rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+        if (!playerManager.pauseState)
+        {
+            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+        }
     }
 
 
