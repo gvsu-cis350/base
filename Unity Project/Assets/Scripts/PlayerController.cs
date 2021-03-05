@@ -53,7 +53,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     void Update()
     {
-        //playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         if (!PV.IsMine)
             return;
         if (!playerManager.pauseState)
@@ -180,6 +179,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if (!PV.IsMine)
             return;
         if (!playerManager.pauseState)
+        {
+            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+        }
+        else if (playerManager.pauseState && !grounded)
         {
             rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
         }
