@@ -5,9 +5,14 @@ using UnityEngine;
 //Add class type for guns in unity
 [CreateAssetMenu(menuName = "FPS/New Gun")]
 
-//public class extends the abstract of iteminfo
+/// <summary>
+/// Public class extends the abstract of iteminfo
+/// </summary>
 public class GunInfo : ItemInfo
 {
-    //Allows unity to assign damage values to gun objects
+    /// <summary>
+    /// Allows unity to assign damage values to gun objects
+    /// </summary>
+    
     public float damage;
 }

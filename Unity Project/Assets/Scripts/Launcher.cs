@@ -28,66 +28,65 @@ public class Launcher : MonoBehaviourPunCallbacks
     //serialization of the starting game button
     [SerializeField] GameObject startGameButton;
 
-    //method call when the launcher is first accessed
+    /// <summary>
+    /// Method call when the launcher is first accessed to set a global instacne of launcher
+    /// </summary>
     private void Awake()
     {
-        //set a global instance of launcher to this object
         Instance = this;
     }
 
-    //method that triggers once on the creation of this class
+    /// <summary>
+    /// Method that triggers once on the creation and connects user to pre-determined photon master server
+    /// </summary>
     void Start()
     {
-        //throw a console message
         Debug.Log("Connecting to Master");
-        //connect to a pre-deterimined photon master server
         PhotonNetwork.ConnectUsingSettings();
     }
 
-    //method that triggers when user connects to photon master server
+    /// <summary>
+    /// Method that triggers when user connects to photon master server, and then joins the lobby of the server and syncs scenes with the server
+    /// </summary>
     public override void OnConnectedToMaster()
     {
-        //throw a console message
         Debug.Log("Connected to Master");
-        //join the lobby of the server that the user just connected to
         PhotonNetwork.JoinLobby();
-        //automatically sync the scene to the Photon server's scene
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    //method that triggers after user connects to lobby
+    /// <summary>
+    /// Method that triggers after user connects to lobby to open the main menu and assign a generic username
+    /// </summary>
     public override void OnJoinedLobby()
     {
-        //open the main menu through the menuManager
         MenuManager.Instance.OpenMenu("MainMenu");
-        //throw a console message
         Debug.Log("Joined Lobby");
-        //set Nickname to an automatically generated name
         PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
-    
-    //method that when called creates a new room within the photon lobby
+
+    /// <summary>
+    /// Method that creates a new room within the photon lobby pased off of a textfield input
+    /// </summary>
     public void CreateRoom()
     {
-        //looks if room name field is empty
+        //exit method if the textfield is empty
         if (string.IsNullOrEmpty(roomNameInputField.text))
-        {
-            //do nothing if it is
             return;
-        }
-        //create a new room named with the text in the textfield
         PhotonNetwork.CreateRoom(roomNameInputField.text);
-        //use the menumanager to open the connecting menu
         MenuManager.Instance.OpenMenu("Connecting");
     }
 
-    //method which automatically calls when user joins a new room
+    /// <summary>
+    /// Method called when user joins a room. Method changes menus and complies a new playerlist when possible.
+    /// </summary>
     public override void OnJoinedRoom()
     {
-        //Open automatically to the waiting menu
         MenuManager.Instance.OpenMenu("Waiting");
+
         //set the room name text field to the photon network's room name
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
+
         //create an array of players from Photon network
         Player[] players = PhotonNetwork.PlayerList;
 
@@ -107,40 +106,57 @@ public class Launcher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-    //method switches host client if old host disconnects
+    /// <summary>
+    /// Method switches host client if old host disconnects
+    /// </summary>
+    /// <param name="newMasterClient"></param>
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-    //method to throw an error menu if a room create fails
+    /// <summary>
+    /// Method switches host client if old host disconnects
+    /// </summary>
+    /// <param name="returnCode"></param>
+    /// <param name="message"></param>
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         errorText.text = "Error: Failed to Join Room: " + message;
         MenuManager.Instance.OpenMenu("Error");
     }
 
-    //method allows user to leave a room and reconnects them to lobby and main menu
+    /// <summary>
+    /// Method allows user to leave a room and reconnects them to lobby and main menu
+    /// </summary>
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
         MenuManager.Instance.OpenMenu("Connecting");
     }
 
-    //method which joins a room based off of information pulled from parameter
+    /// <summary>
+    /// Method which joins a room based off of information passed through the parameter
+    /// </summary>
+    /// <param name="info"></param>
     public void JoinRoom(RoomInfo info)
     {
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenMenu("Connecting");
     }
 
-    //method to return to main menu on leaving a room    
+    /// <summary>
+    /// Method to return to main menu when leaving a room    
+    /// </summary>
     public override void OnLeftRoom()
     {
         MenuManager.Instance.OpenMenu("MainMenu");
     }
 
-    //Method that calls whenever a room is updated to update local runs of users
+    /// <summary>
+    /// Method that calls whenever a room is updated to update local runs of users
+    /// </summary>
+    /// <param name="roomList"></param>
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         //destroy all stored rooms on update
@@ -159,13 +175,18 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    //Method to update the player list whenever someone enters a room
+    /// <summary>
+    /// Method to update the player list whenever someone enters a room
+    /// </summary>
+    /// <param name="newPlayer"></param>
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
 
-    //Method which starts the game for everyone
+    /// <summary>
+    /// Method which starts the game for everyone in room when called
+    /// </summary>
     public void StartGame()
     {
         PhotonNetwork.LoadLevel(1);

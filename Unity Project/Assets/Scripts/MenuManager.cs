@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//script class to manage menu collections
+/// <summary>
+/// Script class to manage menu collections
+/// </summary>
 public class MenuManager : MonoBehaviour
 {
     //create a global instance of this menu to be referenced by everything
@@ -11,55 +13,55 @@ public class MenuManager : MonoBehaviour
     //Array of menus that this script can access and assigned through unity
     [SerializeField] Menu[] menus;
 
-    //When this is first referenced
+    /// <summary>
+    /// Set a globabl instance of menuManager when this script first referenced
+    /// </summary>
     private void Awake()
     {
-        //Set a global instance of menuManager to this script
         Instance = this;
     }
 
-    //Method to open menu based on a string
+    /// <summary>
+    /// Method to open menu based on a string. Opens menus matching the string name and closes any that are open and don't match
+    /// </summary>
+    /// <param name="menuName"></param>
     public void OpenMenu(string menuName)
     {
-        //iterate through all of the menus in the menu array
         for(int i = 0; i <menus.Length; i++)
         {
-            //if they match the passed menu
             if(menus[i].menuName == menuName)
             {
-                //open that menu
                 menus[i].Open();
             }
-            //else if they are open
             else if (menus[i].open)
             {
-                //close that menu
                 CloseMenu(menus[i]);
             }
         }
     }
 
-    //method to open menus based on the menu object
+    /// <summary>
+    /// Method to open menu based on a passed object. Closes all menus and then opens the matching menu object
+    /// </summary>
+    /// <param name="menu"></param>
     public void OpenMenu(Menu menu)
     {
-        //iterate through all of the menus in the menu array
         for(int i = 0; i < menus.Length; i++)
         {
-            //if they are open
             if (menus[i].open)
             {
-                //close those menus
                 CloseMenu(menus[i]);
             }
         }
-        //open the passed menu object
         menu.Open();
     }
 
-    //method to close menu
+    /// <summary>
+    /// Method calls the menu close method on a passed object parameter
+    /// </summary>
+    /// <param name="menu"></param>
     public void CloseMenu(Menu menu)
     {
-        //call the specific menu passed and close it
         menu.Close();
     }
 }

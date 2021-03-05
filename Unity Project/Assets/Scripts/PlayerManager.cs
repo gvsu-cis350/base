@@ -12,22 +12,14 @@ public class PlayerManager : MonoBehaviour
     
     GameObject controller;
 
-//    private static PlayerManager Instance;
-
     [SerializeField] MenuManager GameMenus;
- //   [SerializeField] GameObject GameMenu;
     [SerializeField] Menu Respawn, Pause;
-
-    //    [SerializeField] MenuManager GameMenu;
-    //    [SerializeField] Menu Respawn;
 
     public bool pauseState = false;
     bool activeController = false;
 
     private void Awake()
     {
-//        Instance = this;
-//        Instantiate(GameMenus, Instance);
         PV = GetComponent<PhotonView>();
     }
     // Start is called before the first frame update
@@ -36,19 +28,10 @@ public class PlayerManager : MonoBehaviour
         if (!PV.IsMine)
         {
             Destroy(GetComponentInChildren<Canvas>().gameObject);
-            //<GameMenu>().gameObject);
         }
         else
         {
-            GameMenus.GetComponent<Image>().enabled = true;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            GameMenus.OpenMenu(Respawn);
-            //   GameMenu.OpenMenu(Respawn);
-            //        if (PV.IsMine)
-            //       {
-            //            CreateController();
-            //        }
+            openMM(Respawn);
         }
     }
 
@@ -64,9 +47,7 @@ public class PlayerManager : MonoBehaviour
             Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
             activeController = true;
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
-            GameMenus.CloseMenu(Respawn);
-            Cursor.lockState = CursorLockMode.Locked;
-            GameMenus.GetComponent<Image>().enabled = false;
+            closeMM(Respawn);
         }
     }
 
@@ -75,7 +56,7 @@ public class PlayerManager : MonoBehaviour
         Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
 
-        //old non-spawnpoint reliant spawn code
+        //old non-spawnpoint reliant spawn code kept here as a backup
         //controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), Vector3.zero, Quaternion.identity, 0, new object[] { PV.ViewID });
     }
 
@@ -83,11 +64,7 @@ public class PlayerManager : MonoBehaviour
     {
         activeController = false;
         PhotonNetwork.Destroy(controller);
-        GameMenus.OpenMenu(Respawn);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        GameMenus.GetComponent<Image>().enabled = true;
-        //        CreateController();
+        openMM(Respawn);
     }
 
     private void togglePause()
@@ -100,29 +77,17 @@ public class PlayerManager : MonoBehaviour
                 {
                     if (activeController)
                     {
-                        pauseState = false;
-                        GameMenus.CloseMenu(Pause);
-                        Cursor.lockState = CursorLockMode.Locked;
-                        Cursor.visible = false;
-                        GameMenus.GetComponent<Image>().enabled = false;
+                        closeMM(Pause);
                     }
                     else
                     {
                         pauseState = false;
- //                       GameMenus.CloseMenu(Pause);
                         GameMenus.OpenMenu(Respawn);
- //                       Cursor.lockState = CursorLockMode.Locked;
-   //                     Cursor.visible = false;
-     //                   GameMenus.GetComponent<Image>().enabled = false;
                     }
                 }
                 else
                 {
-                    pauseState = true;
-                    GameMenus.OpenMenu(Pause);
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
-                    GameMenus.GetComponent<Image>().enabled = true;
+                    openMM(Pause);
                 }
 
             }
@@ -135,11 +100,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (activeController)
             {
-                pauseState = false;
-                GameMenus.CloseMenu(Pause);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                GameMenus.GetComponent<Image>().enabled = false;
+                closeMM(Pause);
             }
             else
             {
@@ -149,12 +110,21 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void closeMM(string menuName)
+    private void closeMM(Menu menuName)
     {
         pauseState = false;
-        GameMenus.CloseMenu(Pause);
+        GameMenus.CloseMenu(menuName);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        GameMenus.GetComponent<Image>().enabled = false;
+    }
 
+    private void openMM(Menu menuName)
+    {
+        pauseState = true;
+        GameMenus.OpenMenu(menuName);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        GameMenus.GetComponent<Image>().enabled = true;
     }
 }

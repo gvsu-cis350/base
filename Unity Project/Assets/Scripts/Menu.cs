@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-//class adds the 'menu' attribute to 
+/// <summary>
+/// Class adds the 'menu' attribute to assigned objects
+/// </summary>
 public class Menu : MonoBehaviour
 {
     //string to store the name of a menu for references in scripts
@@ -12,21 +14,21 @@ public class Menu : MonoBehaviour
     //boolean to determine if the menu is active
     public bool open;
 
-    //class which opens menu on call
+    /// <summary>
+    /// Method to set a menu object to active
+    /// </summary>
     public void Open()
     {
-        //flip open bool on
         open = true;
-        //set the menu to active
         gameObject.SetActive(true);
     }
 
-    //class which closes menu on call
+    /// <summary>
+    /// Method to set a menu object to inactive
+    /// </summary>
     public void Close()
     {
-        //flip open bool off
         open = false;
-        //set the menu to non-active
         gameObject.SetActive(false);
     }
 }

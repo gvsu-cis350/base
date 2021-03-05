@@ -2,82 +2,91 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//class to check if a player is on the ground
+/// <summary>
+/// Class to verify if a player is on the ground
+/// </summary>
 public class PlayerGroundCheck : MonoBehaviour
 {
     //variable to reference the playerController class
     PlayerController playerController;
 
-    //when this class is referenced
+    /// <summary>
+    /// Method activates when the method is referenced and assigns playerController to a var
+    /// </summary>
     private void Awake()
     {
-        //set playerController reference too the playerController from this class' parent object
         playerController = GetComponentInParent<PlayerController>();
     }
 
-    //Method triggers when soemthing enters the Player's bottom box collider
+    /// <summary>
+    /// Method changes bool when soemthing enters the Player's bottom box collider
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        //check to see if the player's body entered the box collider
+        //exit method if player enters their own collider
         if (other.gameObject == playerController.gameObject)
-            //if it did, return and exit method
             return;
-        //if something did enter, set the player's status as on the ground
         playerController.SetGroundedState(true);
     }
 
-    //Method triggers when something exits the Player's bottom box collider
+    /// <summary>
+    /// Method changes bool when something exits the Player's bottom box collider
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerExit(Collider other)
     {
-        //check to see if the player's body entered the box collider
+        //exit method if player enters their own collider
         if (other.gameObject == playerController.gameObject)
-            //if it did, return and exit method
             return;
-        //if something did exit, set the player's status as not on the ground
         playerController.SetGroundedState(false);
     }
 
-    //Method triggers when something stays within the Player's bottom box collider
+    /// <summary>
+    /// Method changes bool when something stays within the Player's bottom box collider
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerStay(Collider other)
     {
-        //check to see if the player's body entered the box collider
+        //exit method if player enters their own collider
         if (other.gameObject == playerController.gameObject)
-            //if it did, return and exit method
             return;
-        //if something is in the box, set the player's status as on the ground
         playerController.SetGroundedState(true);
     }
 
-    //Method triggers when a collision entity enters the Player's bottom box collider
+    /// <summary>
+    /// Method changes bool when a collision entity enters the Player's bottom box collider
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
-        //check to see if the player's body entered the box collider
+        //exit method if player enters their own collider
         if (collision.gameObject == playerController.gameObject)
-            //if it did, return and exit method
             return;
-        //if something did enter, set the player's status as on the ground
         playerController.SetGroundedState(true);
     }
 
-    //Method triggers when a collision entity exits the Player's bottom box collider
+    /// <summary>
+    /// Method changes bool when a collision entity exits the Player's bottom box collider
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionExit(Collision collision)
     {
-        //check to see if the player's body entered the box collider
+        //exit method if player enters their own collider
         if (collision.gameObject == playerController.gameObject)
-            //if it did, return and exit method
             return;
-        //if something did exit, set the player's status as not on the ground
         playerController.SetGroundedState(false);
     }
 
-    //Method triggers when a collision entity stays within the Player's bottom box collider
+    /// <summary>
+    /// Method changes bool when a collision entity stays within the Player's bottom box collider
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionStay(Collision collision)
     {
-        //check to see if the player's body entered the box collider
+        //exit method if player enters their own collider
         if (collision.gameObject == playerController.gameObject)
-            //if it did, return and exit method
             return;
-        //if something is in the box, set the player's status as on the ground
         playerController.SetGroundedState(true);
     }
 }

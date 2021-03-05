@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Abstract class which extends the item class
+/// <summary>
+/// Abstract class which extends the item class
+/// </summary>
 public abstract class Gun : Item
 {
-    //Reference to the item class use method
+    /// <summary>
+    /// Reference to the item class use method
+    /// </summary>
     public abstract override void Use();
 }
