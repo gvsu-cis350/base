@@ -7,9 +7,6 @@ using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
-    //
-    // IMPORTANT TODO: FIX BUG WHERE YOU CAN SWITCH FROM SPAWN MENU TO PAUSE MENU BUT NOT BACK
-    //
 
     PhotonView PV;
     
@@ -18,13 +15,14 @@ public class PlayerManager : MonoBehaviour
 //    private static PlayerManager Instance;
 
     [SerializeField] MenuManager GameMenus;
-    [SerializeField] GameObject GameMenu;
+ //   [SerializeField] GameObject GameMenu;
     [SerializeField] Menu Respawn, Pause;
 
     //    [SerializeField] MenuManager GameMenu;
     //    [SerializeField] Menu Respawn;
 
     public bool pauseState = false;
+    bool activeController = false;
 
     private void Awake()
     {
@@ -64,6 +62,7 @@ public class PlayerManager : MonoBehaviour
         if (PV.IsMine)
         {
             Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
+            activeController = true;
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
             GameMenus.CloseMenu(Respawn);
             Cursor.lockState = CursorLockMode.Locked;
@@ -82,6 +81,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Die()
     {
+        activeController = false;
         PhotonNetwork.Destroy(controller);
         GameMenus.OpenMenu(Respawn);
         Cursor.lockState = CursorLockMode.None;
@@ -98,11 +98,23 @@ public class PlayerManager : MonoBehaviour
             {
                 if (pauseState)
                 {
-                    pauseState = false;
-                    GameMenus.CloseMenu(Pause);
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                    GameMenus.GetComponent<Image>().enabled = false;
+                    if (activeController)
+                    {
+                        pauseState = false;
+                        GameMenus.CloseMenu(Pause);
+                        Cursor.lockState = CursorLockMode.Locked;
+                        Cursor.visible = false;
+                        GameMenus.GetComponent<Image>().enabled = false;
+                    }
+                    else
+                    {
+                        pauseState = false;
+ //                       GameMenus.CloseMenu(Pause);
+                        GameMenus.OpenMenu(Respawn);
+ //                       Cursor.lockState = CursorLockMode.Locked;
+   //                     Cursor.visible = false;
+     //                   GameMenus.GetComponent<Image>().enabled = false;
+                    }
                 }
                 else
                 {
@@ -121,11 +133,19 @@ public class PlayerManager : MonoBehaviour
     {
         if (PV.IsMine)
         {
-            pauseState = false;
-            GameMenus.CloseMenu(Pause);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            GameMenus.GetComponent<Image>().enabled = false;
+            if (activeController)
+            {
+                pauseState = false;
+                GameMenus.CloseMenu(Pause);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                GameMenus.GetComponent<Image>().enabled = false;
+            }
+            else
+            {
+                pauseState = false;
+                GameMenus.OpenMenu(Respawn);
+            }
         }
     }
 
