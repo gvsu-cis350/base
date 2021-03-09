@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
 
 
 /// <summary>
@@ -160,5 +162,14 @@ public class PlayerManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         GameMenus.GetComponent<Image>().enabled = true;
+    }
+
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+  //      PhotonNetwork.ConnectionState
+
+   //     SceneManager.LoadScene(1);
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System.IO;
+using Photon.Realtime;
 
 /// <summary>
 /// Class to manage room creations and create playermanagers
@@ -55,9 +56,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
     /// <param name="loadSceneMode"></param>
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if(scene.buildIndex == 1)
+        if(scene.buildIndex == 2)
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }
+    }
+
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene(1);
     }
 }
