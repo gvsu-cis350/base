@@ -20,8 +20,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         //checks if another RoomManager exists and destroys it if there is one
-        if (Instance)
-        {
+        if (Instance)// != null)
+       {
+ //           Debug.Log(Instance);
+//            Debug.Log("Succesful destruction");
             Destroy(gameObject);
             return;
         }
@@ -56,7 +58,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     /// <param name="loadSceneMode"></param>
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if(scene.buildIndex == 2)
+        if ((scene.buildIndex > 1) && (scene.buildIndex < SceneManager.sceneCountInBuildSettings))
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }

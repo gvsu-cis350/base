@@ -16,6 +16,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_Text errorText;
     [SerializeField] TMP_Text roomNameText;
+    [SerializeField] TMP_Dropdown mapSelectionDropdown;
 
     //roomlist interactions through unity
     [SerializeField] Transform roomListContent;
@@ -25,8 +26,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform PlayerListContent;
     [SerializeField] GameObject PlayerListItemPrefab;
 
-    //serialization of the starting game button
-    [SerializeField] GameObject startGameButton;
+    //serialization of the host buttons
+    [SerializeField] GameObject startGameButton, roomSettingsButton;
 
     /// <summary>
     /// Method call when the launcher is first accessed to set a global instacne of launcher
@@ -41,7 +42,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     void Start()
     {
-        Debug.Log("Connecting to Master");
+   //     Debug.Log("Connecting to Master");
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -50,7 +51,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected to Master");
+       // Debug.Log("Connected to Master");
         PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
@@ -61,7 +62,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         MenuManager.Instance.OpenMenu("MainMenu");
-        Debug.Log("Joined Lobby");
+       // Debug.Log("Joined Lobby");
         PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 
@@ -103,6 +104,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
 
         //set the start button to be active for host client
+        roomSettingsButton.SetActive(PhotonNetwork.IsMasterClient);
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
@@ -113,6 +115,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        roomSettingsButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     /// <summary>
@@ -189,6 +192,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel(2);
+
+        PhotonNetwork.LoadLevel(mapSelectionDropdown.value + 2);
     }
 }
