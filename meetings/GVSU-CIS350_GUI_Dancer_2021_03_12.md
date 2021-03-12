@@ -13,6 +13,9 @@ Discussion points:
 
 Goals for next week (include responsibilities)
 
-* Changing physics demo to work with different shapes
+* Changing physics demo to work with different shapes (EVAN & JACQUELIN)
  * New classes for different shapes that inherit from the move engine class
-* 
+* Part 2 for Homework 3 (Each person makes a use case diagram) 
+    *Physics Systems > Graphics Interface (EVAN)
+    *User > Graphics Interface (DONALD)
+    *User Input System > Physics System (ABIGAIL)
