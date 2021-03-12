@@ -22,8 +22,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         //checks if another RoomManager exists and destroys it if there is one
         if (Instance)// != null)
        {
- //           Debug.Log(Instance);
-//            Debug.Log("Succesful destruction");
             Destroy(gameObject);
             return;
         }
@@ -52,7 +50,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// This method triggers with an OnSceneLoaded and creates a playermanager for the user if they are on the game scene
+    /// This method triggers with an OnSceneLoaded and creates a playermanager for the user if they are on a map scene
     /// </summary>
     /// <param name="scene"></param>
     /// <param name="loadSceneMode"></param>
