@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
+    [SerializeField] GameObject clientWeaponCamera;
 
     //item vars
     int itemIndex;
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         } 
         else
         {
+    //        Destroy(clientWeaponCamera);
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
         }
