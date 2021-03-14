@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     //Reference vars
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
+    [SerializeField] GameObject itemHolder;
     [SerializeField] Item[] items;
-    [SerializeField] GameObject clientWeaponCamera;
 
     //item vars
     int itemIndex;
@@ -55,7 +55,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         } 
         else
         {
-    //        Destroy(clientWeaponCamera);
+            //Destroy(clientWeaponCamera);
+            Transform[] children = itemHolder.gameObject.GetComponentsInChildren<Transform>();
+            foreach(Transform go in children)
+            {
+                go.gameObject.layer = 0;
+            }
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
         }
@@ -143,7 +148,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         items[itemIndex].itemGameObject.SetActive(true);
 
         //set previously held item to inactive
-        if(previousItemIndex != -1)
+        if (previousItemIndex != -1)
         {
             items[previousItemIndex].itemGameObject.SetActive(false);
         }
