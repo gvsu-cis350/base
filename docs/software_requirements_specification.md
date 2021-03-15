@@ -22,6 +22,7 @@ These are the functional and non-functional requirements for the next few weeks 
 	4. Each user shall have access to the settings menu at all times.
 	5. The software’s window shall vary in size according to user settings.
 	6. Users shall be able to change their names from the player settings menu.
+	7. Users shall use the player settings menu to set the application in fullscreen mode.
 5. General
 	1. The game shall use Unity 2019.4.18f1(LTS)
 	2. Each user’s game shall connect to Photon Fixed Region ID “US”.
@@ -30,6 +31,8 @@ These are the functional and non-functional requirements for the next few weeks 
 	5. Users shall use the mouse to change camera direction.
 	6. Users shall use a sprint key to increase movement speed.
 	7. Users shall use the spacebar to cause their character to jump.
+	8. The application shall automatically generate a config file upon the start of the applicaiton if no config file is found.
+	9. The application shall save a preferred Field of View setting for the player camera.
 	
 
 # Non-Functional Requirements
