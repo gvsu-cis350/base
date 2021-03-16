@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject itemHolder;
     [SerializeField] Item[] items;
+    [SerializeField] Material Host, Regular;
 
     //item vars
     int itemIndex;
@@ -51,19 +52,28 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void Start()
     {
-
-
         if (PV.IsMine)
         {
             EquipItem(0);
+            if (customProperties.ContainsKey("app"))
+            {
+                customProperties.Remove("app");
+            }
+            if (PhotonNetwork.IsMasterClient)
+            {
+                customProperties.Add("app", 1);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+            }
+            else
+            {
+                customProperties.Add("app", 2);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+            }
         } 
         else
         {
-            //Destroy(clientWeaponCamera);
-
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-            //PhotonNetwork.MasterClient.gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         }
     }
 
@@ -162,8 +172,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         //check to see if we are the local player
         if(PV.IsMine)
         {
-            //create a new hashtable
-            //            Hashtable hash = new Hashtable();
             //add our item index to the hashtable
             if (customProperties.ContainsKey("itemIndex"))
             {
@@ -174,7 +182,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             //send the hashtable over the photon network
             PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
 
+            //Select all of the items held in the local player's hand
             Transform[] children = items[itemIndex].gameObject.GetComponentsInChildren<Transform>();
+            //Set them to only be rendered by the fixed FOV camera
             foreach (Transform go in children)
             {
                 go.gameObject.layer = 10;
@@ -194,7 +204,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if(!PV.IsMine && targetPlayer == PV.Owner)
         {
             //sync weapons if above is true
-            EquipItem((int)changedProps["itemIndex"]);
+            if (changedProps.ContainsKey("itemIndex"))
+            {
+                EquipItem((int)changedProps["itemIndex"]);
+            }
+            
+            if (changedProps.ContainsKey("app"))
+            {
+                changeAppearance((int)changedProps["app"]);
+            }
         }
     }
 
@@ -305,5 +323,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
                 EquipItem(itemIndex - 1);
             }
         }
+    }
+
+    public void changeAppearance(int mat)
+    {
+        if(mat == 1)
+        {
+            this.gameObject.GetComponent<MeshRenderer>().material = Host;
+        } 
+        else if(mat == 2)
+        {
+            this.gameObject.GetComponent<MeshRenderer>().material = Regular;
+        }
+        
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
 }

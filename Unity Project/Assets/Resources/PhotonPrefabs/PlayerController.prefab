@@ -499,6 +499,8 @@ MonoBehaviour:
   items:
   - {fileID: 8248425215699461919}
   - {fileID: 5572324538090995247}
+  Host: {fileID: 2100000, guid: af93035103d79d74fb91219ea7860750, type: 2}
+  Regular: {fileID: 2100000, guid: c9f1bc3192d911948bd831dff2121ab3, type: 2}
 --- !u!114 &77362379395884376
 MonoBehaviour:
   m_ObjectHideFlags: 0
