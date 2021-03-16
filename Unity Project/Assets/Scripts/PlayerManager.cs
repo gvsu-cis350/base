@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
     //unity reference vars
     [SerializeField] MenuManager GameMenus;
     [SerializeField] Menu Respawn, Pause;
+    [SerializeField] Material Host;
 
     //menu activation bools
     public bool pauseState = false;
@@ -68,6 +69,10 @@ public class PlayerManager : MonoBehaviour
             
             //create a new controller at the spawnpoint prefab loaction
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
+            if (!PhotonNetwork.IsMasterClient)
+            {
+    //            controller.gameObject.GetComponent<MeshRenderer>().material = Host;
+            }
             //old non-spawnpoint reliant spawn code kept here as a backup
             //controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), Vector3.zero, Quaternion.identity, 0, new object[] { PV.ViewID });
 

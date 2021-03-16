@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     //refence to parent that instantiates player controller
     PlayerManager playerManager;
 
+    Hashtable customProperties = new Hashtable();
+
     /// <summary>
     /// Method call which assigns objects to reference vars in script when script is referenced
     /// </summary>
@@ -49,6 +51,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void Start()
     {
+
+
         if (PV.IsMine)
         {
             EquipItem(0);
@@ -56,13 +60,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         else
         {
             //Destroy(clientWeaponCamera);
-            Transform[] children = itemHolder.gameObject.GetComponentsInChildren<Transform>();
-            foreach(Transform go in children)
-            {
-                go.gameObject.layer = 0;
-            }
+
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
+            //PhotonNetwork.MasterClient.gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         }
     }
 
@@ -147,6 +148,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         itemIndex = parIndex;
         items[itemIndex].itemGameObject.SetActive(true);
 
+
+
         //set previously held item to inactive
         if (previousItemIndex != -1)
         {
@@ -160,11 +163,22 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if(PV.IsMine)
         {
             //create a new hashtable
-            Hashtable hash = new Hashtable();
+            //            Hashtable hash = new Hashtable();
             //add our item index to the hashtable
-            hash.Add("itemIndex", itemIndex);
+            if (customProperties.ContainsKey("itemIndex"))
+            {
+                customProperties.Remove("itemIndex");
+            }
+            //hash.Add("itemIndex", itemIndex);
+            customProperties.Add("itemIndex", itemIndex);
             //send the hashtable over the photon network
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+
+            Transform[] children = items[itemIndex].gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform go in children)
+            {
+                go.gameObject.layer = 10;
+            }
         }
     }
 

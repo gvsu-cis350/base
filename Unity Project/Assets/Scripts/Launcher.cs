@@ -34,6 +34,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     private void Awake()
     {
+ //       PlayerInfo playerInfo = DataSaver.loadData<PlayerInfo>("")
         Instance = this;
     }
 
@@ -63,6 +64,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         MenuManager.Instance.OpenMenu("MainMenu");
        // Debug.Log("Joined Lobby");
+       
         PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 

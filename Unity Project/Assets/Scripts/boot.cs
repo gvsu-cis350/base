@@ -32,6 +32,7 @@ public class boot : MonoBehaviour
             newLoad.resolutionWidth = resolutions[0].width;
             newLoad.resolutionHeight = resolutions[0].height;
             newLoad.fullscreen = false;
+            newLoad.nickname = "Player " + UnityEngine.Random.Range(0, 1000).ToString("0000");
             DataSaver.saveData(newLoad, "config");
         }
     }

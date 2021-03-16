@@ -12,4 +12,5 @@ public class PlayerInfo
     public int resolutionWidth;
     public int resolutionHeight;
     public bool fullscreen;
+    public string nickname;
 }
