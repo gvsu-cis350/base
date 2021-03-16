@@ -15,7 +15,7 @@ public class PlayerSettings : MonoBehaviour
     public Resolution[] resolutions;
     Dictionary<int, Resolution> resolutionDict = new Dictionary<int, Resolution>();
     private List<string> WidthByHeight = new List<string>();
-
+    int curRes;
 
     public void Awake()
     {
@@ -39,13 +39,21 @@ public class PlayerSettings : MonoBehaviour
 
     public void loadSettings()
     {
-            PlayerInfo loadData = DataSaver.loadData<PlayerInfo>("config");
-            volumeSlider.value = loadData.masterVolume;
-            fovSlider.value = loadData.fov;
-            resolutionSelection.ClearOptions();
-            resolutionSelection.AddOptions(WidthByHeight);
-            resolutionSelection.value = Array.IndexOf(resolutions, (loadData.resolutionWidth + "X" + loadData.resolutionHeight));
-            fullScreen.SetIsOnWithoutNotify(loadData.fullscreen);
+        PlayerInfo loadData = DataSaver.loadData<PlayerInfo>("config");
+        
+        volumeSlider.value = loadData.masterVolume;
+        fovSlider.value = loadData.fov;
+        resolutionSelection.ClearOptions();
+        resolutionSelection.AddOptions(WidthByHeight);
+        foreach(var item in resolutionDict)
+        {
+            if ((item.Value.width == loadData.resolutionWidth) && (item.Value.height == loadData.resolutionHeight))
+            {
+                curRes = item.Key;
+            }
+        }
+        resolutionSelection.value = curRes;
+        fullScreen.SetIsOnWithoutNotify(loadData.fullscreen);
     }
 
     public void applySettings()
@@ -58,9 +66,9 @@ public class PlayerSettings : MonoBehaviour
         PlayerInfo newSave = new PlayerInfo();
         newSave.masterVolume = (int)volumeSlider.value;
         newSave.fov = (int)fovSlider.value;
-        newSave.savedResolution = resolutions[resolutionSelection.value];
-        newSave.resolutionHeight = resolutions[resolutionSelection.value].height;
-        newSave.resolutionWidth = resolutions[resolutionSelection.value].width;
+        newSave.savedResolution = resolutionDict[resolutionSelection.value];
+        newSave.resolutionHeight = resolutionDict[resolutionSelection.value].height;
+        newSave.resolutionWidth = resolutionDict[resolutionSelection.value].width;
         newSave.fullscreen = fullScreen.isOn;
         DataSaver.saveData(newSave, "config");
     }
