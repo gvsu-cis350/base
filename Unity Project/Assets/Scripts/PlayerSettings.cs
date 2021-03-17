@@ -5,12 +5,15 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
 
 public class PlayerSettings : MonoBehaviour
 {
     [SerializeField] Slider volumeSlider, fovSlider;
     [SerializeField] TMPro.TMP_Dropdown resolutionSelection;
     [SerializeField] Toggle fullScreen;
+    [SerializeField] TMP_Text volumeText, fovText;
+    [SerializeField] TMP_InputField nickName;
 
     public Resolution[] resolutions;
     Dictionary<int, Resolution> resolutionDict = new Dictionary<int, Resolution>();
@@ -40,8 +43,10 @@ public class PlayerSettings : MonoBehaviour
     public void loadSettings()
     {
         PlayerInfo loadData = DataSaver.loadData<PlayerInfo>("config");
-        
+
+        volumeText.text = "Volume: " + loadData.masterVolume;
         volumeSlider.value = loadData.masterVolume;
+        fovText.text = "FOV: " + loadData.fov;
         fovSlider.value = loadData.fov;
         resolutionSelection.ClearOptions();
         resolutionSelection.AddOptions(WidthByHeight);
@@ -54,6 +59,7 @@ public class PlayerSettings : MonoBehaviour
         }
         resolutionSelection.value = curRes;
         fullScreen.SetIsOnWithoutNotify(loadData.fullscreen);
+        nickName.text = loadData.nickname;
     }
 
     public void applySettings()
@@ -71,6 +77,13 @@ public class PlayerSettings : MonoBehaviour
         newSave.resolutionHeight = resolutionDict[resolutionSelection.value].height;
         newSave.resolutionWidth = resolutionDict[resolutionSelection.value].width;
         newSave.fullscreen = fullScreen.isOn;
+        newSave.nickname = nickName.text;
         DataSaver.saveData(newSave, "config");
+    }
+
+    public void updateText()
+    {
+        volumeText.text = "Volume: " + volumeSlider.value;
+        fovText.text = "FOV: " + fovSlider.value;
     }
 }

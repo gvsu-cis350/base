@@ -2469,7 +2469,18 @@ MonoBehaviour:
   m_Value: 30
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1700322529}
+        m_MethodName: updateText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &445104210
 GameObject:
   m_ObjectHideFlags: 0
@@ -8271,6 +8282,9 @@ MonoBehaviour:
   fovSlider: {fileID: 432573964}
   resolutionSelection: {fileID: 383781829}
   fullScreen: {fileID: 292877219}
+  volumeText: {fileID: 1712904615}
+  fovText: {fileID: 975351934}
+  nickName: {fileID: 1180690960}
 --- !u!1 &1712904613
 GameObject:
   m_ObjectHideFlags: 0
@@ -10872,4 +10886,15 @@ MonoBehaviour:
   m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1700322529}
+        m_MethodName: updateText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
