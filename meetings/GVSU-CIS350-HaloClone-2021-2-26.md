@@ -1,4 +1,4 @@
-## Meeting minutes template
+## Meeting
 
 Team name: Halo Clone
 

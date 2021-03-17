@@ -1,10 +1,10 @@
-## Meeting minutes template
+## Meeting
 
 Team name: Halo Clone
 
 Members present: Adam, Connor, Dylan, Lucas
 
-Date: 3/3/2021
+Date: 3/10/2021
 
 Time: 10:30 am - 11:37 am
 
