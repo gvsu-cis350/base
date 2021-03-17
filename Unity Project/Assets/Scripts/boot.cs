@@ -7,13 +7,30 @@ using System;
 
 public class boot : MonoBehaviour
 {
+    public PlayerInfo currentSettings;
+
+    public static boot bootObject;
+
     private void Awake()
     {
+        bootObject = this;
         DontDestroyOnLoad(transform.gameObject);
         newload();
-        PlayerInfo load = DataSaver.loadData<PlayerInfo>("config");
-        Screen.SetResolution(load.resolutionWidth, load.resolutionHeight, load.fullscreen);
+
+        currentSettings = DataSaver.loadData<PlayerInfo>("config");
+        Screen.SetResolution(currentSettings.resolutionWidth, currentSettings.resolutionHeight, currentSettings.fullscreen);
         SceneManager.LoadScene(1);
+    }
+    private void Start()
+    {
+        GameEvents.current.onNewSettings += SettingsUpdated;
+    }
+
+    private void SettingsUpdated()
+    {
+        currentSettings = null;
+        currentSettings = DataSaver.loadData<PlayerInfo>("config");
+        GameEvents.current.onSettingsUpdateEvent();
     }
 
     private void newload()

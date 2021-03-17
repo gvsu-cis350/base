@@ -59,6 +59,7 @@ public class PlayerSettings : MonoBehaviour
     public void applySettings()
     {
         Screen.SetResolution(resolutionDict[resolutionSelection.value].width, resolutionDict[resolutionSelection.value].height, fullScreen.isOn);
+        GameEvents.current.onNewSettingsEvent();
     }
 
     public void saveSettings()
