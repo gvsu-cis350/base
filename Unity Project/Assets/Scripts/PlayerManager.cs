@@ -20,7 +20,6 @@ public class PlayerManager : MonoBehaviour
     //unity reference vars
     [SerializeField] MenuManager GameMenus;
     [SerializeField] Menu Respawn, Pause;
-    [SerializeField] Material Host;
 
     //menu activation bools
     public bool pauseState = false;
@@ -173,8 +172,5 @@ public class PlayerManager : MonoBehaviour
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
-  //      PhotonNetwork.ConnectionState
-
-   //     SceneManager.LoadScene(1);
     }
 }
