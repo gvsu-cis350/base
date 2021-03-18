@@ -39,7 +39,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// Method that triggers once on the creation and connects user to pre-determined photon master server
+    /// Method that triggers once on the creation and connects user to pre-determined photon master server.
     /// </summary>
     void Start()
     {
@@ -194,7 +194,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public void StartGame()
     {
-
         PhotonNetwork.LoadLevel(mapSelectionDropdown.value + 2);
     }
 }
