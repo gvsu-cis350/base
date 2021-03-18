@@ -42,24 +42,22 @@ public class PlayerSettings : MonoBehaviour
 
     public void loadSettings()
     {
-        PlayerInfo loadData = DataSaver.loadData<PlayerInfo>("config");
-
-        volumeText.text = "Volume: " + loadData.masterVolume;
-        volumeSlider.value = loadData.masterVolume;
-        fovText.text = "FOV: " + loadData.fov;
-        fovSlider.value = loadData.fov;
+        volumeText.text = "Volume: " + boot.bootObject.currentSettings.masterVolume;
+        volumeSlider.value = boot.bootObject.currentSettings.masterVolume;
+        fovText.text = "FOV: " + boot.bootObject.currentSettings.fov;
+        fovSlider.value = boot.bootObject.currentSettings.fov;
         resolutionSelection.ClearOptions();
         resolutionSelection.AddOptions(WidthByHeight);
         foreach(var item in resolutionDict)
         {
-            if ((item.Value.width == loadData.resolutionWidth) && (item.Value.height == loadData.resolutionHeight))
+            if ((item.Value.width == boot.bootObject.currentSettings.resolutionWidth) && (item.Value.height == boot.bootObject.currentSettings.resolutionHeight))
             {
                 curRes = item.Key;
             }
         }
         resolutionSelection.value = curRes;
-        fullScreen.SetIsOnWithoutNotify(loadData.fullscreen);
-        nickName.text = loadData.nickname;
+        fullScreen.SetIsOnWithoutNotify(boot.bootObject.currentSettings.fullscreen);
+        nickName.text = boot.bootObject.currentSettings.nickname;
     }
 
     public void applySettings()
