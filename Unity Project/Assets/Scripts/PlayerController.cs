@@ -28,9 +28,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     Rigidbody rb;
     PhotonView PV;
 
-    //health vars
+    //health and shield vars
     const float maxHealth = 100f;
     float currentHealth = maxHealth;
+//    const float maxShields = 75f;
+//    float currentShields = maxShields;
 
     //refence to parent that instantiates player controller
     PlayerManager playerManager;
@@ -54,6 +56,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (PV.IsMine)
         {
+            GameEvents.current.onSettingsUpdate += updateMouse;
             EquipItem(0);
             if (customProperties.ContainsKey("app"))
             {
@@ -341,5 +344,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
+    }
+
+    private void updateMouse()
+    {
+        mouseSenstivity = boot.bootObject.currentSettings.mouseSensitvity;
     }
 }

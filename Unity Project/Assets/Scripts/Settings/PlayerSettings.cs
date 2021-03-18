@@ -9,10 +9,10 @@ using UnityEngine.Events;
 
 public class PlayerSettings : MonoBehaviour
 {
-    [SerializeField] Slider volumeSlider, fovSlider;
+    [SerializeField] Slider volumeSlider, fovSlider, musicVolumeSlider, sfxVolumeSlider, mouseSensitivitySlider;
     [SerializeField] TMPro.TMP_Dropdown resolutionSelection;
     [SerializeField] Toggle fullScreen;
-    [SerializeField] TMP_Text volumeText, fovText;
+    [SerializeField] TMP_Text volumeText, fovText, musicVolumeText, sfxVolumeText, mouseSensitivityText;
     [SerializeField] TMP_InputField nickName;
 
     public Resolution[] resolutions;
@@ -44,8 +44,14 @@ public class PlayerSettings : MonoBehaviour
     {
         volumeText.text = "Volume: " + boot.bootObject.currentSettings.masterVolume;
         volumeSlider.value = boot.bootObject.currentSettings.masterVolume;
+        musicVolumeText.text = "Music Volume: " + boot.bootObject.currentSettings.musicVolume;
+        musicVolumeSlider.value = boot.bootObject.currentSettings.musicVolume;
+        sfxVolumeText.text = "SFX Volume: " + boot.bootObject.currentSettings.sfxVolume;
+        sfxVolumeSlider.value = boot.bootObject.currentSettings.sfxVolume;
         fovText.text = "FOV: " + boot.bootObject.currentSettings.fov;
         fovSlider.value = boot.bootObject.currentSettings.fov;
+        mouseSensitivityText.text = "Mouse Sensitivity: " + boot.bootObject.currentSettings.mouseSensitvity;
+        mouseSensitivitySlider.value = boot.bootObject.currentSettings.mouseSensitvity;
         resolutionSelection.ClearOptions();
         resolutionSelection.AddOptions(WidthByHeight);
         foreach(var item in resolutionDict)
@@ -81,7 +87,10 @@ public class PlayerSettings : MonoBehaviour
 
     public void updateText()
     {
-        volumeText.text = "Volume: " + volumeSlider.value;
+        volumeText.text = "Master Volume: " + volumeSlider.value;
         fovText.text = "FOV: " + fovSlider.value;
+        musicVolumeText.text = "Music Volume: " + musicVolumeSlider.value;
+        sfxVolumeText.text = "SFX Volume: " + sfxVolumeSlider.value;
+        mouseSensitivityText.text = "Mouse Sensitivity: " + mouseSensitivitySlider.value;
     }
 }

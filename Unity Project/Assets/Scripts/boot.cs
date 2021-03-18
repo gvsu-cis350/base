@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 using System;
+using Photon.Pun;
 
 public class boot : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class boot : MonoBehaviour
     {
         currentSettings = null;
         currentSettings = DataSaver.loadData<PlayerInfo>("config");
+        PhotonNetwork.NickName = currentSettings.nickname;
         GameEvents.current.onSettingsUpdateEvent();
     }
 
@@ -42,15 +44,17 @@ public class boot : MonoBehaviour
         {
             Resolution[] resolutions = Screen.resolutions;
             Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
-            PlayerInfo newLoad = new PlayerInfo();
-            newLoad.masterVolume = 70;
-            newLoad.fov = 80;
-            newLoad.savedResolution = resolutions[0];
-            newLoad.resolutionWidth = resolutions[0].width;
-            newLoad.resolutionHeight = resolutions[0].height;
-            newLoad.fullscreen = false;
-            newLoad.nickname = "Player " + UnityEngine.Random.Range(0, 1000).ToString("0000");
-            DataSaver.saveData(newLoad, "config");
+            currentSettings.masterVolume = 70;
+            currentSettings.musicVolume = 70;
+            currentSettings.sfxVolume = 70;
+            currentSettings.fov = 80;
+            currentSettings.savedResolution = resolutions[0];
+            currentSettings.resolutionWidth = resolutions[0].width;
+            currentSettings.resolutionHeight = resolutions[0].height;
+            currentSettings.fullscreen = false;
+            currentSettings.nickname = "Player " + UnityEngine.Random.Range(0, 1000).ToString("0000");
+            currentSettings.mouseSensitvity = 10;
+            DataSaver.saveData(currentSettings, "config");
         }
     }
 }

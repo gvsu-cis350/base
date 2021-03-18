@@ -7,10 +7,13 @@ using UnityEngine;
 public class PlayerInfo
 {
     public int masterVolume;
+    public int musicVolume;
+    public int sfxVolume;
     public int fov;
     public Resolution savedResolution;
     public int resolutionWidth;
     public int resolutionHeight;
     public bool fullscreen;
     public string nickname;
+    public float mouseSensitvity;
 }
