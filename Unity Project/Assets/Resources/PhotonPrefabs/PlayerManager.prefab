@@ -68,10 +68,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volumeSlider: {fileID: 7964739726005370018}
   fovSlider: {fileID: 4890795147848672188}
+  musicVolumeSlider: {fileID: 0}
+  sfxVolumeSlider: {fileID: 0}
+  mouseSensitivitySlider: {fileID: 0}
   resolutionSelection: {fileID: 6929805127953562657}
   fullScreen: {fileID: 2033820136999492029}
   volumeText: {fileID: 6347369916215682614}
   fovText: {fileID: 2274486618025826204}
+  musicVolumeText: {fileID: 0}
+  sfxVolumeText: {fileID: 0}
+  mouseSensitivityText: {fileID: 0}
   nickName: {fileID: 3818081595301184863}
 --- !u!1 &293186229859530164
 GameObject:
