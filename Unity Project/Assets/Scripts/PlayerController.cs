@@ -13,6 +13,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject itemHolder;
     [SerializeField] Item[] items;
     [SerializeField] Material Host, Regular;
+    [SerializeField] GameObject thirdPersonModel, firstPersonModel;
+
+    Animator firstAnimation;
+    Animator thirdAnimation;
 
     //item vars
     int itemIndex;
@@ -47,6 +51,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         rb = GetComponent<Rigidbody>();
         PV = GetComponent<PhotonView>();
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+        firstAnimation = firstPersonModel.GetComponent<Animator>();
+        thirdAnimation = thirdPersonModel.GetComponent<Animator>();
     }
 
     /// <summary>
@@ -71,6 +77,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             {
                 customProperties.Add("app", 2);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+            }
+            Transform[] fschildren = firstPersonModel.gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform go in fschildren)
+            {
+                go.gameObject.layer = 10;
+            }
+            Transform[] thchildren = thirdPersonModel.gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform go in thchildren)
+            {
+                go.gameObject.layer = 11;
             }
         } 
         else
@@ -121,7 +137,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         //note the minus sign can be changed to a plus sign to invert mouse movement
         verticalLookRotation -= Input.GetAxisRaw("Mouse Y") * mouseSenstivity;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
+        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -75f, 75f);
 
         cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
     }
@@ -134,6 +150,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
+
+        if ((Input.GetAxisRaw("Horizontal") != 0) || (Input.GetAxisRaw("Vertical") != 0))
+        {
+            firstAnimation.SetBool("Walking", true);
+            thirdAnimation.SetBool("Walking", true);
+        } 
+        else
+        {
+            firstAnimation.SetBool("Walking", false);
+            thirdAnimation.SetBool("Walking", false);
+        }
     }
 
     /// <summary>
