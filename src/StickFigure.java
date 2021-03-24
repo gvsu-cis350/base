@@ -1,38 +1,12 @@
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.*;
 
-public class StickFigure extends JFrame implements ActionListener {
 
-   private JPanel viewerPanel;
-   private JPanel controlPanel;
-
-   private Container contentPane;
+public class StickFigure{
 
    private int body;
    private int feet;
    private Color color;
    private int size;
-
-   public StickFigure(){
-      super("GUI Dancer");
-
-      contentPane = new Container();
-      contentPane.setLayout(new GridLayout(1,2));
-
-      viewerPanel = new JPanel();
-      viewerPanel.setBackground(Color.GREEN);
-      viewerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-      contentPane.add(viewerPanel);
-
-      controlPanel = new JPanel();
-      controlPanel.setBackground(Color.RED);
-      controlPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-      contentPane.add(controlPanel);
-
-      add(contentPane);
-   }
 
    public void drawing (Graphics paper){
       int head = feet - size;
@@ -49,19 +23,6 @@ public class StickFigure extends JFrame implements ActionListener {
       paper.drawLine(body, feet-70, body-25, feet-70);
       paper.drawLine(body, feet-70, body+25, feet-85);
 
-   }
-
-   @Override
-   public void actionPerformed(ActionEvent e) {
-
-   }
-
-   public static void main(String[] args){
-      GUIDancer frame = new GUIDancer();
-      frame.setSize(new Dimension(500, 500));
-      frame.setResizable(false);
-      frame.setVisible(true);
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
 
 }
