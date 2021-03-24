@@ -10,7 +10,7 @@ public class StickFigureDemo extends JFrame implements ActionListener {
     private Container contentPane;
 
     public StickFigureDemo(){
-        super("GUI Dancer");
+        super("Sitck Figure Demo");
 
         contentPane = new Container();
         contentPane.setLayout(new GridLayout(1,2));
@@ -22,6 +22,27 @@ public class StickFigureDemo extends JFrame implements ActionListener {
 
         add(contentPane);
     }
+    private int body;
+    private int feet;
+    private Color color;
+    private int size;
+
+    public void drawing (Graphics paper){
+        int head = feet - size;
+
+        paper.setColor(color); // this sets the color of the stick figure
+        paper.drawOval(body-10, head, 20, 20); // make the head
+        paper.drawLine(body, head+20, head, feet - 30); // make the body
+
+        // make the legs
+        paper.drawLine(body, feet-30, body-15, feet);
+        paper.drawLine(body, feet-30, body+15, feet);
+
+        // make the arms
+        paper.drawLine(body, feet-70, body-25, feet-70);
+        paper.drawLine(body, feet-70, body+25, feet-85);
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -30,7 +51,7 @@ public class StickFigureDemo extends JFrame implements ActionListener {
 
     public static void main(String[] args){
         StickFigureDemo frame = new StickFigureDemo();
-        frame.setSize(new Dimension(500, 500));
+        frame.setSize(new Dimension(1000, 1000));
         frame.setResizable(false);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
