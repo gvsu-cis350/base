@@ -1,49 +1,14 @@
 fileFormatVersion: 2
-guid: ef51737cf3f714444a0e53e382d4e866
+guid: 69b58adcfef7cc742a5f7b6d5831881a
 ModelImporter:
-  serializedVersion: 19301
+  serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: -203655887218126122
     second: mixamo.com
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_master-chief-arms_0.6_16_16
-    second: {fileID: 2100000, guid: 87d94d977c7f9884898b7f56dcf8f939, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_master-chief-helmet_0.7_16_16
-    second: {fileID: 2100000, guid: 33542ef1bf6c73544ad12b4ed5ad7a77, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_master-chief-legs_0.6_16_16
-    second: {fileID: 2100000, guid: 2c823219e7956454c86fb5e778a3fdf3, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_master-chief-shoulders_0.6_16_16
-    second: {fileID: 2100000, guid: e5365e2f574f3d145947fbe26bff26a1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_master-chief-techsuit_0.4_16_16
-    second: {fileID: 2100000, guid: addb3e73ff5e19542a50f06142da056e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 24_master-chief-torso_0.6_16_16
-    second: {fileID: 2100000, guid: 7f96c9bf4b5f46546b96e78eded5c8e5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 4_master-chief-helmet-visor_1.3_16_16
-    second: {fileID: 2100000, guid: 0d057ad263028aa4fbaf7ef08940cd8f, type: 2}
+  externalObjects: {}
   materials:
-    materialImportMode: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -72,7 +37,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 1.5
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -87,6 +52,7 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
@@ -96,6 +62,9 @@ ModelImporter:
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
@@ -119,7 +88,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1.5
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
@@ -129,6 +98,7 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

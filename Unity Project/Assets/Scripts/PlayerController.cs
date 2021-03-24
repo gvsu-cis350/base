@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     //Reference vars
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
-    [SerializeField] GameObject itemHolder;
-    [SerializeField] Item[] items;
+    [SerializeField] GameObject firstItemHolder, thirdItemHolder;
+    [SerializeField] Item[] firstItems, thirdItems;
     [SerializeField] Material Host, Regular;
     [SerializeField] GameObject thirdPersonModel, firstPersonModel;
 
@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if (PV.IsMine)
         {
             GameEvents.current.onSettingsUpdate += updateMouse;
-            EquipItem(0);
+            EquipItem(1);
             if (customProperties.ContainsKey("app"))
             {
                 customProperties.Remove("app");
@@ -93,6 +93,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
+            Destroy(firstPersonModel);
+            Destroy(firstItemHolder);
         }
     }
 
@@ -117,7 +119,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             //check to see if the user fires their gun
             if (Input.GetMouseButtonDown(0))
             {
-                items[itemIndex].Use();
+                firstItems[itemIndex].Use();
+                thirdItems[itemIndex].Use();
             }
         }
 
@@ -186,14 +189,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         //set the itemIndex to passed value and make that object active in the game
         itemIndex = parIndex;
-        items[itemIndex].itemGameObject.SetActive(true);
+        firstItems[itemIndex].itemGameObject.SetActive(true);
+        thirdItems[itemIndex].itemGameObject.SetActive(true);
 
 
 
         //set previously held item to inactive
         if (previousItemIndex != -1)
         {
-            items[previousItemIndex].itemGameObject.SetActive(false);
+            firstItems[previousItemIndex].itemGameObject.SetActive(false);
+            thirdItems[previousItemIndex].itemGameObject.SetActive(false);
         }
 
         //make currently held item the previously held item
@@ -213,11 +218,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
 
             //Select all of the items held in the local player's hand
-            Transform[] children = items[itemIndex].gameObject.GetComponentsInChildren<Transform>();
+            Transform[] fschildren = firstItems[itemIndex].gameObject.GetComponentsInChildren<Transform>();
             //Set them to only be rendered by the fixed FOV camera
-            foreach (Transform go in children)
+            foreach (Transform go in fschildren)
             {
                 go.gameObject.layer = 10;
+            }
+            //Select all of the items held in the local player's hand
+            Transform[] thchildren = thirdItems[itemIndex].gameObject.GetComponentsInChildren<Transform>();
+            //Set them to only be rendered by the fixed FOV camera
+            foreach (Transform go in thchildren)
+            {
+                go.gameObject.layer = 11;
             }
         }
     }
@@ -321,7 +333,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     private void weaponSwitch()
     {
         //handle inputs from the number keys
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < firstItems.Length; i++)
         {
             if (Input.GetKeyDown((i + 1).ToString()))
             {
@@ -333,7 +345,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         //handle inputs from the mouse scroll wheel
         if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
         {
-            if (itemIndex >= items.Length - 1)
+            if (itemIndex >= firstItems.Length - 1)
             {
                 EquipItem(0);
             }
@@ -346,7 +358,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         {
             if (itemIndex <= 0)
             {
-                EquipItem(items.Length - 1);
+                EquipItem(firstItems.Length - 1);
             }
             else
             {
