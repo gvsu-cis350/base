@@ -1,7 +1,7 @@
 import java.awt.*;
 
 
-public class StickFigure{
+public class StickFigureDemo{
 
    private int body;
    private int feet;
