@@ -5,14 +5,18 @@ using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 {
     //Reference vars
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
-    [SerializeField] GameObject itemHolder;
-    [SerializeField] Item[] items;
+    [SerializeField] GameObject firstItemHolder, thirdItemHolder;
+    [SerializeField] Item[] firstItems, thirdItems;
     [SerializeField] Material Host, Regular;
+    [SerializeField] GameObject thirdPersonModel, firstPersonModel;
+
+    Animator firstAnimation;
+    Animator thirdAnimation;
 
     //item vars
     int itemIndex;
@@ -47,6 +51,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         rb = GetComponent<Rigidbody>();
         PV = GetComponent<PhotonView>();
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+        firstAnimation = firstPersonModel.GetComponent<Animator>();
+        thirdAnimation = thirdPersonModel.GetComponent<Animator>();
     }
 
     /// <summary>
@@ -72,11 +78,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
                 customProperties.Add("app", 2);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
             }
+            Transform[] fschildren = firstPersonModel.gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform go in fschildren)
+            {
+                go.gameObject.layer = 10;
+            }
+            Transform[] thchildren = thirdPersonModel.gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform go in thchildren)
+            {
+                go.gameObject.layer = 11;
+            }
         } 
         else
         {
-            Destroy(GetComponentInChildren<Camera>().gameObject);
+            Destroy(firstPersonModel.gameObject.GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
+            Destroy(firstPersonModel);
+            Destroy(firstItemHolder);
         }
     }
 
@@ -101,7 +119,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             //check to see if the user fires their gun
             if (Input.GetMouseButtonDown(0))
             {
-                items[itemIndex].Use();
+                firstItems[itemIndex].Use();
+                thirdItems[itemIndex].Use();
             }
         }
 
@@ -134,6 +153,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
+
+        if ((moveDir.x != 0) || (moveDir.z != 0))
+        {
+            firstAnimation.SetBool("Walking", true);
+            thirdAnimation.SetBool("Walking", true);
+        } 
+        else
+        {
+            firstAnimation.SetBool("Walking", false);
+            thirdAnimation.SetBool("Walking", false);
+        }
     }
 
     /// <summary>
@@ -159,12 +189,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         //set the itemIndex to passed value and make that object active in the game
         itemIndex = parIndex;
-        items[itemIndex].itemGameObject.SetActive(true);
+        firstItems[itemIndex].itemGameObject.SetActive(true);
+        thirdItems[itemIndex].itemGameObject.SetActive(true);
+
+
 
         //set previously held item to inactive
         if (previousItemIndex != -1)
         {
-            items[previousItemIndex].itemGameObject.SetActive(false);
+            firstItems[previousItemIndex].itemGameObject.SetActive(false);
+            thirdItems[previousItemIndex].itemGameObject.SetActive(false);
         }
 
         //make currently held item the previously held item
@@ -184,11 +218,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
 
             //Select all of the items held in the local player's hand
-            Transform[] fschildren = items[itemIndex].gameObject.GetComponentsInChildren<Transform>();
+            Transform[] fschildren = firstItems[itemIndex].gameObject.GetComponentsInChildren<Transform>();
             //Set them to only be rendered by the fixed FOV camera
             foreach (Transform go in fschildren)
             {
                 go.gameObject.layer = 10;
+            }
+            //Select all of the items held in the local player's hand
+            Transform[] thchildren = thirdItems[itemIndex].gameObject.GetComponentsInChildren<Transform>();
+            //Set them to only be rendered by the fixed FOV camera
+            foreach (Transform go in thchildren)
+            {
+                go.gameObject.layer = 11;
             }
         }
     }
@@ -292,7 +333,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     private void weaponSwitch()
     {
         //handle inputs from the number keys
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < firstItems.Length; i++)
         {
             if (Input.GetKeyDown((i + 1).ToString()))
             {
@@ -304,7 +345,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         //handle inputs from the mouse scroll wheel
         if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
         {
-            if (itemIndex >= items.Length - 1)
+            if (itemIndex >= firstItems.Length - 1)
             {
                 EquipItem(0);
             }
@@ -317,7 +358,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         {
             if (itemIndex <= 0)
             {
-                EquipItem(items.Length - 1);
+                EquipItem(firstItems.Length - 1);
             }
             else
             {
