@@ -3,7 +3,57 @@ guid: d0ef271657aabf3478a86aec49b7ce8a
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh0.013_0.1_16_16
+    second: {fileID: 2100000, guid: 0e99970f69cd37a4d91ad1d0b7575d0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh1.011_0.1_16_16
+    second: {fileID: 2100000, guid: 0e99970f69cd37a4d91ad1d0b7575d0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh2.011_0.1_16_16
+    second: {fileID: 2100000, guid: 0e99970f69cd37a4d91ad1d0b7575d0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh3.010_0.1_16_16
+    second: {fileID: 2100000, guid: 0e99970f69cd37a4d91ad1d0b7575d0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh5.009_0.1_16_16
+    second: {fileID: 2100000, guid: ed05bfc182d9b0846bf1adb6ebc5b02d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh6.009_0.1_16_16
+    second: {fileID: 2100000, guid: 96bae25cc3476b24690c5b57ef4b799f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh7.008_0.1_16_16
+    second: {fileID: 2100000, guid: f022f1ce6a90cf94a85805d1107a7cda, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh8.008_0.1_16_16
+    second: {fileID: 2100000, guid: 9baa0b67a27207b4dab6769a4a27373b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh9.007_0.1_16_16
+    second: {fileID: 2100000, guid: f6fee1973bd2516418b2fcf4f5fc5ed6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 41_mesh4.010_0.1_16_16
+    second: {fileID: 2100000, guid: d657f13e69e3d78498710fb8c08188f9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

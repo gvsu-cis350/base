@@ -102,6 +102,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -126,6 +127,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1137904231653859430
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,6 +425,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -447,6 +450,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5171464643356410229
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,6 +513,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -533,6 +538,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &6277248461224464731
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -605,12 +611,14 @@ MonoBehaviour:
   walkSpeed: 8
   jumpForce: 300
   smoothTime: 0.15
-  itemHolder: {fileID: 5335045827310604207}
-  items:
-  - {fileID: 8248425215699461919}
-  - {fileID: 5572324538090995247}
+  firstItemHolder: {fileID: 0}
+  thirdItemHolder: {fileID: 0}
+  firstItems: []
+  thirdItems: []
   Host: {fileID: 2100000, guid: af93035103d79d74fb91219ea7860750, type: 2}
   Regular: {fileID: 2100000, guid: c9f1bc3192d911948bd831dff2121ab3, type: 2}
+  thirdPersonModel: {fileID: 0}
+  firstPersonModel: {fileID: 0}
 --- !u!114 &77362379395884376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,6 +723,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -739,6 +748,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5907680432035263328
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,32 @@ guid: 64dc80e7320d05745bb78847e0b7f0a6
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh0.011_0.1_16_16
+    second: {fileID: 2100000, guid: 2f05499d21fa1d3419ce951f4b59f669, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh1.009_0.1_16_16
+    second: {fileID: 2100000, guid: 2f05499d21fa1d3419ce951f4b59f669, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh2.009_0.1_16_16
+    second: {fileID: 2100000, guid: 2f05499d21fa1d3419ce951f4b59f669, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 40_mesh4.008_0.1_16_16
+    second: {fileID: 2100000, guid: 2f05499d21fa1d3419ce951f4b59f669, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 41_mesh3.008_0.1_16_16
+    second: {fileID: 2100000, guid: 2f05499d21fa1d3419ce951f4b59f669, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -85,7 +110,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.015
+    globalScale: 1.5
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
