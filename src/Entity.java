@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 public class Entity {
-  private double x, y, vx, vy;
-  private ArrayList<Accel> accelerations = new ArrayList<>();
+  protected double x, y, vx, vy;
+  protected ArrayList<Accel> accelerations = new ArrayList<>();
 
-  public Entity(int x, int y, double vx, double vy) {
+  public Entity(double x, double y, double vx, double vy) {
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -12,12 +12,12 @@ public class Entity {
   }
 
   // Squares
-  public Entity(int x, int y, double vx, double vy, int w, int h) {
+  public Entity(double x, double y, double vx, double vy, double w, double h) {
 
   }
 
   // Balls
-  public Entity(int x, int y, double vx, double vy, int r) {
+  public Entity(double x, double y, double vx, double vy, double r) {
 
   }
 
@@ -40,6 +40,11 @@ public class Entity {
     this.accelerations.add(a);
   }
 
+  public void updateVelocity(double vx, double vy) {
+    this.vx = vx;
+    this.vy = vy;
+  }
+
   public void updatePos(double newX, double newY) {
     this.x = newX;
     this.y = newY;
@@ -53,12 +58,6 @@ public class Entity {
     return this.vy;
   }
 
-  // dimX and dimY are independent to entity
-
-  // getCenter is independent to entity
-
-  // getRadius is independent to entity
-
   public double getX() {
     return this.x;
   }
@@ -66,10 +65,6 @@ public class Entity {
   public double getY() {
     return this.y;
   }
-
-  // getX2 is unused and relies on dimX
-
-  // getY2 is unused and relies on dimY
 
   public void setX(int x) {
     this.x = x;

@@ -1,12 +1,18 @@
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.*;
 
 public class Main {
+
+    public static final int MAX_SPAWN = 2;
+    public static final int RATE = 100;
+    public static final int GRAVITY = 1000;
+    public static final double DRAG = 0;
 
     public static int width;
     public static int height;
@@ -29,9 +35,21 @@ public class Main {
         initializeFrame();
         // Thread moveEngine = new MoveEngine();
         // moveEngine.start();
-         Thread makeLife = new MakeLife();
+         Thread makeLife = new MakeEntity();
          makeLife.start();
         runAnimation();
+    }
+
+    public static synchronized int giveBirth(Square square) {
+        if (world.size() >= MAX_SPAWN) return 1;
+        world.add(square);
+        return 0;
+    }
+
+    public static synchronized int giveBirth(Ball ball) {
+        if (world.size() >= MAX_SPAWN) return 1;
+        world.add(ball);
+        return 0;
     }
 
     public static void initializeFrame() {
@@ -102,16 +120,22 @@ public class Main {
 
                 // clear back buffer
                 g2D = buffer.createGraphics();
-                g2D.setColor(Color.darkGray);
+                g2D.setColor(Color.WHITE);
                 g2D.fillRect(0, 0, width, height);
 
                 // draw entities
                 for (int i = 0; i < world.size(); i++) {
                     at = new AffineTransform();
-//                    at.translate(world.get(i).getX(), world.get(i).getY()); // get coords of entity
+                     at.translate(world.get(i).getX(), world.get(i).getY()); // get coords of entity
                     Entity entity = world.get(i);
+                    g2D.setColor(Color.GREEN);
                     // for circles
-                    // g2D.fill(new Ellipse2D.Double(entity.getX(), entity.getY(), entity.getRadius() * 2, entity.getRadius() * 2));
+                    if (entity instanceof Ball) {
+                        g2D.fill(new Ellipse2D.Double(entity.getX(), entity.getY(), ((Ball) entity).getRadius() * 2, ((Ball) entity).getRadius() * 2));
+                    }
+                    if (entity instanceof Square) {
+                        g2D.fill(new Rectangle2D.Double(entity.getX(), entity.getY(), ((Square) entity).getWidth(), ((Square) entity).getHeight()));
+                    }
                 }
 
                 // display debug stats in frame
@@ -130,9 +154,5 @@ public class Main {
                 if (g2D != null) g2D.dispose();
             }
         }
-    }
-
-    public static synchronized int giveBirth(int x, int y, double vx, double vy) {
-
     }
 }
