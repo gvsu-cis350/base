@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
+using UnityEngine.Animations.Rigging;
 
 public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 {
@@ -11,12 +12,12 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject firstItemHolder, thirdItemHolder;
-    [SerializeField] Item[] firstItems, thirdItems;
+    [SerializeField] Item[] firstItems;
     [SerializeField] Material Host, Regular;
-    [SerializeField] GameObject thirdPersonModel, firstPersonModel;
+    [SerializeField] GameObject firstPersonModel;
+    [SerializeField] MultiPositionConstraint cameraRot;
 
     Animator firstAnimation;
-    Animator thirdAnimation;
 
     //item vars
     int itemIndex;
@@ -52,7 +53,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         PV = GetComponent<PhotonView>();
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         firstAnimation = firstPersonModel.GetComponent<Animator>();
-        thirdAnimation = thirdPersonModel.GetComponent<Animator>();
+
     }
 
     /// <summary>
@@ -63,7 +64,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         if (PV.IsMine)
         {
             GameEvents.current.onSettingsUpdate += updateMouse;
-            EquipItem(1);
+            EquipItem(0);
             if (customProperties.ContainsKey("app"))
             {
                 customProperties.Remove("app");
@@ -82,11 +83,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             foreach (Transform go in fschildren)
             {
                 go.gameObject.layer = 10;
-            }
-            Transform[] thchildren = thirdPersonModel.gameObject.GetComponentsInChildren<Transform>();
-            foreach (Transform go in thchildren)
-            {
-                go.gameObject.layer = 11;
             }
         } 
         else
@@ -120,7 +116,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             if (Input.GetMouseButtonDown(0))
             {
                 firstItems[itemIndex].Use();
-                thirdItems[itemIndex].Use();
             }
         }
 
@@ -140,9 +135,27 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         //note the minus sign can be changed to a plus sign to invert mouse movement
         verticalLookRotation -= Input.GetAxisRaw("Mouse Y") * mouseSenstivity;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -75f, 75f);
+        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -60f, 58f);
 
         cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
+
+        float zOffset;
+
+        if(cameraHolder.transform.localEulerAngles.x > 180)
+        {
+            zOffset = (((cameraHolder.transform.rotation.eulerAngles.x - 360) / -58) * -0.12f);
+//            Debug.Log(cameraHolder.transform.rotation.eulerAngles.x / -58);
+//            Debug.Log(zOffset);
+            cameraRot.data.offset = new Vector3(0, 0, zOffset);
+        } else
+        {
+            zOffset = ((cameraHolder.transform.rotation.eulerAngles.x / 60) * 0.08f);
+            cameraRot.data.offset = new Vector3(0, 0, zOffset);
+        }
+
+        //cameraRot.data.offset = new Vector3(0, 0, (((float)cameraHolder.transform.rotation.eulerAngles.x) / 60));
+        
+        //cameraDown.weight = ((float) cameraHolder.transform.rotation.eulerAngles.x) / 60;
     }
 
     /// <summary>
@@ -154,16 +167,18 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
 
+        firstAnimation.SetFloat("InputX", moveAmount.x);
+        firstAnimation.SetFloat("InputZ", moveAmount.z);
+/*
         if ((moveDir.x != 0) || (moveDir.z != 0))
         {
             firstAnimation.SetBool("Walking", true);
-            thirdAnimation.SetBool("Walking", true);
         } 
         else
         {
             firstAnimation.SetBool("Walking", false);
-            thirdAnimation.SetBool("Walking", false);
         }
+*/
     }
 
     /// <summary>
@@ -190,15 +205,11 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //set the itemIndex to passed value and make that object active in the game
         itemIndex = parIndex;
         firstItems[itemIndex].itemGameObject.SetActive(true);
-        thirdItems[itemIndex].itemGameObject.SetActive(true);
-
-
 
         //set previously held item to inactive
         if (previousItemIndex != -1)
         {
             firstItems[previousItemIndex].itemGameObject.SetActive(false);
-            thirdItems[previousItemIndex].itemGameObject.SetActive(false);
         }
 
         //make currently held item the previously held item
@@ -223,13 +234,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             foreach (Transform go in fschildren)
             {
                 go.gameObject.layer = 10;
-            }
-            //Select all of the items held in the local player's hand
-            Transform[] thchildren = thirdItems[itemIndex].gameObject.GetComponentsInChildren<Transform>();
-            //Set them to only be rendered by the fixed FOV camera
-            foreach (Transform go in thchildren)
-            {
-                go.gameObject.layer = 11;
             }
         }
     }
