@@ -13,7 +13,7 @@ public class StickFigureDemo extends JFrame implements ActionListener {
         super("Sitck Figure Demo");
 
         contentPane = new Container();
-        contentPane.setLayout(new GridLayout(1,2));
+        contentPane.setLayout(new GridLayout(1,1));
 
         viewerPanel = new JPanel();
         viewerPanel.setBackground(Color.white);
@@ -22,10 +22,10 @@ public class StickFigureDemo extends JFrame implements ActionListener {
 
         add(contentPane);
     }
-    private int body;
-    private int feet;
-    private Color color;
-    private int size;
+    public int body;
+    public int feet;
+    public Color color;
+    public int size;
 
     public void drawing (Graphics paper){
         int head = feet - size;
