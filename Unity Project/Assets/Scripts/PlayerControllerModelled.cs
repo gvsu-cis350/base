@@ -89,8 +89,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             Destroy(firstPersonModel.gameObject.GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-            Destroy(firstPersonModel);
-            Destroy(firstItemHolder);
+            //Destroy(firstPersonModel);
+            //Destroy(firstItemHolder);
         }
     }
 
