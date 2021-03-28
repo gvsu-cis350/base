@@ -65,9 +65,10 @@ public class PlayerManager : MonoBehaviour
         {
             //get a random spawnpoint
             Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
-            
+
             //create a new controller at the spawnpoint prefab loaction
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerModelled"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
+            //controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "test"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
             if (!PhotonNetwork.IsMasterClient)
             {
     //            controller.gameObject.GetComponent<MeshRenderer>().material = Host;

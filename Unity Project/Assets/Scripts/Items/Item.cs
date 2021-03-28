@@ -10,7 +10,8 @@ public abstract class Item : MonoBehaviour
     //assign a name and object to all items
     public ItemInfo itemInfo;
     public GameObject itemGameObject;
-
+    public Transform weaponLeftGrip;
+    public Transform weaponRightGrip;
     /// <summary>
     /// Method call use for all items that inherit this class
     /// </summary>

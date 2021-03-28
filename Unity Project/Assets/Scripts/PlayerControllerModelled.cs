@@ -11,13 +11,14 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     //Reference vars
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
-    [SerializeField] GameObject firstItemHolder, thirdItemHolder;
-    [SerializeField] Item[] firstItems;
+    [SerializeField] GameObject itemHolder;
+    [SerializeField] GameObject weaponPivot;
+    [SerializeField] Item[] items;
     [SerializeField] Material Host, Regular;
-    [SerializeField] GameObject firstPersonModel;
+    [SerializeField] GameObject playerModel;
     [SerializeField] MultiPositionConstraint cameraRot;
 
-    Animator firstAnimation;
+    Animator Animation;
 
     //item vars
     int itemIndex;
@@ -32,6 +33,10 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     //player boundry vars
     Rigidbody rb;
     PhotonView PV;
+
+    //Left and Right hands
+    public Transform weaponLeftGrip;
+    public Transform weaponRightGrip;
 
     //health and shield vars
     const float maxHealth = 100f;
@@ -52,8 +57,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         rb = GetComponent<Rigidbody>();
         PV = GetComponent<PhotonView>();
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
-        firstAnimation = firstPersonModel.GetComponent<Animator>();
-
+        Animation = playerModel.GetComponent<Animator>();
     }
 
     /// <summary>
@@ -79,7 +83,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 customProperties.Add("app", 2);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
             }
-            Transform[] fschildren = firstPersonModel.gameObject.GetComponentsInChildren<Transform>();
+            Transform[] fschildren = playerModel.gameObject.GetComponentsInChildren<Transform>();
             foreach (Transform go in fschildren)
             {
                 go.gameObject.layer = 10;
@@ -87,10 +91,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         } 
         else
         {
-            Destroy(firstPersonModel.gameObject.GetComponentInChildren<Camera>().gameObject);
+            Destroy(playerModel.gameObject.GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-            //Destroy(firstPersonModel);
-            //Destroy(firstItemHolder);
         }
     }
 
@@ -115,8 +117,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             //check to see if the user fires their gun
             if (Input.GetMouseButtonDown(0))
             {
-                firstItems[itemIndex].Use();
+                items[itemIndex].Use();
             }
+        } 
+        else
+        {
+            Animation.SetFloat("InputX", 0);
+            Animation.SetFloat("InputZ", 0);
         }
 
         //kill player controller if they fall into the void
@@ -141,21 +148,17 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         float zOffset;
 
+        //Y .07
         if(cameraHolder.transform.localEulerAngles.x > 180)
         {
             zOffset = (((cameraHolder.transform.rotation.eulerAngles.x - 360) / -58) * -0.12f);
-//            Debug.Log(cameraHolder.transform.rotation.eulerAngles.x / -58);
-//            Debug.Log(zOffset);
             cameraRot.data.offset = new Vector3(0, 0, zOffset);
-        } else
+        } 
+        else
         {
             zOffset = ((cameraHolder.transform.rotation.eulerAngles.x / 60) * 0.08f);
             cameraRot.data.offset = new Vector3(0, 0, zOffset);
         }
-
-        //cameraRot.data.offset = new Vector3(0, 0, (((float)cameraHolder.transform.rotation.eulerAngles.x) / 60));
-        
-        //cameraDown.weight = ((float) cameraHolder.transform.rotation.eulerAngles.x) / 60;
     }
 
     /// <summary>
@@ -167,18 +170,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
 
-        firstAnimation.SetFloat("InputX", moveAmount.x);
-        firstAnimation.SetFloat("InputZ", moveAmount.z);
-/*
-        if ((moveDir.x != 0) || (moveDir.z != 0))
-        {
-            firstAnimation.SetBool("Walking", true);
-        } 
-        else
-        {
-            firstAnimation.SetBool("Walking", false);
-        }
-*/
+        Animation.SetFloat("InputX", moveAmount.x);
+        Animation.SetFloat("InputZ", moveAmount.z);
     }
 
     /// <summary>
@@ -204,12 +197,12 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         //set the itemIndex to passed value and make that object active in the game
         itemIndex = parIndex;
-        firstItems[itemIndex].itemGameObject.SetActive(true);
+        items[itemIndex].itemGameObject.SetActive(true);
 
         //set previously held item to inactive
         if (previousItemIndex != -1)
         {
-            firstItems[previousItemIndex].itemGameObject.SetActive(false);
+            items[previousItemIndex].itemGameObject.SetActive(false);
         }
 
         //make currently held item the previously held item
@@ -229,12 +222,17 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
 
             //Select all of the items held in the local player's hand
-            Transform[] fschildren = firstItems[itemIndex].gameObject.GetComponentsInChildren<Transform>();
+            Transform[] fschildren = items[itemIndex].gameObject.GetComponentsInChildren<Transform>();
             //Set them to only be rendered by the fixed FOV camera
             foreach (Transform go in fschildren)
             {
                 go.gameObject.layer = 10;
             }
+
+            weaponLeftGrip.transform.localPosition = items[itemIndex].weaponLeftGrip.transform.localPosition;
+            weaponLeftGrip.transform.localRotation = items[itemIndex].weaponLeftGrip.transform.localRotation;
+            weaponRightGrip.transform.localPosition = items[itemIndex].weaponRightGrip.transform.localPosition;
+            weaponRightGrip.transform.localRotation = items[itemIndex].weaponRightGrip.transform.localRotation;
         }
     }
 
@@ -337,7 +335,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     private void weaponSwitch()
     {
         //handle inputs from the number keys
-        for (int i = 0; i < firstItems.Length; i++)
+        for (int i = 0; i < items.Length; i++)
         {
             if (Input.GetKeyDown((i + 1).ToString()))
             {
@@ -349,7 +347,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //handle inputs from the mouse scroll wheel
         if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
         {
-            if (itemIndex >= firstItems.Length - 1)
+            if (itemIndex >= items.Length - 1)
             {
                 EquipItem(0);
             }
@@ -362,7 +360,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             if (itemIndex <= 0)
             {
-                EquipItem(firstItems.Length - 1);
+                EquipItem(items.Length - 1);
             }
             else
             {
