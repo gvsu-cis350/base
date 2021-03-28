@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class defines the variables that establish the settings
+/// </summary>
 [Serializable]
 public class PlayerInfo
 {

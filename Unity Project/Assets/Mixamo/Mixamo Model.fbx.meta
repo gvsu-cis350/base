@@ -512,30 +512,30 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: Pistol Walk (1)(Clone)
+    - name: Mixamo Model(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: 5_Body_1.0_0_0
-      parentName: Pistol Walk (1)(Clone)
+      parentName: Mixamo Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 100, y: 100, z: 100}
     - name: 5_Head_1.0_0_0
-      parentName: Pistol Walk (1)(Clone)
+      parentName: Mixamo Model(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 100, y: 100, z: 100}
     - name: Armature
-      parentName: Pistol Walk (1)(Clone)
+      parentName: Mixamo Model(Clone)
       position: {x: 0.031082146, y: 0.022313993, z: -0.19647068}
       rotation: {x: -0.63622206, y: 0.10033754, z: 0.1364967, w: 0.7526769}
       scale: {x: 100, y: 100, z: 100}
     - name: root
       parentName: Armature
       position: {x: -0, y: 0, z: 0}
-      rotation: {x: 0.050455593, y: -0.035387818, z: 0.9827394, w: 0.17442834}
+      rotation: {x: 0.026210457, y: 0.10181899, z: 0.98019755, w: 0.16780578}
       scale: {x: 1.0000005, y: 1, z: 1.0000001}
     - name: pelvis
       parentName: root
@@ -822,12 +822,12 @@ ModelImporter:
     - name: index_01_r
       parentName: index_metacarpal_r
       position: {x: 2.9057262e-10, y: 0.0010791227, z: -3.8743017e-10}
-      rotation: {x: 0.0051192967, y: -0.1671289, z: 0.03565469, w: 0.9852768}
+      rotation: {x: 0.005119297, y: -0.1671289, z: 0.035654694, w: 0.9852768}
       scale: {x: 0.99999964, y: 1.0000008, z: 1.0000012}
     - name: index_02_r
       parentName: index_01_r
       position: {x: 5.327165e-10, y: 0.00043842808, z: -5.8114524e-10}
-      rotation: {x: 0.00607163, y: -0.333826, z: 0.027230876, w: 0.9422218}
+      rotation: {x: 0.006071629, y: -0.333826, z: 0.027230872, w: 0.9422218}
       scale: {x: 0.9999993, y: 1.0000002, z: 1.0000006}
     - name: index_03_r
       parentName: index_02_r

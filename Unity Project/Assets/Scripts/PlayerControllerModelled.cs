@@ -6,49 +6,53 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
 using UnityEngine.Animations.Rigging;
 
+/// <summary>
+/// Class is the controller for player controller and allows the player to move around
+/// </summary>
 public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 {
-    //Reference vars
+    #region Vars
+    #region Inspector Reference Vars
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject itemHolder;
     [SerializeField] GameObject weaponPivot;
     [SerializeField] Item[] items;
-    [SerializeField] Material Host, Regular;
+    [SerializeField] Material Regular, Blue, Red;
     [SerializeField] GameObject playerModel;
     [SerializeField] MultiPositionConstraint cameraRot;
     [SerializeField] RigBuilder rigBuilder;
+    #endregion
 
-    Animator Animation;
-
-    //item vars
+    #region Item Vars
     int itemIndex;
     int previousItemIndex = -1;
+    #endregion
 
-    //movement vars
+    #region Location and Rotation Vars
     float verticalLookRotation;
     bool grounded;
     Vector3 smoothMoveVelocity;
     Vector3 moveAmount;
+    #endregion
 
-    //player boundry vars
+    #region Player Vars
     Rigidbody rb;
     PhotonView PV;
-
-    //Left and Right hands
+    PlayerManager playerManager;
+    Hashtable customProperties = new Hashtable();
+    Animator Animation;
     public Transform weaponLeftGrip;
     public Transform weaponRightGrip;
+    #endregion
 
-    //health and shield vars
+    #region Health and Shield Vars
     const float maxHealth = 100f;
     float currentHealth = maxHealth;
-//    const float maxShields = 75f;
-//    float currentShields = maxShields;
-
-    //refence to parent that instantiates player controller
-    PlayerManager playerManager;
-
-    Hashtable customProperties = new Hashtable();
+    //    const float maxShields = 75f;
+    //    float currentShields = maxShields;
+    #endregion
+    #endregion
 
     /// <summary>
     /// Method call which assigns objects to reference vars in script when script is referenced
@@ -66,16 +70,19 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void Start()
     {
-        
         if (PV.IsMine)
         {
+            //subscribe the mouse senstivity method to settings update event
             GameEvents.current.onSettingsUpdate += updateMouse;
+            //Equip the first item available
             EquipItem(0);
-            if (customProperties.ContainsKey("app"))
+            //Remove the material entry in the hashmap if there is one
+            if (customProperties.ContainsKey("mat"))
             {
-                customProperties.Remove("app");
+                customProperties.Remove("mat");
             }
-            if (PhotonNetwork.IsMasterClient)
+            /*
+            if (playerManager)
             {
                 customProperties.Add("app", 1);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
@@ -85,6 +92,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 customProperties.Add("app", 2);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
             }
+            */
+            //Set the entire player model to the static FOV camera layer
             Transform[] fschildren = playerModel.gameObject.GetComponentsInChildren<Transform>();
             foreach (Transform go in fschildren)
             {
@@ -94,14 +103,19 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         } 
         else
         {
+            //remove components that will conflict with the local copies of those componenets
             rigBuilder.layers.RemoveAt(1);
             Destroy(playerModel.gameObject.GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
         }
 
+        //Invoke the rigbuilder to enable at a slight delay due to the issues between Photon and the rigging system
         Invoke(nameof(delayedRigBuilder), 0.001f);
     }
 
+    /// <summary>
+    /// Method to enable the rig builder so that hand, body, and weapon tracking work
+    /// </summary>
     private void delayedRigBuilder()
     {
        rigBuilder.enabled = true;
@@ -133,6 +147,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         } 
         else
         {
+            //make sure that the character only animates the idle animation while paused
             Animation.SetFloat("InputX", 0);
             Animation.SetFloat("InputZ", 0);
         }
@@ -181,6 +196,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
 
+        //Tell the animator which direction the character is moving in
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
     }
@@ -240,6 +256,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 go.gameObject.layer = 10;
             }
 
+            //Set new hand locations based on stored hand locations
             weaponLeftGrip.transform.localPosition = items[itemIndex].weaponLeftGrip.transform.localPosition;
             weaponLeftGrip.transform.localRotation = items[itemIndex].weaponLeftGrip.transform.localRotation;
             weaponRightGrip.transform.localPosition = items[itemIndex].weaponRightGrip.transform.localPosition;
@@ -380,24 +397,39 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
+    /// <summary>
+    /// Method to change the material of the player controller. Currently based on host privlages
+    /// </summary>
+    /// <param name="mat"></param>
     public void changeAppearance(int mat)
     {
         if(mat == 1)
         {
-            this.gameObject.GetComponent<MeshRenderer>().material = Host;
+//            this.gameObject.GetComponent<MeshRenderer>().material = Regular;
         } 
         else if(mat == 2)
         {
-            this.gameObject.GetComponent<MeshRenderer>().material = Regular;
+//            this.gameObject.GetComponent<MeshRenderer>().material = Blue;
+        }
+        else if(mat == 3)
+        {
+//            this.gameObject.GetComponent<MeshRenderer>().material = Red;
         }
         
     }
 
+    /// <summary>
+    /// Method forces all players to update their custom properties whenever a new player joins in order to ensure that there is proper syncing
+    /// </summary>
+    /// <param name="newPlayer"></param>
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
 
+    /// <summary>
+    /// Method which updates the mouse sensitivity whenever the settings are updated
+    /// </summary>
     private void updateMouse()
     {
         mouseSenstivity = boot.bootObject.currentSettings.mouseSensitvity;

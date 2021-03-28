@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Class to verify if a player is on the ground
+/// Class to verify if a player is on the ground. This model works specifically with the modelled version of the player controller.
 /// </summary>
 public class PlayerGroundCheckModelled : MonoBehaviour
 {

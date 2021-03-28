@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public abstract class Item : MonoBehaviour
 {
-    //assign a name and object to all items
+    //assign a name and object to all items, also assign a position for both of the hands
     public ItemInfo itemInfo;
     public GameObject itemGameObject;
     public Transform weaponLeftGrip;
