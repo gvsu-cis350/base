@@ -17,6 +17,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] Material Host, Regular;
     [SerializeField] GameObject playerModel;
     [SerializeField] MultiPositionConstraint cameraRot;
+    [SerializeField] RigBuilder rigBuilder;
 
     Animator Animation;
 
@@ -65,6 +66,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void Start()
     {
+        
         if (PV.IsMine)
         {
             GameEvents.current.onSettingsUpdate += updateMouse;
@@ -88,12 +90,21 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             {
                 go.gameObject.layer = 10;
             }
+            
         } 
         else
         {
+            rigBuilder.layers.RemoveAt(1);
             Destroy(playerModel.gameObject.GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
         }
+
+        Invoke(nameof(delayedRigBuilder), 0.001f);
+    }
+
+    private void delayedRigBuilder()
+    {
+       rigBuilder.enabled = true;
     }
 
     /// <summary>
@@ -255,7 +266,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             
             if (changedProps.ContainsKey("app"))
             {
-                changeAppearance((int)changedProps["app"]);
+//                changeAppearance((int)changedProps["app"]);
             }
         }
     }
