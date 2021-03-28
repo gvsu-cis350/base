@@ -34,7 +34,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Method called upon a PlayerManager creations which destroys the ingame menus of other users from the local user's run of the game if PV doesn't match and opens the respawn menu if it does
+    /// Method called upon a PlayerManager creations which destroys the ingame menus of other users from the local user's run of the game if PV doesn't match and opens the respawn menu if PV does match
     /// </summary>
     void Start()
     {
@@ -169,7 +169,9 @@ public class PlayerManager : MonoBehaviour
         GameMenus.GetComponent<Image>().enabled = true;
     }
 
-
+    /// <summary>
+    /// Public method to force a player to return to the lobby
+    /// </summary>
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();

@@ -62,6 +62,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// Method which cases a local player to force a player onto the menu scene
+    /// </summary>
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(1);

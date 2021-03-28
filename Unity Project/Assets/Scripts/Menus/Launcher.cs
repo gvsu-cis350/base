@@ -58,13 +58,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// Method that triggers after user connects to lobby to open the main menu and assign a generic username
+    /// Method that triggers after user connects to lobby to open the main menu and assign a username based on the player config file
     /// </summary>
     public override void OnJoinedLobby()
     {
         MenuManager.Instance.OpenMenu("MainMenu");
        // Debug.Log("Joined Lobby");
-       
         PhotonNetwork.NickName = boot.bootObject.currentSettings.nickname;
     }
 

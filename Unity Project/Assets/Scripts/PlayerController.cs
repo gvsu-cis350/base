@@ -5,39 +5,44 @@ using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
 
+/// <summary>
+/// Class is the controller for player controller and allows the player to move around
+/// </summary>
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 {
-    //Reference vars
+    #region Vars
+    #region Inspector Reference Vars
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject itemHolder;
     [SerializeField] Item[] items;
     [SerializeField] Material Host, Regular;
+    #endregion
 
-    //item vars
+    #region Item Vars
     int itemIndex;
     int previousItemIndex = -1;
+    #endregion
 
-    //movement vars
+    #region Location and Roatation Vars
     float verticalLookRotation;
     bool grounded;
     Vector3 smoothMoveVelocity;
     Vector3 moveAmount;
+    #endregion
 
-    //player boundry vars
+    #region Player Vars
     Rigidbody rb;
     PhotonView PV;
+    PlayerManager playerManager;
+    Hashtable customProperties = new Hashtable();
+    #endregion
 
-    //health and shield vars
+    #region Health Vars
     const float maxHealth = 100f;
     float currentHealth = maxHealth;
-//    const float maxShields = 75f;
-//    float currentShields = maxShields;
-
-    //refence to parent that instantiates player controller
-    PlayerManager playerManager;
-
-    Hashtable customProperties = new Hashtable();
+    #endregion
+    #endregion
 
     /// <summary>
     /// Method call which assigns objects to reference vars in script when script is referenced
@@ -56,12 +61,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (PV.IsMine)
         {
+            //subscribe the mouse senstivity method to settings update event
             GameEvents.current.onSettingsUpdate += updateMouse;
-            EquipItem(1);
+            //Equip the first item available
+            EquipItem(0);
+            //Remove the material entry in the hashmap if there is one
             if (customProperties.ContainsKey("app"))
             {
                 customProperties.Remove("app");
             }
+            //Determine the material that a player should be rendered as
             if (PhotonNetwork.IsMasterClient)
             {
                 customProperties.Add("app", 1);
@@ -75,6 +84,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         } 
         else
         {
+            //destroy cameras and rigidbodies if they are not assigned to the local user
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
         }
@@ -326,6 +336,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
+    /// <summary>
+    /// Method to change the material of the player controller. Currently based on host privlages
+    /// </summary>
+    /// <param name="mat"></param>
     public void changeAppearance(int mat)
     {
         if(mat == 1)
@@ -336,14 +350,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         {
             this.gameObject.GetComponent<MeshRenderer>().material = Regular;
         }
-        
     }
 
+    /// <summary>
+    /// Method forces all players to update their custom properties whenever a new player joins in order to ensure that there is proper syncing
+    /// </summary>
+    /// <param name="newPlayer"></param>
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
 
+    /// <summary>
+    /// Method which updates the mouse sensitivity whenever the settings are updated
+    /// </summary>
     private void updateMouse()
     {
         mouseSenstivity = boot.bootObject.currentSettings.mouseSensitvity;
