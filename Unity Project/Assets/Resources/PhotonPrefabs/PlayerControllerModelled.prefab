@@ -1538,7 +1538,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 0539305e3e9dd3249bb56a8f873f054e, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -1699,7 +1699,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1064778679952070125}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
   m_Name: 
@@ -1741,6 +1741,8 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!1 &1100289641228273376
 GameObject:
   m_ObjectHideFlags: 0
@@ -4603,6 +4605,7 @@ MonoBehaviour:
   Regular: {fileID: 2100000, guid: c9f1bc3192d911948bd831dff2121ab3, type: 2}
   playerModel: {fileID: 1064778679952070125}
   cameraRot: {fileID: 9098714930193122692}
+  rigBuilder: {fileID: 5586612325702600484}
   weaponLeftGrip: {fileID: 3421124853899436244}
   weaponRightGrip: {fileID: 3498765730678500885}
 --- !u!1 &5190145382035406159
