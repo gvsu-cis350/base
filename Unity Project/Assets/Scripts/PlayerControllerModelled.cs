@@ -18,7 +18,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject itemHolder;
     [SerializeField] GameObject weaponPivot;
     [SerializeField] Item[] items;
-    [SerializeField] Material Regular, Blue, Red;
+    [SerializeField] GameObject Helmet, Body;
+    [SerializeField] Material RegularHelmet, RegularBody, BlueHelmet, BlueBody, RedHelmet, RedBody;
     [SerializeField] GameObject playerModel;
     [SerializeField] MultiPositionConstraint cameraRot;
     [SerializeField] RigBuilder rigBuilder;
@@ -325,7 +326,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <param name="damage"></param>
     public void TakeDamage(float damage)
     {
-        PV.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+        PV.RPC("RPC_TakeDamage", RpcTarget.All, damage, boot.bootObject.localPV.ViewID);
     }
 
     /// <summary>
@@ -333,7 +334,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     /// <param name="damage"></param>
     [PunRPC]
-    void RPC_TakeDamage(float damage)
+    void RPC_TakeDamage(float damage, int shooter)
     {
         //exit method if PV ids don't match
         if (!PV.IsMine)
@@ -345,6 +346,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //trigger the die method if current health is not above 1
         if(currentHealth <= 0)
         {
+            playerManager.killedPlayer(shooter); 
             Die();
         }
     }
@@ -398,22 +400,25 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     }
 
     /// <summary>
-    /// Method to change the material of the player controller. Currently based on host privlages
+    /// Method to change the material of the player controller
     /// </summary>
     /// <param name="mat"></param>
     public void changeAppearance(int mat)
     {
         if(mat == 1)
         {
-//            this.gameObject.GetComponent<MeshRenderer>().material = Regular;
+            Helmet.GetComponent<SkinnedMeshRenderer>().material = RegularHelmet;
+            Body.GetComponent<SkinnedMeshRenderer>().material = RegularBody;
         } 
         else if(mat == 2)
         {
-//            this.gameObject.GetComponent<MeshRenderer>().material = Blue;
+            Helmet.GetComponent<SkinnedMeshRenderer>().material = RedHelmet;
+            Body.GetComponent<SkinnedMeshRenderer>().material = RedBody;
         }
         else if(mat == 3)
         {
-//            this.gameObject.GetComponent<MeshRenderer>().material = Red;
+            Helmet.GetComponent<SkinnedMeshRenderer>().material = BlueHelmet;
+            Body.GetComponent<SkinnedMeshRenderer>().material = BlueBody;
         }
         
     }

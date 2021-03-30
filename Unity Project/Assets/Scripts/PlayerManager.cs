@@ -14,7 +14,7 @@ using System;
 public class PlayerManager : MonoBehaviour
 {
     //reference vars
-    PhotonView PV;
+    public PhotonView PV;
     GameObject controller;
     
     //unity reference vars
@@ -25,12 +25,22 @@ public class PlayerManager : MonoBehaviour
     public bool pauseState = false;
     bool activeController = false;
 
+    int kills = 0;
+    int deaths = 0;
+
     /// <summary>
     /// Method called when this class is referenced, assigns the Photon View to PM's PV reference var
     /// </summary>
     private void Awake()
     {
         PV = GetComponent<PhotonView>();
+
+        if (PV.IsMine)
+        {
+            boot.bootObject.localPV = PV;
+        }
+
+        Debug.Log(boot.bootObject.localPV.ViewID);
     }
 
     /// <summary>
@@ -90,6 +100,7 @@ public class PlayerManager : MonoBehaviour
         activeController = false;
         PhotonNetwork.Destroy(controller);
         openMM(Respawn);
+        deaths++;
     }
 
     /// <summary>
@@ -175,5 +186,19 @@ public class PlayerManager : MonoBehaviour
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+    }
+
+    public void killedPlayer(int shooter)
+    {
+        PhotonView.Find(shooter).RPC("RPC_KilledPlayer", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void RPC_KilledPlayer()
+    {
+        if (!PV.IsMine)
+            return;
+        kills++;
+        Debug.Log(kills);
     }
 }

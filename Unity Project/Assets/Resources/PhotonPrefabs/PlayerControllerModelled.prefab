@@ -4627,9 +4627,14 @@ MonoBehaviour:
   - {fileID: 7083134688094348391}
   - {fileID: 5572324538090995247}
   - {fileID: 1508270545875949201}
-  Regular: {fileID: 2100000, guid: c9f1bc3192d911948bd831dff2121ab3, type: 2}
-  Blue: {fileID: 0}
-  Red: {fileID: 0}
+  Helmet: {fileID: 570242538157289332}
+  Body: {fileID: 2527142986528243767}
+  RegularHelmet: {fileID: 2100000, guid: 27926f1e4ce869e45903116022c8038d, type: 2}
+  RegularBody: {fileID: 2100000, guid: 62f8bff27385779429a16b145d6701d0, type: 2}
+  BlueHelmet: {fileID: 2100000, guid: 74b44ed5ea8d59940a4186bd9543a4f0, type: 2}
+  BlueBody: {fileID: 2100000, guid: 0043e29ba24dc9b46825b8bab6c61255, type: 2}
+  RedHelmet: {fileID: 2100000, guid: 6d3bfcece5ab65c428385fb35dc2ccbf, type: 2}
+  RedBody: {fileID: 2100000, guid: 95981247ace18c048b6d4d4ad99425e7, type: 2}
   playerModel: {fileID: 1064778679952070125}
   cameraRot: {fileID: 9098714930193122692}
   rigBuilder: {fileID: 5586612325702600484}

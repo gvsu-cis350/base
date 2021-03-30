@@ -10,6 +10,7 @@ public class SingleShotGun : Gun
     //unity reference var
     [SerializeField] Camera cam;
 
+
     /// <summary>
     /// Method references the base use method from item class and calls the shoot method
     /// </summary>

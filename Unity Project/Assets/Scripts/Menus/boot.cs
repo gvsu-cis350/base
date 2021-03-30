@@ -13,6 +13,7 @@ public class boot : MonoBehaviour
 {
     #region Vars
     public PlayerInfo currentSettings;
+    public PhotonView localPV;
     public static boot bootObject;
     #endregion
 

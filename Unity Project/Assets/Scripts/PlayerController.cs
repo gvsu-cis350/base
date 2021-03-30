@@ -8,7 +8,7 @@ using Photon.Realtime;
 /// <summary>
 /// Class is the controller for player controller and allows the player to move around
 /// </summary>
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+public class PlayerController : MonoBehaviourPunCallbacks , IDamageable
 {
     #region Vars
     #region Inspector Reference Vars
@@ -257,14 +257,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
         }
     }
-
+    
     /// <summary>
     /// Method calls when the local player hits a damagable enitity and this method tells that entity that they need to take damage through photon RPC.
     /// </summary>
     /// <param name="damage"></param>
     public void TakeDamage(float damage)
     {
-        PV.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+        PV.RPC("RPC_TakeDamage", RpcTarget.All, damage, boot.bootObject.localPV.ViewID);
     }
 
     /// <summary>
@@ -272,7 +272,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     /// <param name="damage"></param>
     [PunRPC]
-    void RPC_TakeDamage(float damage)
+    void RPC_TakeDamage(float damage, int shooter)
     {
         //exit method if PV ids don't match
         if (!PV.IsMine)
@@ -282,11 +282,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         currentHealth -= damage;
 
         //trigger the die method if current health is not above 1
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
+            playerManager.killedPlayer(shooter);
             Die();
         }
     }
+
 
     /// <summary>
     /// Reference the parent playerManager's die method to destroy this player controller

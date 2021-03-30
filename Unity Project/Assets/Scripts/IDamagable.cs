@@ -4,7 +4,7 @@
 public interface IDamageable
 {
     /// <summary>
-    /// Initial method which dmagable entities extend so that all damage and rely on this base method
+    /// Initial method which damagable entities extend so that all damage can rely on this base method
     /// </summary>
     /// <param name="damage"></param>
     void TakeDamage(float damage);
