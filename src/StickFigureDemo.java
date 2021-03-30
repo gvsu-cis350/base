@@ -13,45 +13,40 @@ public class StickFigureDemo extends JFrame {
 
     public StickFigureDemo(){
         setLayout(new BorderLayout());
+
+        //changeable things
         setSize(500, 375);
+        setTitle("Stick Figure Demo");
+        //add("Center", figure);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //another way to center the screen
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
-    private class StickFigure  extends figure{}
+    private class StickFigure extends Canvas {
 
-    //other stuff
-    private JPanel viewerPanel;
-    private JPanel controlPanel;
+        public void drawing (Graphics paper){
+            int body = 0;
+            int feet = 0;
+            Color color = null;
+            int size = 0;
 
-    private Container contentPane;
+            int head = feet - size;
 
+            paper.setColor(color); // this sets the color of the stick figure
+            paper.drawOval(body-10, head, 20, 20); // make the head
+            paper.drawLine(body, head+20, head, feet - 30); // make the body
 
+            // make the legs
+            paper.drawLine(body, feet-30, body-15, feet);
+            paper.drawLine(body, feet-30, body+15, feet);
 
-    public int body;
-    public int feet;
-    public Color color;
-    public int size;
+            // make the arms
+            paper.drawLine(body, feet-70, body-25, feet-70);
+            paper.drawLine(body, feet-70, body+25, feet-85);
 
-    public void drawing (Graphics paper){
-        int head = feet - size;
-
-        paper.setColor(color); // this sets the color of the stick figure
-        paper.drawOval(body-10, head, 20, 20); // make the head
-        paper.drawLine(body, head+20, head, feet - 30); // make the body
-
-        // make the legs
-        paper.drawLine(body, feet-30, body-15, feet);
-        paper.drawLine(body, feet-30, body+15, feet);
-
-        // make the arms
-        paper.drawLine(body, feet-70, body-25, feet-70);
-        paper.drawLine(body, feet-70, body+25, feet-85);
-
+        }
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-
 }
