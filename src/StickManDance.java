@@ -58,11 +58,6 @@ public class Drawing extends JPanel implements MouseListener {
        
         
         addMouseListener(this);
-     
-        
-        
-        
-        // note that drawing must be written in code so that pieces of the drawing on the top layer must be written last
 
     }
     
