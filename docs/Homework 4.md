@@ -1,4 +1,4 @@
-# 1. Tasks that have been **completed**
+# 1. Tasks that have been ** completed **
 
 ### 2/24/2021
 * Name: Asset Collection
