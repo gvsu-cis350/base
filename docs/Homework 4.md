@@ -77,7 +77,7 @@
 ### 3/19/2021
 * Name: Weapon Models and Scripts
 * Description: Instead of using pre-built weapon assets, we will use models from the Unity store and script out our own weapons.
-* Expected time to complete: 
+* Expected time to complete: 3 weeks
 * Responsibility: Dylan
 
 ### 3/24/2021
@@ -89,19 +89,19 @@
 ### 3/24/2021
 * Name: Open Alien Planet Map
 * Description: create an open area with a few obstacles that can be used for gameplay
-* Expected time to complete: 3 week
+* Expected time to complete: 1 week
 * Responsibility: Adam
 
 ### 3/24/2021
 * Name: Arena Map
 * Description: A more open colosseum build with crates and large walls to spawn in
-* Expected time to complete: 3 weeks
+* Expected time to complete: 1 week
 * Responsibility: Adam
 
 ### 3/24/2021
 * Name: Close Quarters Arena
 * Description: A smaller close combat arena with many walls and hiding places
-* Expected time to complete: 3 weeks
+* Expected time to complete: 1 week
 * Responsibility: Adam
 
 ### 3/24/2021
