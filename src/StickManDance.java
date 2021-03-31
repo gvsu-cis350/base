@@ -24,8 +24,7 @@ public class Drawing extends JPanel implements MouseListener {
         f.setContentPane(new Drawing());
         f.setSize(600, 400);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        f.setVisible(true);
-        
+        f.setVisible(true); 
     }
 
     public void paintComponent(Graphics g){
