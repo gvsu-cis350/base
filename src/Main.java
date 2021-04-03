@@ -120,7 +120,7 @@ public class Main {
 
                 // clear back buffer
                 g2D = buffer.createGraphics();
-                g2D.setColor(Color.WHITE);
+                g2D.setColor(Color.GRAY);
                 g2D.fillRect(0, 0, width, height);
 
                 // draw entities
@@ -128,13 +128,13 @@ public class Main {
                     at = new AffineTransform();
                      at.translate(world.get(i).getX(), world.get(i).getY()); // get coords of entity
                     Entity entity = world.get(i);
-                    g2D.setColor(Color.GREEN);
+                    g2D.setColor(Color.WHITE);
                     // for circles
                     if (entity instanceof Ball) {
-                        g2D.fill(new Ellipse2D.Double(entity.getX(), entity.getY(), ((Ball) entity).getRadius() * 2, ((Ball) entity).getRadius() * 2));
+                        g2D.draw(new Ellipse2D.Double(entity.getX(), entity.getY(), ((Ball) entity).getRadius() * 2, ((Ball) entity).getRadius() * 2));
                     }
                     if (entity instanceof Square) {
-                        g2D.fill(new Rectangle2D.Double(entity.getX(), entity.getY(), ((Square) entity).getWidth(), ((Square) entity).getHeight()));
+                        g2D.draw(new Rectangle2D.Double(entity.getX(), entity.getY(), ((Square) entity).getWidth(), ((Square) entity).getHeight()));
                     }
                 }
 
