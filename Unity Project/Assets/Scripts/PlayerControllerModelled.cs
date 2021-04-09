@@ -131,8 +131,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         if (!PV.IsMine)
             return;
 
-        //check to see if there is a pause state
-        if (!playerManager.pauseState)
+        //check to see if there is a the current game state is set to playing
+        if ((int)playerManager.state == 2)
         {
             //run basic movement methods and weapon switching methods
             Look();
@@ -309,13 +309,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         if (!PV.IsMine)
             return;
 
-        //check to see a pause statue and stop movement if there is one
-        if (!playerManager.pauseState)
+        //check to see a the game state is set to playing
+        if ((int)playerManager.state == 2)
         {
             rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
         }
         //Allow player to move through the air in a pause state until they are on the ground
-        else if (playerManager.pauseState && !grounded)
+        else if (((int)playerManager.state != 2) && !grounded)
         {
             rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
         }

@@ -31,14 +31,15 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
     #endregion
 
     #region Menu
-    public bool pauseState = false;
     bool activeController = false;
     #endregion
 
     [SerializeField] TMP_Text kills, deaths, arenaMap, tdmMap;
-    [SerializeField] Transform leaderBoard;
+    [SerializeField] Transform leaderBoard, endGame;
     [SerializeField] GameObject statsCard;
- //   private TMP_Text ui_myDeaths;
+
+    public GameState state = GameState.Waiting;
+    public bool perpetual = false;
     #endregion
 
     /// <summary>
@@ -80,6 +81,9 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
     /// </summary>
     private void Update()
     {
+        if (state == GameState.Ending)
+            return;
+
         togglePause();
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -89,6 +93,24 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
         }
     }
 
+    #region Enums
+    public enum EventCodes : byte
+    {
+        NewPlayer,
+        UpdatePlayers,
+        ChangeStat
+    }
+
+    public enum GameState
+    {
+        Waiting = 0,
+        Starting = 1,
+        Playing = 2,
+        Ending = 3
+    }
+    #endregion
+
+    #region Creation and Death
     /// <summary>
     /// Method creates a new player controller when called
     /// </summary>
@@ -121,7 +143,9 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
         openMM(Respawn);
         ChangeStat_S(PhotonNetwork.LocalPlayer.ActorNumber, 1, 1);
     }
+    #endregion
 
+    #region Pause
     /// <summary>
     /// Method opens or closes the pause menu when escape key is pressed
     /// </summary>
@@ -131,7 +155,7 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
         {
             if (PV.IsMine)
             {
-                if (pauseState)
+                if (state != GameState.Playing)
                 {
                     //logic statment to evaluate if the respawn menu needs to be opened when the pause menu is closed
                     if (activeController)
@@ -140,7 +164,7 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
                     }
                     else
                     {
-                        pauseState = false;
+                        state = GameState.Playing;
                         GameMenus.OpenMenu(Respawn);
                     }
                 }
@@ -167,19 +191,21 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
             }
             else
             {
-                pauseState = false;
+                state = GameState.Playing;
                 GameMenus.OpenMenu(Respawn);
             }
         }
     }
+    #endregion
 
+    #region Menus
     /// <summary>
     /// Private method which closes the passed menu, locks the cursor to the screen, makes the cursor and menu background invisable, and sets pause bool to false
     /// </summary>
     /// <param name="menuName"></param>
     private void closeMM(Menu menuName)
     {
-        pauseState = false;
+        state = GameState.Playing;
         GameMenus.CloseMenu(menuName);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -192,12 +218,13 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
     /// <param name="menuName"></param>
     private void openMM(Menu menuName)
     {
-        pauseState = true;
+        state = GameState.Waiting;
         GameMenus.OpenMenu(menuName);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         GameMenus.GetComponent<Image>().enabled = true;
     }
+    #endregion
 
     /// <summary>
     /// Public method to force a player to return to the lobby
@@ -242,6 +269,7 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
         if (GameSettings.GameMode == GameMode.TDM) p_lb = p_lb.Find("TDM");
         */
 
+        arenaMap.text = SceneManager.GetActiveScene().name;
         // clean up
         for (int i = 2; i < p_lb.childCount; i++)
         {
@@ -391,17 +419,88 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
         */
         return sorted;
     }
-    #region Photon Events
-    public enum EventCodes : byte
+
+    private void StateCheck()
     {
-        NewPlayer,
-        UpdatePlayers,
-        ChangeStat
+        if (state == GameState.Ending)
+        {
+            EndGame();
+        }
     }
+
+    private void ScoreCheck()
+    {
+        // define temporary variables
+        bool detectwin = false;
+
+        // check to see if any player has met the win conditions
+        foreach (PlayerStats a in playerStats)
+        {
+            // free for all
+            //         if (a.kills >= killcount)
+            if (a.deaths >= 2)
+            {
+                detectwin = true;
+                break;
+            }
+        }
+
+        // did we find a winner?
+        if (detectwin)
+        {
+            // are we the master client? is the game still going?
+            if (PhotonNetwork.IsMasterClient && state != GameState.Ending)
+            {
+                // if so, tell the other players that a winner has been detected
+                UpdatePlayers_S((int)GameState.Ending, playerStats);
+            }
+        }
+    }
+    private void EndGame()
+    {
+        // set game state to ending
+        state = GameState.Ending;
+
+        leaderBoard.gameObject.SetActive(false);
+
+        // set timer to 0
+  //      if (timerCoroutine != null) StopCoroutine(timerCoroutine);
+//        currentMatchTime = 0;
+ //       RefreshTimerUI();
+
+        // disable room
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //PhotonNetwork.DestroyAll();
+
+            if (!perpetual)
+            {
+                PhotonNetwork.CurrentRoom.IsVisible = false;
+                PhotonNetwork.CurrentRoom.IsOpen = false;
+            }
+        }
+
+        // activate map camera
+        //        mapcam.SetActive(true);
+
+        //Run commands to turn off all menus
+        GameMenus.CloseAllMenus();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        GameMenus.GetComponent<Image>().enabled = true;
+
+        // show end game ui
+        endGame.gameObject.SetActive(true);
+        Leaderboard(endGame);
+
+        // wait X seconds and then return to main menu
+        StartCoroutine(End(6f));
+    }
+
+    #region Photon Events
 
     public void OnEvent(EventData photonEvent)
     {
-//        Debug.LogError("We are receiving events");
         if (photonEvent.Code >= 200) return;
 
         EventCodes e = (EventCodes)photonEvent.Code;
@@ -423,6 +522,7 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
         }
     }
 
+    #region NewPlayer
     public void NewPlayer_S(PlayerStats p)
     {
         object[] package = new object[4];
@@ -450,14 +550,16 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
         }
         */
 
-        UpdatePlayers_S(playerStats);    //(int)state, playerStats);
+        UpdatePlayers_S((int)state, playerStats);
     }
+    #endregion
 
-    public void UpdatePlayers_S(List<PlayerStats> info)    //int state, List<PlayerStats> info)
+    #region UpdatePlayers
+    public void UpdatePlayers_S(int state, List<PlayerStats> info)
     {
         object[] package = new object[info.Count + 1];
 
-        //package[0] = state;
+        package[0] = state;
         for (int i = 0; i < info.Count; i++)
         {
             object[] piece = new object[5];
@@ -476,7 +578,7 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
 
     public void UpdatePlayers_R(object[] data)
     {
- //       state = (GameState)data[0];
+        state = (GameState)data[0];
 
         /*
         //check if there is a new player
@@ -515,9 +617,11 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
             }
         }
 
-        //StateCheck();
+        StateCheck();
     }
+    #endregion
 
+    #region ChangeStat
     public void ChangeStat_S(int actor, byte stat, byte amt)
     {
         object[] package = new object[] { actor, stat, amt };
@@ -554,7 +658,50 @@ public class PlayerManager : MonoBehaviour, IOnEventCallback
             }
         }
 
-//        ScoreCheck();
+        ScoreCheck();
     }
+    #endregion
+    #endregion
+    #region Coroutines
+    /*
+    private IEnumerator Timer()
+    {
+        yield return new WaitForSeconds(1f);
+
+        currentMatchTime -= 1;
+
+        if (currentMatchTime <= 0)
+        {
+            timerCoroutine = null;
+            UpdatePlayers_S((int)GameState.Ending, playerInfo);
+        }
+        else
+        {
+            RefreshTimer_S();
+            timerCoroutine = StartCoroutine(Timer());
+        }
+    }
+    */
+
+    private IEnumerator End(float p_wait)
+    {
+        yield return new WaitForSeconds(p_wait);
+
+        if (perpetual)
+        {
+            // new match
+            if (PhotonNetwork.IsMasterClient)
+            {
+ //               NewMatch_S();
+            }
+        }
+        else
+        {
+            // disconnect
+            PhotonNetwork.AutomaticallySyncScene = false;
+            PhotonNetwork.LeaveRoom();
+        }
+    }
+
     #endregion
 }

@@ -64,4 +64,18 @@ public class MenuManager : MonoBehaviour
     {
         menu.Close();
     }
+
+    /// <summary>
+    /// Method can be called to close all menus in the menuManager
+    /// </summary>
+    public void CloseAllMenus()
+    {
+        for (int i = 0; i < menus.Length; i++)
+        {
+            if (menus[i].open)
+            {
+                CloseMenu(menus[i]);
+            }
+        }
+    }
 }

@@ -5,6 +5,7 @@ using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
 using System.Linq;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 //class to hand the launch of the game and the main menu screen
 public class Launcher : MonoBehaviourPunCallbacks
@@ -75,8 +76,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         //exit method if the textfield is empty
         if (string.IsNullOrEmpty(roomNameInputField.text))
             return;
-        RoomOptions options = new RoomOptions();
-        PhotonNetwork.CreateRoom(roomNameInputField.text, options);
+        PhotonNetwork.CreateRoom(roomNameInputField.text);
         MenuManager.Instance.OpenMenu("Connecting");
     }
 
@@ -194,6 +194,19 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public void StartGame()
     {
+        Hashtable roomSettings = new Hashtable();
+        if(mapSelectionDropdown.value == 0)
+        {
+            roomSettings.Remove("GameType");
+            roomSettings.Add("GameType", "Arena");
+        } 
+        else
+        {
+            roomSettings.Remove("GameType");
+            roomSettings.Add("GameType", "TDM");
+        }
+        roomSettings.Add("Pistol", true);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
         PhotonNetwork.LoadLevel(mapSelectionDropdown.value + 2);
     }
 }
