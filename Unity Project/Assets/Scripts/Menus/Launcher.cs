@@ -75,7 +75,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         //exit method if the textfield is empty
         if (string.IsNullOrEmpty(roomNameInputField.text))
             return;
-        PhotonNetwork.CreateRoom(roomNameInputField.text);
+        RoomOptions options = new RoomOptions();
+        PhotonNetwork.CreateRoom(roomNameInputField.text, options);
         MenuManager.Instance.OpenMenu("Connecting");
     }
 

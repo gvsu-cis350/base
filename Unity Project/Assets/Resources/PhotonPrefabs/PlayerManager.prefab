@@ -5661,6 +5661,7 @@ MonoBehaviour:
   Respawn: {fileID: 6669702019684694901}
   Pause: {fileID: 2409709286202509575}
   pauseState: 0
+  myIndex: 0
 --- !u!1 &9070396719661814380
 GameObject:
   m_ObjectHideFlags: 0
