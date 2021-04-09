@@ -23,6 +23,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject playerModel;
     [SerializeField] MultiPositionConstraint cameraRot;
     [SerializeField] RigBuilder rigBuilder;
+    [SerializeField] Transform weaponLeftGrip;
+    [SerializeField] Transform weaponRightGrip;
     #endregion
 
     #region Item Vars
@@ -43,8 +45,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     PlayerManager playerManager;
     Hashtable customProperties = new Hashtable();
     Animator Animation;
-    public Transform weaponLeftGrip;
-    public Transform weaponRightGrip;
     #endregion
 
     #region Health and Shield Vars
@@ -257,12 +257,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 go.gameObject.layer = 10;
             }
 
-            //Set new hand locations based on stored hand locations
-            weaponLeftGrip.transform.localPosition = items[itemIndex].weaponLeftGrip.transform.localPosition;
-            weaponLeftGrip.transform.localRotation = items[itemIndex].weaponLeftGrip.transform.localRotation;
-            weaponRightGrip.transform.localPosition = items[itemIndex].weaponRightGrip.transform.localPosition;
-            weaponRightGrip.transform.localRotation = items[itemIndex].weaponRightGrip.transform.localRotation;
         }
+
+        //Set new hand locations based on stored hand locations
+        weaponLeftGrip.transform.localPosition = items[itemIndex].weaponLeftGrip.transform.localPosition;
+        weaponLeftGrip.transform.localRotation = items[itemIndex].weaponLeftGrip.transform.localRotation;
+        weaponRightGrip.transform.localPosition = items[itemIndex].weaponRightGrip.transform.localPosition;
+        weaponRightGrip.transform.localRotation = items[itemIndex].weaponRightGrip.transform.localRotation;
     }
 
     /// <summary>

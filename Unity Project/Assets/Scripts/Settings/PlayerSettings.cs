@@ -121,6 +121,7 @@ public class PlayerSettings : MonoBehaviour
         newSave.savedResolution = resolutionDict[resolutionSelection.value];
         newSave.resolutionHeight = resolutionDict[resolutionSelection.value].height;
         newSave.resolutionWidth = resolutionDict[resolutionSelection.value].width;
+        newSave.mouseSensitvity = (int)mouseSensitivitySlider.value;
         newSave.fullscreen = fullScreen.isOn;
         newSave.nickname = nickName.text;
         DataSaver.saveData(newSave, "config");
