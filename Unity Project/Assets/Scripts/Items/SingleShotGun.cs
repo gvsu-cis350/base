@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 /// <summary>
 /// Class type which stems from gun and establishes single shot weapons
@@ -28,11 +29,25 @@ public class SingleShotGun : Gun
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
         ray.origin = cam.transform.position;
 
-        //detect if the ray hit an object, and if it is damagable procced accordiningly
+        //detect if the ray hit an object
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
+            //check to see if we are playing TDM
+            if((GameSettings.GameMode == GameMode.TDM) && (hit.collider.gameObject.GetComponent<PlayerControllerModelled>()))
+            {
+                //Check if the shooter and the shootee are on different teams
+                if ((hit.collider.gameObject.GetComponent<PlayerControllerModelled>().blueTeam != GameSettings.IsBlueTeam))// || (hit.collider.gameObject.GetComponent<PlayerController>().blueTeam != GameSettings.IsBlueTeam))
+                {
+                    //check if hit object is damagable and apply damage
+                    hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
+                }
+            }
+            else
+            {
+                //check if hit object is damagable and apply damage
+                hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
+            }
             //    Debug.Log("We hit " + hit.collider.gameObject.name);
-            hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
         }
     }
 }

@@ -19,7 +19,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject weaponPivot;
     [SerializeField] Item[] items;
     [SerializeField] GameObject Helmet, Body;
-    [SerializeField] Material RegularHelmet, RegularBody, BlueHelmet, BlueBody, RedHelmet, RedBody;
+    [SerializeField] Material BlueHelmet, BlueBody, RedHelmet, RedBody; // RegularHelmet, RegularBody,
     [SerializeField] GameObject playerModel;
     [SerializeField] MultiPositionConstraint cameraRot;
     [SerializeField] RigBuilder rigBuilder;
@@ -45,6 +45,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     PlayerManager playerManager;
     Hashtable customProperties = new Hashtable();
     Animator Animation;
+    public bool blueTeam;
     #endregion
 
     #region Health and Shield Vars
@@ -55,6 +56,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #endregion
     #endregion
 
+    #region Creation Methods
     /// <summary>
     /// Method call which assigns objects to reference vars in script when script is referenced
     /// </summary>
@@ -64,6 +66,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         PV = GetComponent<PhotonView>();
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         Animation = playerModel.GetComponent<Animator>();
+        blueTeam = playerManager.blueTeam;
+        customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
     }
 
     /// <summary>
@@ -78,22 +82,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             //Equip the first item available
             EquipItem(0);
             //Remove the material entry in the hashmap if there is one
-            if (customProperties.ContainsKey("mat"))
+            if (!customProperties.ContainsKey("Team") && (GameSettings.GameMode == GameMode.TDM))
             {
-                customProperties.Remove("mat");
-            }
-            /*
-            if (playerManager)
-            {
-                customProperties.Add("app", 1);
+                customProperties.Add("Team", blueTeam);
+                changeAppearance(blueTeam);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
             }
-            else
-            {
-                customProperties.Add("app", 2);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
-            }
-            */
+
             //Set the entire player model to the static FOV camera layer
             Transform[] fschildren = playerModel.gameObject.GetComponentsInChildren<Transform>();
             foreach (Transform go in fschildren)
@@ -121,6 +116,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     {
        rigBuilder.enabled = true;
     }
+    #endregion
 
     /// <summary>
     /// Update method called continously based on frame rate of user to handle local inputs
@@ -160,6 +156,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
+    #region Movement
     /// <summary>
     /// Method which takes mouse inputs and converts that into camera movement in the game
     /// </summary>
@@ -214,6 +211,17 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     }
 
     /// <summary>
+    /// Public method to force grounded state if need be
+    /// </summary>
+    /// <param name="parGrounded"></param>
+    public void SetGroundedState(bool parGrounded)
+    {
+        grounded = parGrounded;
+    }
+    #endregion
+
+    #region Weapons
+    /// <summary>
     /// Method call for equiping items pased on a passed integer
     /// </summary>
     /// <param name="parIndex"></param>
@@ -267,100 +275,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     }
 
     /// <summary>
-    /// Method calls whenever properites on the player are updated and then syncs those changes across the network
-    /// </summary>
-    /// <param name="targetPlayer"></param>
-    /// <param name="changedProps"></param>
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-    {
-        //Check to see if we are not the local player (not synced)
-        //and check to see if this function matches to the player that we are calling this for
-        if(!PV.IsMine && targetPlayer == PV.Owner)
-        {
-            //sync weapons if above is true
-            if (changedProps.ContainsKey("itemIndex"))
-            {
-                EquipItem((int)changedProps["itemIndex"]);
-            }
-            
-            if (changedProps.ContainsKey("app"))
-            {
-//                changeAppearance((int)changedProps["app"]);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Public method to force grounded state if need be
-    /// </summary>
-    /// <param name="parGrounded"></param>
-    public void SetGroundedState(bool parGrounded)
-    {
-        grounded = parGrounded;
-
-    }
-
-    /// <summary>
-    /// Method is called at a fixed rate instead of being tied to framerate like update() to move the character model around the game
-    /// </summary>
-    private void FixedUpdate()
-    {
-        //exit method if PV ids don't match
-        if (!PV.IsMine)
-            return;
-
-        //check to see a the game state is set to playing
-        if ((int)playerManager.state == 2)
-        {
-            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
-        }
-        //Allow player to move through the air in a pause state until they are on the ground
-        else if (((int)playerManager.state != 2) && !grounded)
-        {
-            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
-        }
-    }
-
-    /// <summary>
-    /// Method calls when the local player hits a damagable enitity and this method tells that entity that they need to take damage through photon RPC.
-    /// </summary>
-    /// <param name="damage"></param>
-    public void TakeDamage(float damage)
-    {
-        PV.RPC("RPC_TakeDamage", RpcTarget.All, damage, boot.bootObject.localPV.ViewID);
-    }
-
-    /// <summary>
-    /// Method is established as a Remote Procedure Call where other users are told to take damage when they are hit
-    /// </summary>
-    /// <param name="damage"></param>
-    [PunRPC]
-    void RPC_TakeDamage(float damage, int shooter)
-    {
-        //exit method if PV ids don't match
-        if (!PV.IsMine)
-            return;
-
-        //remove passed damage from current health
-        currentHealth -= damage;
-
-        //trigger the die method if current health is not above 1
-        if(currentHealth <= 0)
-        {
-            playerManager.killedPlayer(shooter); 
-            Die();
-        }
-    }
-
-    /// <summary>
-    /// Reference the parent playerManager's die method to destroy this player controller
-    /// </summary>
-    void Die()
-    {
-        playerManager.Die();
-    }
-
-    /// <summary>
     /// Method handles weapon switching from various inputs
     /// </summary>
     private void weaponSwitch()
@@ -399,29 +313,110 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             }
         }
     }
+    #endregion
+
+    /// <summary>
+    /// Method is called at a fixed rate instead of being tied to framerate like update() to move the character model around the game
+    /// </summary>
+    private void FixedUpdate()
+    {
+        //exit method if PV ids don't match
+        if (!PV.IsMine)
+            return;
+
+        //check to see a the game state is set to playing
+        if ((int)playerManager.state == 2)
+        {
+            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+        }
+        //Allow player to move through the air in a pause state until they are on the ground
+        else if (((int)playerManager.state != 2) && !grounded)
+        {
+            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+        }
+    }
+
+    #region Damage and Death
+    /// <summary>
+    /// Method calls when the local player hits a damagable enitity and this method tells that entity that they need to take damage through photon RPC.
+    /// </summary>
+    /// <param name="damage"></param>
+    public void TakeDamage(float damage)
+    {
+        PV.RPC("RPC_TakeDamage", RpcTarget.All, damage, boot.bootObject.localPV.ViewID);
+    }
+
+    /// <summary>
+    /// Method is established as a Remote Procedure Call where other users are told to take damage when they are hit
+    /// </summary>
+    /// <param name="damage"></param>
+    [PunRPC]
+    void RPC_TakeDamage(float damage, int shooter)
+    {
+        //exit method if PV ids don't match
+        if (!PV.IsMine)
+            return;
+
+        //remove passed damage from current health
+        currentHealth -= damage;
+
+        //trigger the die method if current health is not above 1
+        if(currentHealth <= 0)
+        {
+            playerManager.killedPlayer(shooter); 
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// Reference the parent playerManager's die method to destroy this player controller
+    /// </summary>
+    void Die()
+    {
+        playerManager.Die();
+    }
+    #endregion
+
+    #region Custom Properties
+    /// <summary>
+    /// Method calls whenever properites on the player are updated and then syncs those changes across the network
+    /// </summary>
+    /// <param name="targetPlayer"></param>
+    /// <param name="changedProps"></param>
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        //Check to see if we are not the local player (not synced)
+        //and check to see if this function matches to the player that we are calling this for
+        if (!PV.IsMine && targetPlayer == PV.Owner)
+        {
+            //sync weapons if above is true
+            if (changedProps.ContainsKey("itemIndex"))
+            {
+                EquipItem((int)changedProps["itemIndex"]);
+            }
+
+            if (changedProps.ContainsKey("Team"))
+            {
+                changeAppearance((bool)changedProps["Team"]);
+            }
+        }
+    }
 
     /// <summary>
     /// Method to change the material of the player controller
     /// </summary>
-    /// <param name="mat"></param>
-    public void changeAppearance(int mat)
+    public void changeAppearance(bool t)
     {
-        if(mat == 1)
-        {
-            Helmet.GetComponent<SkinnedMeshRenderer>().material = RegularHelmet;
-            Body.GetComponent<SkinnedMeshRenderer>().material = RegularBody;
-        } 
-        else if(mat == 2)
-        {
-            Helmet.GetComponent<SkinnedMeshRenderer>().material = RedHelmet;
-            Body.GetComponent<SkinnedMeshRenderer>().material = RedBody;
-        }
-        else if(mat == 3)
+        if (t)
         {
             Helmet.GetComponent<SkinnedMeshRenderer>().material = BlueHelmet;
             Body.GetComponent<SkinnedMeshRenderer>().material = BlueBody;
         }
-        
+        else
+        {
+            Helmet.GetComponent<SkinnedMeshRenderer>().material = RedHelmet;
+            Body.GetComponent<SkinnedMeshRenderer>().material = RedBody;
+        }
     }
 
     /// <summary>
@@ -432,6 +427,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     {
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
+    #endregion
 
     /// <summary>
     /// Method which updates the mouse sensitivity whenever the settings are updated

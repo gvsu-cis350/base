@@ -32,21 +32,27 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public List<PlayerStats> playerStats = new List<PlayerStats>();
     public int myIndex;
     Hashtable customProperties;
+    public bool blueTeam;
     #endregion
 
     #region States
     bool activeController = false;
     public GameState state = GameState.Waiting;
     public bool perpetual;
+    private bool playerAdded;
     #endregion
 
     private int currentMatchTime;
     private Coroutine matchTimerCoroutine;
-    private int matchLength = 10;
+    private int matchLength = 60;
+    private int arenaKills = 20;
+    private int tdmKills = 100;
+
     #region UI
     [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScore, redScore;
+    [SerializeField] TMP_Text endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
     [SerializeField] Transform leaderBoard, endGame;
-    [SerializeField] GameObject statsCard;
+    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard;
     #endregion
     #endregion
 
@@ -64,6 +70,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             boot.bootObject.localPV = PV;
         }
         customProperties = PhotonNetwork.CurrentRoom.CustomProperties;
+        blueTeam = CalculateTeam();
     }
 
     /// <summary>
@@ -71,18 +78,24 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     /// </summary>
     void Start()
     {
+        GameSettings.GameMode = (GameMode)(int)customProperties["GameType"];
+        GameSettings.IsBlueTeam = blueTeam;
         if (!PV.IsMine)
         {
             Destroy(GetComponentInChildren<Canvas>().gameObject);
         }
         else
         {
-            //PhotonNetwork.OnEventCall += this.OnEvent;
             localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
             NewPlayer_S(localPlayerStats);
-            openMM(Respawn);
             refreshStats();
             InitializeTimer();
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                playerAdded = true;
+                openMM(Respawn);
+            }
         }
     }
 
@@ -242,6 +255,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     /// <param name="menuName"></param>
     private void openMM(Menu menuName)
     {
+        leaderBoard.gameObject.SetActive(false);
         state = GameState.Waiting;
         GameMenus.OpenMenu(menuName);
         Cursor.lockState = CursorLockMode.None;
@@ -299,11 +313,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     #region Leaderboard
     private void Leaderboard(Transform p_lb)
     { 
-        // specify leaderboard
-        //if ((int)customProperties["GameType"] == 0) p_lb = p_lb.Find("FFA");
-        //if ((int)customProperties["GameType"] == 1) p_lb = p_lb.Find("TDM");
-
-        map.text = SceneManager.GetActiveScene().name;
         // clean up
         for (int i = 2; i < p_lb.childCount; i++)
         {
@@ -311,25 +320,36 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         // set details
-        if((int)customProperties["GameType"] == 0)
+        if(GameSettings.GameMode == GameMode.FFA)
         {
             gameType.text = "Free For All";
-        } 
-        else
+            blueScore.gameObject.SetActive(false);
+            redScore.gameObject.SetActive(false);
+        }
+        else if (GameSettings.GameMode == GameMode.TDM)
         {
             gameType.text = "Team Deathmatch";
+
+            int blueKills = 0;
+            int redKills = 0;
+
+            // set scores
+            foreach (PlayerStats p in playerStats)
+            {
+                if (p.blueTeam)
+                {
+                    blueKills += p.kills;
+                }
+                else
+                {
+                    redKills += p.kills;
+                }
+            }
+            blueScore.text = blueKills.ToString();
+            redScore.text = redKills.ToString();
         }
 
         map.text = SceneManager.GetActiveScene().name;
-
-        /*
-        // set scores
-        if (GameSettings.GameMode == GameMode.TDM)
-        {
-            p_lb.Find("Header/Score/Home").GetComponent<Text>().text = "0";
-            p_lb.Find("Header/Score/Away").GetComponent<Text>().text = "0";
-        }
-        */
 
         // cache prefab
         GameObject playercard = p_lb.GetChild(1).gameObject;
@@ -371,7 +391,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         List<PlayerStats> sorted = new List<PlayerStats>();
 
-        if ((int)customProperties["GameType"] == 0)
+        if (GameSettings.GameMode == GameMode.FFA)
         {
             while (sorted.Count < p_info.Count)
             {
@@ -394,7 +414,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 sorted.Add(selection);
             }
         } 
-        else if ((int)customProperties["GameType"] == 1)
+        else if (GameSettings.GameMode == GameMode.TDM)
         {
             List<PlayerStats> redSorted = new List<PlayerStats>();
             List<PlayerStats> blueSorted = new List<PlayerStats>();
@@ -457,7 +477,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         return sorted;
     }
-#endregion
+    #endregion
 
     #region Checks
     private void StateCheck()
@@ -472,16 +492,38 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         // define temporary variables
         bool detectwin = false;
-
-        // check to see if any player has met the win conditions
-        foreach (PlayerStats a in playerStats)
+        if(GameSettings.GameMode == GameMode.FFA)
         {
-            // free for all
-            //         if (a.kills >= killcount)
-            if (a.deaths >= 2)
+            // check to see if any player has met the win conditions
+            foreach (PlayerStats a in playerStats)
+            {
+                // free for all
+                if (a.kills >= arenaKills)
+                {
+                    detectwin = true;
+                    break;
+                }
+            }
+        }
+        else if (GameSettings.GameMode == GameMode.TDM)
+        {
+            int blueKills = 0;
+            int redKills = 0;
+
+            foreach (PlayerStats p in playerStats)
+            {
+                if (p.blueTeam)
+                {
+                    blueKills += p.kills;
+                }
+                else
+                {
+                    redKills += p.kills;
+                }
+            }
+            if ((blueKills >= tdmKills) || (redKills >= tdmKills))
             {
                 detectwin = true;
-                break;
             }
         }
 
@@ -523,18 +565,70 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
 
-        // activate map camera
-        //        mapcam.SetActive(true);
-
         //Run commands to turn off all menus
         GameMenus.CloseAllMenus();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         GameMenus.GetComponent<Image>().enabled = true;
 
+        if (GameSettings.GameMode == GameMode.FFA)
+        {
+            endPlayerCard.SetActive(true);
+            int highest = -1;
+            PlayerStats selection = playerStats[0];
+            foreach (PlayerStats a in playerStats)
+            {
+                if (a.kills > highest)
+                {
+                    selection = a;
+                    highest = a.kills;
+                }
+            }
+
+            endDeaths.text = selection.deaths.ToString();
+            endKills.text = selection.kills.ToString();
+            endPlayer.text = selection.username;
+        }
+        else if (GameSettings.GameMode == GameMode.TDM)
+        {
+            endTeamCard.SetActive(true);
+            int blueKills = 0;
+            int redKills = 0;
+
+            foreach (PlayerStats p in playerStats)
+            {
+                if (p.blueTeam)
+                {
+                    blueKills += p.kills;
+                }
+                else
+                {
+                    redKills += p.kills;
+                }
+            }
+            endBlueScore.text = blueKills.ToString();
+            endRedScore.text = redKills.ToString();
+
+            if (blueKills > redKills)
+            {
+                endTeam.text = "Blue Team Wins";
+                endTeam.color = new Color(0, 0, 255);
+            }
+            else if (blueKills < redKills)
+            {
+                endTeam.text = "Red Team Wins";
+                endTeam.color = new Color(255, 0, 0);
+            }
+            else
+            {
+                endTeam.text = "Draw";
+                endTeam.color = new Color(255, 255, 255);
+            }
+        }
+
         // show end game ui
         endGame.gameObject.SetActive(true);
-        Leaderboard(endGame);
+        Leaderboard(leaderBoard);
 
         // wait X seconds and then return to main menu
         StartCoroutine(End(6f));
@@ -553,9 +647,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private Boolean CalculateTeam()
     {
-        return false;
+        return PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0;
     }
-#endregion
+    #endregion
 
     #region Photon Events
 
@@ -648,18 +742,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         state = (GameState)data[0];
 
-        /*
-        //check if there is a new player
-        if (playerStats.Count < data.Length - 1)
-        {
-            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
-            {
-                //if so, resync our local player information
-                gameObject.GetComponent<Player>().TrySync();
-            }
-        }
-        */
-
         playerStats = new List<PlayerStats>();
 
         for (int i = 1; i < data.Length; i++)
@@ -673,15 +755,14 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             if (PhotonNetwork.LocalPlayer.ActorNumber == p.actor)
             {
                 myIndex = i - 1;
-                /*
+
                 //if we have been waiting to be added to the game then spawn us in
                 if (!playerAdded)
                 {
                     playerAdded = true;
-                    GameSettings.IsAwayTeam = p.awayTeam;
-                    Spawn();
+                    GameSettings.IsBlueTeam = p.blueTeam;
+                    openMM(Respawn);
                 }
-                */
             }
         }
 
@@ -710,12 +791,12 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 {
                     case 0: //kills
                         playerStats[i].kills += amt;
-                        Debug.Log($"Player {playerStats[i].username} : kills = {playerStats[i].kills}");
+//                        Debug.Log($"Player {playerStats[i].username} : kills = {playerStats[i].kills}");
                         break;
 
                     case 1: //deaths
                         playerStats[i].deaths += amt;
-                        Debug.Log($"Player {playerStats[i].username} : deaths = {playerStats[i].deaths}");
+ //                       Debug.Log($"Player {playerStats[i].username} : deaths = {playerStats[i].deaths}");
                         break;
                 }
 

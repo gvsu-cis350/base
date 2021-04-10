@@ -30,6 +30,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     //serialization of the host buttons
     [SerializeField] GameObject startGameButton, roomSettingsButton;
 
+    Hashtable roomSettings = new Hashtable();
+
     /// <summary>
     /// Method call when the launcher is first accessed to set a global instacne of launcher
     /// </summary>
@@ -76,7 +78,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         //exit method if the textfield is empty
         if (string.IsNullOrEmpty(roomNameInputField.text))
             return;
-        PhotonNetwork.CreateRoom(roomNameInputField.text);
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 16;
+        PhotonNetwork.CreateRoom(roomNameInputField.text, roomOptions);
         MenuManager.Instance.OpenMenu("Connecting");
     }
 
@@ -194,11 +198,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public void StartGame()
     {
-        Hashtable roomSettings = new Hashtable();
-        roomSettings.Clear();
+        roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
+        if (roomSettings.ContainsKey("GameType"))
+            roomSettings.Remove("GameType");
         roomSettings.Add("GameType", gameTypeDropdown.value);
-//        roomSettings.Add("Pistol", true);
+        //        roomSettings.Add("Pistol", true);
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
+        Debug.Log((int)PhotonNetwork.CurrentRoom.CustomProperties["GameType"]);
         PhotonNetwork.LoadLevel(mapSelectionDropdown.value + 2);
     }
 }
