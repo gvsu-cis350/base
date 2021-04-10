@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SettingsAudio : MonoBehaviour
+public class SettingsAudioListener : MonoBehaviour
 {
     /// <summary>
     /// Method subscribes to settings update event and loads the initial Maseter volume

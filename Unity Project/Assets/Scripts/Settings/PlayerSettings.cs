@@ -12,7 +12,7 @@ public class PlayerSettings : MonoBehaviour
     #region Vars
     #region Inspector Reference Vars
     [SerializeField] Slider volumeSlider, fovSlider, musicVolumeSlider, sfxVolumeSlider, mouseSensitivitySlider;
-    [SerializeField] TMPro.TMP_Dropdown resolutionSelection;
+    [SerializeField] TMP_Dropdown resolutionSelection;
     [SerializeField] Toggle fullScreen;
     [SerializeField] TMP_Text volumeText, fovText, musicVolumeText, sfxVolumeText, mouseSensitivityText;
     [SerializeField] TMP_InputField nickName;
