@@ -12,31 +12,44 @@ public class RocketLauncher : Gun
 	[SerializeField] GameObject projectile;
 	[SerializeField] Transform projectileSpawnSpot;
 
+/*
 	private Coroutine reloadTimerCoroutine;
 	public int maxAmmo = 2;
 	private int currentAmmo;
 	public int reloadTime = 5;
 	private int currentTimer;
-
+*/
 
     private void Awake()
     {
-		currentAmmo = maxAmmo;
+		((GunInfo)itemInfo).currentAmmo = ((GunInfo)itemInfo).maxAmmo;
     }
-    /// <summary>
-    /// Method references the base use method from item class and calls the shoot method
-    /// </summary>
-    public override void Use()
+
+	public void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			Debug.Log("Reloading");
+			((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
+			reloadTimerCoroutine = StartCoroutine(Timer());
+		}
+	}
+
+	public override int returnInfo()
+	{
+		return ((GunInfo)itemInfo).currentAmmo;
+	}
+
+	/// <summary>
+	/// Method references the base use method from item class and calls the shoot method
+	/// </summary>
+	public override void Use()
     {
-		if (currentAmmo > 0)
+		if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0))
         {
 			Shoot();
-			currentAmmo--;
+			((GunInfo)itemInfo).currentAmmo--;
 		}
-		else if(currentAmmo <= 0)
-        {
-			reloadTimerCoroutine = StartCoroutine(Timer());
-        }
     }
 
     /// <summary>
@@ -47,8 +60,8 @@ public class RocketLauncher : Gun
 			// Instantiate the projectile
 			if (projectile != null)
 			{
-				GameObject proj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Rocket"), projectileSpawnSpot.position, projectileSpawnSpot.rotation) as GameObject;
-				proj.GetComponent<Projectile>().setPV(boot.bootObject.localPV.ViewID);
+//			controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerModelled"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
+				GameObject proj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Rocket"), projectileSpawnSpot.position, projectileSpawnSpot.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
 			}
 			else
 			{
@@ -61,22 +74,5 @@ public class RocketLauncher : Gun
 */
 		// Play the gunshot sound
 		GetComponent<AudioSource>().PlayOneShot(fireSound);
-	}
-
-	private IEnumerator Timer()
-	{
-		yield return new WaitForSeconds(1f);
-
-		reloadTime -= 1;
-
-		if (reloadTime <= 0)
-		{
-			reloadTimerCoroutine = null;
-			currentAmmo = maxAmmo;
-		}
-		else
-		{
-			reloadTimerCoroutine = StartCoroutine(Timer());
-		}
 	}
 }

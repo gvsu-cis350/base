@@ -50,6 +50,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     #region UI
     [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScore, redScore;
+    public TMP_Text ammoCounter;
     [SerializeField] TMP_Text endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
     [SerializeField] Transform leaderBoard, endGame;
     [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard;

@@ -40,6 +40,7 @@ public class Projectile : MonoBehaviour
 	{
 		// Add the initial force to rigidbody
 		GetComponent<Rigidbody>().AddRelativeForce(0, 0, initialForce);
+		PV = GetComponent<PhotonView>();
 	}
 
 	// Update is called once per frame
@@ -55,14 +56,10 @@ public class Projectile : MonoBehaviour
 		}
 
 		// Make the projectile move
-		if (initialForce == 0)		// Only if initial force is not being used to propel this projectile
-			GetComponent<Rigidbody>().velocity = transform.forward * speed;
+		//if (initialForce == 0)		// Only if initial force is not being used to propel this projectile
+		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 	}
 
-	public void setPV(int pv)
-    {
-		PV = PhotonView.Find(pv);
-    }
 	void OnCollisionEnter(Collision col)
 	{
 		// If the projectile collides with something, call the Hit() function
@@ -105,7 +102,7 @@ public class Projectile : MonoBehaviour
 		// Instantiate the explosion
 		if (explosion != null)
 		{
-            if ((PV != null) && (PV.IsMine))
+            if (PV.IsMine)
             {
 				Instantiate(explosionMaster, position, Quaternion.identity);
 			}

@@ -11,13 +11,36 @@ public class SingleShotGun : Gun
     //unity reference var
     [SerializeField] Camera cam;
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Reloading");
+            ((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
+            reloadTimerCoroutine = StartCoroutine(Timer());
+        }
+    }
+
+    public override int returnInfo()
+    {
+        return ((GunInfo)itemInfo).currentAmmo;
+    }
 
     /// <summary>
     /// Method references the base use method from item class and calls the shoot method
     /// </summary>
     public override void Use()
     {
-        Shoot();
+        if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0))
+        {
+            Debug.Log("bang");
+            Shoot();
+            ((GunInfo)itemInfo).currentAmmo--;
+        }
+        else if (((GunInfo)itemInfo).currentAmmo <= 0)
+        {
+            //dryfire
+        }
     }
 
     /// <summary>

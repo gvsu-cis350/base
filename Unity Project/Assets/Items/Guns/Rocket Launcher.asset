@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Rocket Launcher
   damage: 75
+  maxAmmo: 2
+  currentAmmo: 0
+  maxReloadTime: 7
+  reloadTime: -9

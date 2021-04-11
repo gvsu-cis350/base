@@ -15,4 +15,9 @@ public class GunInfo : ItemInfo
     /// </summary>
     
     public float damage;
+    public int maxAmmo;
+    public int currentAmmo;
+    public int maxReloadTime;
+    public int reloadTime;
+    private int currentTimer;
 }

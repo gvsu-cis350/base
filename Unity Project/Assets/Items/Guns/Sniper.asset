@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Sniper
   damage: 100
+  maxAmmo: 4
+  currentAmmo: 4
+  maxReloadTime: 6
+  reloadTime: 6

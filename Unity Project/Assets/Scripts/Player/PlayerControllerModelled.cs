@@ -95,6 +95,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 go.gameObject.layer = 10;
             }
             Helmet.layer = 12;
+            playerManager.ammoCounter.text = items[itemIndex].returnInfo().ToString();
         } 
         else
         {
@@ -140,6 +141,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             {
                 items[itemIndex].Use();
             }
+
+            playerManager.ammoCounter.text = items[itemIndex].returnInfo().ToString();
         } 
         else
         {
