@@ -117,6 +117,8 @@ public class PlayerSettings : MonoBehaviour
     {
         PlayerInfo newSave = new PlayerInfo();
         newSave.masterVolume = (int)volumeSlider.value;
+        newSave.musicVolume = (int)musicVolumeSlider.value;
+        newSave.sfxVolume = (int)sfxVolumeSlider.value;
         newSave.fov = (int)fovSlider.value;
         newSave.savedResolution = resolutionDict[resolutionSelection.value];
         newSave.resolutionHeight = resolutionDict[resolutionSelection.value].height;

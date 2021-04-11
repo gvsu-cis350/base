@@ -21,7 +21,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject Helmet, Body;
     [SerializeField] Material BlueHelmet, BlueBody, RedHelmet, RedBody; // RegularHelmet, RegularBody,
     [SerializeField] GameObject playerModel;
-    [SerializeField] MultiPositionConstraint cameraRot;
     [SerializeField] RigBuilder rigBuilder;
     [SerializeField] Transform weaponLeftGrip;
     [SerializeField] Transform weaponRightGrip;
@@ -80,7 +79,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             //subscribe the mouse senstivity method to settings update event
             GameEvents.current.onSettingsUpdate += updateMouse;
             //Equip the first item available
-            EquipItem(0);
+            EquipItem(1);
             //Remove the material entry in the hashmap if there is one
             if (!customProperties.ContainsKey("Team") && (GameSettings.GameMode == GameMode.TDM))
             {
@@ -95,7 +94,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             {
                 go.gameObject.layer = 10;
             }
-            
+            Helmet.layer = 12;
         } 
         else
         {
@@ -169,20 +168,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         verticalLookRotation = Mathf.Clamp(verticalLookRotation, -60f, 58f);
 
         cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
-
-        float zOffset;
-
-        //Y .07
-        if(cameraHolder.transform.localEulerAngles.x > 180)
-        {
-            zOffset = (((cameraHolder.transform.rotation.eulerAngles.x - 360) / -58) * -0.12f);
-            cameraRot.data.offset = new Vector3(0, 0, zOffset);
-        } 
-        else
-        {
-            zOffset = ((cameraHolder.transform.rotation.eulerAngles.x / 60) * 0.08f);
-            cameraRot.data.offset = new Vector3(0, 0, zOffset);
-        }
     }
 
     /// <summary>

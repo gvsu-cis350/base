@@ -44,7 +44,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private int currentMatchTime;
     private Coroutine matchTimerCoroutine;
-    private int matchLength = 60;
+    private int matchLength = 600000;
     private int arenaKills = 20;
     private int tdmKills = 100;
 
