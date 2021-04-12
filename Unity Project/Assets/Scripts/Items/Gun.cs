@@ -12,9 +12,11 @@ public abstract class Gun : Item
     /// Reference to the item class use method
     /// </summary>
     public abstract override void Use();
-	public abstract override int returnInfo();
+    public abstract override void RefreshItem();
+    public abstract override int returnInfo();
 
 	protected Coroutine reloadTimerCoroutine;
+	public GameObject soundEffect;
 
 	private void Awake()
 	{

@@ -143,7 +143,12 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             }
 
             playerManager.ammoCounter.text = items[itemIndex].returnInfo().ToString();
-        } 
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                items[itemIndex].RefreshItem();
+            }
+        }
         else
         {
             //make sure that the character only animates the idle animation while paused

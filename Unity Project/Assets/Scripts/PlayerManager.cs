@@ -84,6 +84,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!PV.IsMine)
         {
             Destroy(GetComponentInChildren<Canvas>().gameObject);
+            Destroy(timer);
+            Destroy(ammoCounter);
         }
         else
         {
@@ -243,6 +245,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     /// <param name="menuName"></param>
     private void closeMM(Menu menuName)
     {
+        if (!PV.IsMine)
+            return;
         state = GameState.Playing;
         GameMenus.CloseMenu(menuName);
         Cursor.lockState = CursorLockMode.Locked;
@@ -256,6 +260,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     /// <param name="menuName"></param>
     private void openMM(Menu menuName)
     {
+        if (!PV.IsMine)
+            return;
         leaderBoard.gameObject.SetActive(false);
         state = GameState.Waiting;
         GameMenus.OpenMenu(menuName);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.IO;
 
 /// <summary>
 /// Class type which stems from gun and establishes single shot weapons
@@ -11,14 +12,19 @@ public class SingleShotGun : Gun
     //unity reference var
     [SerializeField] Camera cam;
 
-    public void Update()
+    private GameObject temp;
+
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Debug.Log("Reloading");
-            ((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
-            reloadTimerCoroutine = StartCoroutine(Timer());
-        }
+        ((GunInfo)itemInfo).currentAmmo = ((GunInfo)itemInfo).maxAmmo;
+        ((GunInfo)itemInfo).reloadTime = 0;
+    }
+    
+    public override void RefreshItem()
+    {
+        Debug.Log("Reloading");
+        ((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
+        this.reloadTimerCoroutine = StartCoroutine(Timer());
     }
 
     public override int returnInfo()
@@ -36,6 +42,8 @@ public class SingleShotGun : Gun
             Debug.Log("bang");
             Shoot();
             ((GunInfo)itemInfo).currentAmmo--;
+            temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect.name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
+            temp.transform.SetParent(itemGameObject.transform);
         }
         else if (((GunInfo)itemInfo).currentAmmo <= 0)
         {
@@ -70,7 +78,7 @@ public class SingleShotGun : Gun
                 //check if hit object is damagable and apply damage
                 hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
             }
-            //    Debug.Log("We hit " + hit.collider.gameObject.name);
+                Debug.Log("We hit " + hit.collider.gameObject.name);
         }
     }
 }

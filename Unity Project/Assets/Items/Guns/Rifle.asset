@@ -16,5 +16,5 @@ MonoBehaviour:
   damage: 6
   maxAmmo: 32
   currentAmmo: 32
-  maxReloadTime: 4
-  reloadTime: 4
+  maxReloadTime: 3
+  reloadTime: 3

@@ -12,27 +12,26 @@ public class RocketLauncher : Gun
 	[SerializeField] GameObject projectile;
 	[SerializeField] Transform projectileSpawnSpot;
 
-/*
-	private Coroutine reloadTimerCoroutine;
-	public int maxAmmo = 2;
-	private int currentAmmo;
-	public int reloadTime = 5;
-	private int currentTimer;
-*/
+	private GameObject temp;
+	/*
+		private Coroutine reloadTimerCoroutine;
+		public int maxAmmo = 2;
+		private int currentAmmo;
+		public int reloadTime = 5;
+		private int currentTimer;
+	*/
 
-    private void Awake()
+	private void Awake()
     {
 		((GunInfo)itemInfo).currentAmmo = ((GunInfo)itemInfo).maxAmmo;
-    }
+		((GunInfo)itemInfo).reloadTime = 0;
+	}
 
-	public void Update()
+	public override void RefreshItem()
 	{
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			Debug.Log("Reloading");
-			((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
-			reloadTimerCoroutine = StartCoroutine(Timer());
-		}
+		Debug.Log("Reloading");
+		((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
+		this.reloadTimerCoroutine = StartCoroutine(Timer());
 	}
 
 	public override int returnInfo()
@@ -49,6 +48,8 @@ public class RocketLauncher : Gun
         {
 			Shoot();
 			((GunInfo)itemInfo).currentAmmo--;
+			temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect.name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
+			temp.transform.SetParent(itemGameObject.transform);
 		}
     }
 
@@ -72,7 +73,5 @@ public class RocketLauncher : Gun
 		if (recoil)
 			Recoil();
 */
-		// Play the gunshot sound
-		GetComponent<AudioSource>().PlayOneShot(fireSound);
 	}
 }

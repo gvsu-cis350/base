@@ -17,5 +17,6 @@ public abstract class Item : MonoBehaviour
     /// Method call use for all items that inherit this class
     /// </summary>
     public abstract void Use();
+    public abstract void RefreshItem();
     public abstract int returnInfo();
 }
