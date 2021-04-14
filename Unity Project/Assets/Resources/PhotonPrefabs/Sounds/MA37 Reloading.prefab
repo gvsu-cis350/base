@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1793477440304303650}
   - component: {fileID: 9182368175192875037}
   m_Layer: 0
-  m_Name: SRS99-AM Shooting
+  m_Name: MA37 Reloading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,11 +44,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 72d8a56a85d856a4296da78479ef5cb9, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 7cac0d0b7e431ac4dac2bcc9747f1301, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -142,8 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7143b5df026af1f40b22a67e4ece301f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  signal: 0
-  lifeTime: 1.8
+  signal: 1
+  lifeTime: 2.304
 --- !u!114 &1793477440304303650
 MonoBehaviour:
   m_ObjectHideFlags: 0
