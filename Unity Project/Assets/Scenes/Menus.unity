@@ -8953,6 +8953,10 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Blood Gultch
       m_Image: {fileID: 0}
+    - m_Text: Arena
+      m_Image: {fileID: 0}
+    - m_Text: Close Quarters
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

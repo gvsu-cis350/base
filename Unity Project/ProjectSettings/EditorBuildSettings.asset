@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Blood Glutch.unity
     guid: b9ecf37c3b7d8e845ac0da1e46390343
+  - enabled: 1
+    path: Assets/Scenes/Arena.unity
+    guid: 099c04b8c1db59144bc517e20459a6f4
+  - enabled: 1
+    path: Assets/Scenes/Close Quarters.unity
+    guid: a976fbc2d07698f4cb1803a4296d573e
   m_configObjects: {}
