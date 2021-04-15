@@ -1942,7 +1942,6 @@ MonoBehaviour:
   soundEffect: {fileID: 7722941763477025041, guid: bc6c6ea550e49924c824e18508222f15,
     type: 3}
   cam: {fileID: 8563530835685953445}
-  fireSound: {fileID: 8300000, guid: 74f27b193e7522c4fa0da5079a42bfb2, type: 3}
   projectile: {fileID: 100000, guid: 47d9cd783fee98240a869a76217393ec, type: 3}
   projectileSpawnSpot: {fileID: 4548535178934980816}
 --- !u!82 &8662177836029368435
