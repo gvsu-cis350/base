@@ -7,17 +7,19 @@ using UnityEngine;
 /// </summary>
 public abstract class Item : MonoBehaviour
 {
+    #region Variables
     //assign a name and object to all items, also assign a position for both of the hands
     public ItemInfo itemInfo;
     public GameObject itemGameObject;
     public Transform weaponLeftGrip;
     public Transform weaponRightGrip;
+    #endregion
 
-    /// <summary>
-    /// Method call use for all items that inherit this class
-    /// </summary>
+    #region Abstracts
+    //Abstract classes which all items need to extend
     public abstract void Use();
     public abstract void RefreshItem();
     public abstract void ResetItem(int level);
     public abstract int returnInfo();
+    #endregion
 }

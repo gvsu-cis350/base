@@ -6,18 +6,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "FPS/New Gun")]
 
 /// <summary>
-/// Public class extends the abstract of iteminfo
+/// Public class extends the abstract of iteminfo and stores information for guns
 /// </summary>
 public class GunInfo : ItemInfo
 {
-    /// <summary>
-    /// Allows unity to assign damage values to gun objects
-    /// </summary>
-    
     public float damage;
     public int maxAmmo;
     public int currentAmmo;
     public int maxReloadTime;
     public int reloadTime;
-    private int currentTimer;
 }

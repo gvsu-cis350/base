@@ -41,10 +41,10 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #region Player Vars
     Rigidbody rb;
     PhotonView PV;
-    PlayerManager playerManager;
+    public PlayerManager playerManager;
     Hashtable customProperties = new Hashtable();
     Animator Animation;
-    public bool blueTeam;
+    public bool blueTeam = false;
     #endregion
 
     #region Health and Shield Vars
@@ -65,7 +65,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         PV = GetComponent<PhotonView>();
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         Animation = playerModel.GetComponent<Animator>();
-        blueTeam = playerManager.blueTeam;
         customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
         if (PV.IsMine)
         {
@@ -81,6 +80,22 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void Start()
     {
+        if (GameSettings.GameMode == GameMode.TDM)
+        {
+            PV.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
+            /*
+            if (GameSettings.IsAwayTeam)
+            {
+                ui_team.text = "red team";
+                ui_team.color = Color.red;
+            }
+            else
+            {
+                ui_team.text = "blue team";
+                ui_team.color = Color.blue;
+            }
+            */
+        }
         if (PV.IsMine)
         {
             //subscribe the mouse senstivity method to settings update event
@@ -140,6 +155,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //exit method if we are not on the local user's Photon View id
         if (!PV.IsMine)
             return;
+        
+        blueTeam = GameSettings.IsBlueTeam;
 
         //check to see if there is a the current game state is set to playing
         if ((int)playerManager.state == 2)
@@ -317,7 +334,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             if (itemIndex >= items.Length - 1)
             {
-                Debug.Log(itemIndex);
                 items[itemIndex].ResetItem(1);
                 EquipItem(0);
             }
@@ -467,4 +483,32 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     {
         mouseSenstivity = boot.bootObject.currentSettings.mouseSensitvity;
     }
+
+    public void TrySync()
+    {
+        if (!photonView.IsMine) return;
+
+        //photonView.RPC("SyncProfile", RpcTarget.All, Launcher.myProfile.username, Launcher.myProfile.level, Launcher.myProfile.xp);
+
+        if (GameSettings.GameMode == GameMode.TDM)
+        {
+            photonView.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
+        }
+    }
+
+    [PunRPC]
+    private void SyncTeam(bool p_blueTeam)
+    {
+        blueTeam = p_blueTeam;
+
+        if (blueTeam)
+        {
+           // ColorTeamIndicators(Color.red);
+        }
+        else
+        {
+         //   ColorTeamIndicators(Color.blue);
+        }
+    }
+
 }

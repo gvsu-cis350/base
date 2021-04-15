@@ -12,15 +12,22 @@ public class SingleShotGun : Gun
     //unity reference var
     [SerializeField] Camera cam;
 
+    //sound effect holder
     private GameObject temp;
-    
+
+    /// <summary>
+    /// Method starts the reloading of the gun when called
+    /// </summary>
     public override void RefreshItem()
     {
-        Debug.Log("Reloading");
         ((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
         this.reloadTimerCoroutine = StartCoroutine(Timer());
     }
 
+    /// <summary>
+    /// Method returns information on the gun
+    /// </summary>
+    /// <returns></returns>
     public override int returnInfo()
     {
         return ((GunInfo)itemInfo).currentAmmo;
@@ -31,14 +38,17 @@ public class SingleShotGun : Gun
     /// </summary>
     public override void Use()
     {
+        //Ammo available and not reloading
         if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0))
         {
-            Debug.Log("bang");
             Shoot();
             ((GunInfo)itemInfo).currentAmmo--;
+
+            //Create sound effect on gun and attach it to the gun
             temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect.name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
             temp.transform.SetParent(itemGameObject.transform);
         }
+        //ammo unavailable
         else if (((GunInfo)itemInfo).currentAmmo <= 0)
         {
             //dryfire
@@ -48,7 +58,7 @@ public class SingleShotGun : Gun
     /// <summary>
     /// Method creates a raycast from the center of the user's screen to hit target
     /// </summary>
-    void Shoot()
+    private void Shoot()
     {
         //Initial raycast setup
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
@@ -58,10 +68,11 @@ public class SingleShotGun : Gun
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             //check to see if we are playing TDM
-            if((GameSettings.GameMode == GameMode.TDM) && (hit.collider.gameObject.GetComponent<PlayerControllerModelled>()))
+            if ((GameSettings.GameMode == GameMode.TDM) && (hit.collider.gameObject.GetComponent<PlayerControllerModelled>()))
             {
                 //Check if the shooter and the shootee are on different teams
-                if ((hit.collider.gameObject.GetComponent<PlayerControllerModelled>().blueTeam != GameSettings.IsBlueTeam))// || (hit.collider.gameObject.GetComponent<PlayerController>().blueTeam != GameSettings.IsBlueTeam))
+                //Note that the teams need to match due to a small cascading fault
+                if (hit.collider.gameObject.GetComponent<PlayerControllerModelled>().blueTeam == GameSettings.IsBlueTeam)
                 {
                     //check if hit object is damagable and apply damage
                     hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
@@ -72,7 +83,7 @@ public class SingleShotGun : Gun
                 //check if hit object is damagable and apply damage
                 hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
             }
-                Debug.Log("We hit " + hit.collider.gameObject.name);
+            //Debug.Log("We hit " + hit.collider.gameObject.name);
         }
     }
 }

@@ -4848,8 +4848,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraHolder: {fileID: 1137904231653859430}
   mouseSenstivity: 10
-  sprintSpeed: 15
-  walkSpeed: 8
+  speed: 10
   jumpForce: 300
   smoothTime: 0.15
   itemHolder: {fileID: 5335045827310604207}
@@ -4869,6 +4868,7 @@ MonoBehaviour:
   rigBuilder: {fileID: 5586612325702600484}
   weaponLeftGrip: {fileID: 3421124853899436244}
   weaponRightGrip: {fileID: 3498765730678500885}
+  playerManager: {fileID: 0}
   blueTeam: 0
 --- !u!1 &5190145382035406159
 GameObject:

@@ -3,6 +3,8 @@
 /// Author: MutantGopher
 /// Attach this script to your explosion prefabs.  It handles damage for
 /// nearby healths, force for nearby rigidbodies, and camera shaking FX.
+/// 
+/// Edited by Connor Boerma
 /// </summary>
 
 using UnityEngine;
@@ -35,6 +37,7 @@ public class Explosion : MonoBehaviour
 			}
 		}
 
+		//Add explosive force for each rigid body
 		foreach (Rigidbody rb in rigidbodies)
 		{
 			rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, 1, ForceMode.Impulse);

@@ -31,8 +31,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     PlayerStats localPlayerStats;
     public List<PlayerStats> playerStats = new List<PlayerStats>();
     public int myIndex;
-    Hashtable customProperties;
-    public bool blueTeam;
+    Hashtable customRoomProperties;
     #endregion
 
     #region States
@@ -70,17 +69,15 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             boot.bootObject.localPV = PV;
         }
-        customProperties = PhotonNetwork.CurrentRoom.CustomProperties;
-        blueTeam = CalculateTeam();
+        customRoomProperties = PhotonNetwork.CurrentRoom.CustomProperties;
     }
 
     /// <summary>
     /// Method called upon a PlayerManager creations which destroys the ingame menus of other users from the local user's run of the game if PV doesn't match and opens the respawn menu if PV does match
     /// </summary>
-    void Start()
+    private void Start()
     {
-        GameSettings.GameMode = (GameMode)(int)customProperties["GameType"];
-        GameSettings.IsBlueTeam = blueTeam;
+        GameSettings.GameMode = (GameMode)(int)customRoomProperties["GameType"];
         if (!PV.IsMine)
         {
             Destroy(GetComponentInChildren<Canvas>().gameObject);
@@ -169,9 +166,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             //create a new controller at the spawnpoint prefab loaction
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerModelled"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
-            //controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "test"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
+
             //old non-spawnpoint reliant spawn code kept here as a backup
-            //controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), Vector3.zero, Quaternion.identity, 0, new object[] { PV.ViewID });
+            //controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerModelled"), Vector3.zero, Quaternion.identity, 0, new object[] { PV.ViewID });
 
             //record an active playerController and close the respawn menu
             activeController = true;
@@ -660,6 +657,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private Boolean CalculateTeam()
     {
+        Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
         return PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0;
     }
     #endregion
@@ -717,13 +715,13 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         playerStats.Add(p);
 
-        /*
+        
         //resync our local player information with the new player
         foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
         {
-            gameObject.GetComponent<Player>().TrySync();
+            gameObject.GetComponent<PlayerControllerModelled>().TrySync();
         }
-        */
+        
 
         UpdatePlayers_S((int)state, playerStats);
     }
