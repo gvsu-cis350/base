@@ -173,7 +173,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 items[itemIndex].Use();
             }
 
-            playerManager.ammoCounter.text = items[itemIndex].returnInfo().ToString();
+            playerManager.ammoCounter.text = "" + items[itemIndex].returnInfo()["currentAmmo"].ToString() + "/" + items[itemIndex].returnInfo()["maxAmmo"].ToString();
 
             if (Input.GetKeyDown(KeyCode.R))
             {

@@ -11,20 +11,31 @@ public abstract class Gun : Item
     #region Abstracts
     public abstract override void Use();
     public abstract override void RefreshItem();
-	public abstract override int returnInfo();
     #endregion
 
     #region Vars
     protected Coroutine reloadTimerCoroutine;
 	public GameObject soundEffect;
 	protected bool canFire = true;
-    #endregion
+	#endregion
+
+	/// <summary>
+	/// Method returns information on the gun
+	/// </summary>
+	/// <returns></returns>
+	public override Hashtable returnInfo()
+	{
+		Hashtable info = new Hashtable();
+		info.Add("currentAmmo", ((GunInfo)itemInfo).currentAmmo);
+		info.Add("maxAmmo", ((GunInfo)itemInfo).maxAmmo);
+		return info;
+	}
 
 	/// <summary>
 	/// Method to reset various variables within a gun based on the level of reset that is passed
 	/// </summary>
 	/// <param name="level"></param>
-    public override void ResetItem(int level)
+	public override void ResetItem(int level)
 	{
 		//Level 0 fully resets the gun (intended to be called at the start of a match/upon respawn)
 		if (level == 0)

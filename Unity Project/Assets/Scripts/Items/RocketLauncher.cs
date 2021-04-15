@@ -24,15 +24,6 @@ public class RocketLauncher : Gun
 	}
 
 	/// <summary>
-	/// Method returns information on this instance of the Rocket Launcher
-	/// </summary>
-	/// <returns></returns>
-	public override int returnInfo()
-	{
-		return ((GunInfo)itemInfo).currentAmmo;
-	}
-
-	/// <summary>
 	/// Method references the base use method from item class and calls the shoot method
 	/// </summary>
 	public override void Use()

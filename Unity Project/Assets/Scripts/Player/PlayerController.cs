@@ -103,14 +103,8 @@ public class PlayerController : MonoBehaviourPunCallbacks , IDamageable
         if (!PV.IsMine)
             return;
 
-<<<<<<< Updated upstream:Unity Project/Assets/Scripts/Player/PlayerController.cs
         //check to see if the current game state is not set to playing
         if ((int)playerManager.state == 2)
-=======
-        
-        //check to see if there is a pause state
-        if (!playerManager.pauseState)
->>>>>>> Stashed changes:Unity Project/Assets/Scripts/PlayerController.cs
         {
             //run basic movement methods and weapon switching methods
             Look();
