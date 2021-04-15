@@ -21,12 +21,6 @@ public class RocketLauncher : Gun
 		private int currentTimer;
 	*/
 
-	private void Awake()
-    {
-		((GunInfo)itemInfo).currentAmmo = ((GunInfo)itemInfo).maxAmmo;
-		((GunInfo)itemInfo).reloadTime = 0;
-	}
-
 	public override void RefreshItem()
 	{
 		Debug.Log("Reloading");

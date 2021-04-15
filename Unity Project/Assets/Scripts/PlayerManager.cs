@@ -100,6 +100,12 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 openMM(Respawn);
             }
         }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
+            NewPlayer_S(localPlayerStats);
+        }
     }
 
     /// <summary>
@@ -379,8 +385,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             */
 
-            if (t_alternateColors) newcard.GetComponent<Image>().color = new Color32(0, 0, 0, 180);
-            t_alternateColors = !t_alternateColors;
+            //if (t_alternateColors) newcard.GetComponent<Image>().color = new Color32(0, 0, 0, 180);
+            //t_alternateColors = !t_alternateColors;
 
             newcard.transform.Find("Username").GetComponent<TMP_Text>().text = a.username;
             newcard.transform.Find("Kills Counter").GetComponent<TMP_Text>().text = a.kills.ToString();

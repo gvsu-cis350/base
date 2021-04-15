@@ -13,14 +13,27 @@ public abstract class Gun : Item
     /// </summary>
     public abstract override void Use();
     public abstract override void RefreshItem();
-    public abstract override int returnInfo();
+	public abstract override int returnInfo();
 
 	protected Coroutine reloadTimerCoroutine;
 	public GameObject soundEffect;
+	protected bool canFire = true;
 
-	private void Awake()
+	public override void ResetItem(int level)
 	{
-		((GunInfo)itemInfo).currentAmmo = ((GunInfo)itemInfo).maxAmmo;
+		if (level == 0)
+		{
+			((GunInfo)itemInfo).currentAmmo = ((GunInfo)itemInfo).maxAmmo;
+			((GunInfo)itemInfo).reloadTime = 0;
+		}
+		else if (level == 1)
+        {
+			if(reloadTimerCoroutine != null)
+            {
+				StopCoroutine(reloadTimerCoroutine);
+				((GunInfo)itemInfo).reloadTime = 0;
+			}
+		}
 	}
 
 	public IEnumerator Timer()

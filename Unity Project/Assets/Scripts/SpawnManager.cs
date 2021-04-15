@@ -10,8 +10,10 @@ public class SpawnManager : MonoBehaviour
     //global refernce var
     public static SpawnManager Instance;
 
-    //array to combine the total number of spawnpoints in a scene
+    //Arrays for all the different spawnpoint lists
     Spawnpoint[] spawnpoints;
+    List<Spawnpoint> bluepoints = new List<Spawnpoint>();
+    List<Spawnpoint> redpoints = new List<Spawnpoint>();
 
     /// <summary>
     /// When the class is referenced, set a global reference and compile an array of spawnpoints
@@ -20,8 +22,20 @@ public class SpawnManager : MonoBehaviour
     {
         Instance = this;
         spawnpoints = GetComponentsInChildren<Spawnpoint>();
+        foreach(Spawnpoint s in spawnpoints)
+        {
+            if (s.isBlueTeam)
+            {
+                bluepoints.Add(s);
+            }
+            else
+            {
+                redpoints.Add(s);
+            }
+        }
     }
 
+    #region Spawnpoint Getters
     /// <summary>
     /// Method which randomly returns one of the spawnpoints so that a user can spawn
     /// </summary>
@@ -30,4 +44,23 @@ public class SpawnManager : MonoBehaviour
     {
         return spawnpoints[Random.Range(0, spawnpoints.Length)].transform;
     }
+
+    /// <summary>
+    /// Method which randomly returns one of the blue spawnpoints so that a user can spawn
+    /// </summary>
+    /// <returns></returns>
+    public Transform GetBlueSpawnpoint()
+    {
+        return bluepoints[Random.Range(0, spawnpoints.Length)].transform;
+    }
+
+    /// <summary>
+    /// Method which randomly returns one of the red spawnpoints so that a user can spawn
+    /// </summary>
+    /// <returns></returns>
+    public Transform GetRedSpawnpoint()
+    {
+        return redpoints[Random.Range(0, spawnpoints.Length)].transform;
+    }
+    #endregion
 }
