@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviourPunCallbacks , IDamageable
     [SerializeField] GameObject itemHolder;
     [SerializeField] Item[] items;
     [SerializeField] Material Host, Regular;
+    [SerializeField] Transform health;
     #endregion
 
     #region Item Vars
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviourPunCallbacks , IDamageable
     #region Health Vars
     const float maxHealth = 100f;
     float currentHealth = maxHealth;
+    
     #endregion
     #endregion
 
@@ -90,6 +92,8 @@ public class PlayerController : MonoBehaviourPunCallbacks , IDamageable
         }
     }
 
+    
+
     /// <summary>
     /// Update method called continously based on frame rate of user to handle local inputs
     /// </summary>
@@ -99,8 +103,14 @@ public class PlayerController : MonoBehaviourPunCallbacks , IDamageable
         if (!PV.IsMine)
             return;
 
+<<<<<<< Updated upstream:Unity Project/Assets/Scripts/Player/PlayerController.cs
         //check to see if the current game state is not set to playing
         if ((int)playerManager.state == 2)
+=======
+        
+        //check to see if there is a pause state
+        if (!playerManager.pauseState)
+>>>>>>> Stashed changes:Unity Project/Assets/Scripts/PlayerController.cs
         {
             //run basic movement methods and weapon switching methods
             Look();
@@ -114,7 +124,7 @@ public class PlayerController : MonoBehaviourPunCallbacks , IDamageable
                 items[itemIndex].Use();
             }
         }
-
+        
         //kill player controller if they fall into the void
         if (transform.position.y < -10f)
         {
