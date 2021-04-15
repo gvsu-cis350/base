@@ -15,6 +15,6 @@ MonoBehaviour:
   itemName: Pistol
   damage: 25
   maxAmmo: 8
-  currentAmmo: 8
+  currentAmmo: 4
   maxReloadTime: 2
-  reloadTime: 2
+  reloadTime: 0

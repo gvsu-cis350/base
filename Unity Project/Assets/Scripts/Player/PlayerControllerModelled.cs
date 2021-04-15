@@ -14,7 +14,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #region Vars
     #region Inspector Reference Vars
     [SerializeField] GameObject cameraHolder;
-    [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
+    [SerializeField] float mouseSenstivity, speed, jumpForce, smoothTime;
     [SerializeField] GameObject itemHolder;
     [SerializeField] GameObject weaponPivot;
     [SerializeField] Item[] items;
@@ -67,6 +67,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         Animation = playerModel.GetComponent<Animator>();
         blueTeam = playerManager.blueTeam;
         customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+        if (PV.IsMine)
+        {
+            foreach (Item i in items)
+            {
+                i.ResetItem(0);
+            }
+        }
     }
 
     /// <summary>
@@ -81,11 +88,18 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             //Equip the first item available
             EquipItem(1);
             //Remove the material entry in the hashmap if there is one
-            if (!customProperties.ContainsKey("Team") && (GameSettings.GameMode == GameMode.TDM))
+            if (GameSettings.GameMode == GameMode.TDM)
             {
-                customProperties.Add("Team", blueTeam);
-                changeAppearance(blueTeam);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+                if (!customProperties.ContainsKey("Team"))
+                {
+                    customProperties.Add("Team", blueTeam);
+                    changeAppearance(blueTeam);
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+                }
+                else
+                {
+                    changeAppearance(blueTeam);
+                }
             }
 
             //Set the entire player model to the static FOV camera layer
@@ -185,11 +199,26 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
-        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
+        //Sprint Code
+        //moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
+        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * speed, ref smoothMoveVelocity, smoothTime);
 
         //Tell the animator which direction the character is moving in
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
+
+        /* WIP VELOCITY BASED MOVEMENT
+        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+        moveDir = transform.TransformDirection(moveDir);
+
+        //moveAmount = moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * smoothTime;
+        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
+
+        //Tell the animator which direction the character is moving in
+        //Note that this doesn't match perfectly with the movement of the character as that movement was changed from positional changes to velocity changes however there was not enough time to find a solution
+        Animation.SetFloat("InputX", Input.GetAxisRaw("Horizontal") * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * smoothTime);
+        Animation.SetFloat("InputZ", Input.GetAxisRaw("Vertical") * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * smoothTime);
+        */
     }
 
     /// <summary>
@@ -277,6 +306,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             if (Input.GetKeyDown((i + 1).ToString()))
             {
+                items[itemIndex].ResetItem(1);
                 EquipItem(i);
                 break;
             }
@@ -287,10 +317,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             if (itemIndex >= items.Length - 1)
             {
+                Debug.Log(itemIndex);
+                items[itemIndex].ResetItem(1);
                 EquipItem(0);
             }
             else
             {
+                items[itemIndex].ResetItem(1);
                 EquipItem(itemIndex + 1);
             }
         }
@@ -298,10 +331,12 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             if (itemIndex <= 0)
             {
+                items[itemIndex].ResetItem(1);
                 EquipItem(items.Length - 1);
             }
             else
             {
+                items[itemIndex].ResetItem(1);
                 EquipItem(itemIndex - 1);
             }
         }
@@ -320,11 +355,14 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //check to see a the game state is set to playing
         if ((int)playerManager.state == 2)
         {
+            
+            //rb.velocity = moveAmount;
             rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
         }
         //Allow player to move through the air in a pause state until they are on the ground
         else if (((int)playerManager.state != 2) && !grounded)
         {
+            //rb.velocity = moveAmount;
             rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
         }
     }

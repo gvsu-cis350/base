@@ -18,5 +18,6 @@ public abstract class Item : MonoBehaviour
     /// </summary>
     public abstract void Use();
     public abstract void RefreshItem();
+    public abstract void ResetItem(int level);
     public abstract int returnInfo();
 }

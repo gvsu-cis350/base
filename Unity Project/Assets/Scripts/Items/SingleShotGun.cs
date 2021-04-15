@@ -13,12 +13,6 @@ public class SingleShotGun : Gun
     [SerializeField] Camera cam;
 
     private GameObject temp;
-
-    private void Awake()
-    {
-        ((GunInfo)itemInfo).currentAmmo = ((GunInfo)itemInfo).maxAmmo;
-        ((GunInfo)itemInfo).reloadTime = 0;
-    }
     
     public override void RefreshItem()
     {
