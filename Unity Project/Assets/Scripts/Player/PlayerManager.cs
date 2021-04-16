@@ -55,6 +55,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] Transform leaderBoard, endGame;
     [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard;
     [SerializeField] GameObject[] items;
+    public Slider shields;
     #endregion
     #endregion
 

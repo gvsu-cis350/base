@@ -48,10 +48,16 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #endregion
 
     #region Health and Shield Vars
-    const float maxHealth = 100f;
-    float currentHealth = maxHealth;
-    //    const float maxShields = 75f;
-    //    float currentShields = maxShields;
+    //Values are based off of Halo 3's data on the halopedia wiki under health
+    private const float maxHealth = 45f;
+    private float currentHealth = maxHealth;
+    private const float maxShields = 70f;
+    private float currentShields = maxShields;
+    private int healthRechargeWait = 10;
+    private int healthRechargePerSecond = 9;
+    private int shieldRechargeWait = 5;
+    private int shieldRechargePerSecond = 35;
+    private int lastHit = 10;
     #endregion
     #endregion
 
@@ -80,7 +86,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void Start()
     {
-        
+
         if (PV.IsMine)
         {
             if (GameSettings.GameMode == GameMode.TDM)
@@ -127,8 +133,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             Helmet.layer = 12;
             playerManager.ammoCounter.text = items[itemIndex].returnInfo().ToString();
 
-            
-        } 
+
+        }
         else
         {
             //remove components that will conflict with the local copies of those componenets
@@ -146,7 +152,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void delayedRigBuilder()
     {
-       rigBuilder.enabled = true;
+        rigBuilder.enabled = true;
     }
     #endregion
 
@@ -158,8 +164,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //exit method if we are not on the local user's Photon View id
         if (!PV.IsMine)
             return;
-        
-//        blueTeam = GameSettings.IsBlueTeam;
 
         //check to see if there is a the current game state is set to playing
         if ((int)playerManager.state == 2)
@@ -190,11 +194,14 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             Animation.SetFloat("InputZ", 0);
         }
 
+        playerManager.shields.value = currentShields;
         //kill player controller if they fall into the void
         if (transform.position.y < -10f)
         {
             Die();
         }
+
+
     }
 
     #region Movement
@@ -287,7 +294,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         previousItemIndex = itemIndex;
 
         //check to see if we are the local player
-        if(PV.IsMine)
+        if (PV.IsMine)
         {
             //add our item index to the hashtable
             if (customProperties.ContainsKey("itemIndex"))
@@ -374,7 +381,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //check to see a the game state is set to playing
         if ((int)playerManager.state == 2)
         {
-            
+
             //rb.velocity = moveAmount;
             rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
         }
@@ -407,13 +414,26 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         if (!PV.IsMine)
             return;
 
-        //remove passed damage from current health
-        currentHealth -= damage;
+        float remainingDamage = damage;
+
+        lastHit = 0;
+        StartCoroutine(tookDamage());
+        if(currentShields < remainingDamage)
+        {
+            remainingDamage -= currentShields;
+            currentShields = 0;
+
+            currentHealth -= remainingDamage;
+        }
+        else if(currentShields >= remainingDamage)
+        {
+            currentShields -= remainingDamage;
+        }
 
         //trigger the die method if current health is not above 1
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
-            playerManager.killedPlayer(shooter); 
+            playerManager.killedPlayer(shooter);
             Die();
         }
     }
@@ -487,6 +507,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         mouseSenstivity = boot.bootObject.currentSettings.mouseSensitvity;
     }
 
+    #region Sync
     public void TrySync()
     {
         if (!photonView.IsMine) return;
@@ -506,12 +527,86 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         if (blueTeam)
         {
-           // ColorTeamIndicators(Color.red);
+            // ColorTeamIndicators(Color.red);
         }
         else
         {
-         //   ColorTeamIndicators(Color.blue);
+            //   ColorTeamIndicators(Color.blue);
+        }
+    }
+    #endregion
+    
+    private IEnumerator tookDamage()
+    {
+        yield return new WaitForSeconds(1f);
+
+        //Start the rechargeShields loop
+        if(lastHit == shieldRechargeWait)
+        {
+            StartCoroutine(rechargeShields());
+        }
+
+        //Start the rechargeHealth loop
+        if (lastHit == healthRechargeWait)
+        {
+            StartCoroutine(rechargeHealth());
+        }
+
+        //Make sure that last hit is going to be greater than the recharge rates but not increase infinitely
+        if (lastHit < (healthRechargeWait + shieldRechargeWait))
+        {
+            lastHit++;
+            StartCoroutine(tookDamage());
         }
     }
 
+    /// <summary>
+    /// Method to start recharging Health
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator rechargeHealth()
+    {
+        yield return new WaitForSeconds(0.1f);
+        //Add health if current health is below max health
+        if (currentHealth < maxHealth)
+        {
+            currentHealth += healthRechargePerSecond / 10f;
+        }
+
+        //Make health a constant or continue to regenerate health
+        if (currentHealth >= maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        else
+        {
+            StartCoroutine(rechargeHealth());
+        }
+
+    }
+
+    /// <summary>
+    /// Method to start recharging Shields
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator rechargeShields()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        //Add shields if the current shields are below max shields
+        if (currentShields < maxShields)
+        {
+            currentShields += shieldRechargePerSecond / 10f;
+        }
+
+        //Make shields a constant or contine to regenerate shields
+        if (currentShields >= maxShields)
+        {
+            currentShields = maxShields;
+        }
+        else
+        {
+            StartCoroutine(rechargeShields());
+        }
+    }
 }
