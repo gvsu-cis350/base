@@ -10,27 +10,33 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 //class to hand the launch of the game and the main menu screen
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    #region Vars
     //static laucncher instance so the launcher can be called throughout the system
     public static Launcher Instance;
 
-    //Textfield interactions through unity
+    #region Room Vars
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_Text errorText;
     [SerializeField] TMP_Text roomNameText;
-    [SerializeField] TMP_Dropdown mapSelectionDropdown, gameTypeDropdown;
+    #endregion
 
-    //roomlist interactions through unity
+    #region RoomList Vars
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListButtonPrefab;
+    #endregion
 
-    //playerlist interactions through unity
+    #region PlayerList Vars
     [SerializeField] Transform PlayerListContent;
     [SerializeField] GameObject PlayerListItemPrefab;
+    #endregion
 
-    //serialization of the host buttons
+    #region Match Settings Vars
     [SerializeField] GameObject startGameButton, roomSettingsButton;
+    [SerializeField] TMP_Dropdown mapSelectionDropdown, gameTypeDropdown, matchLengthDropdown, scoreCheckDropdown;
 
     Hashtable roomSettings = new Hashtable();
+    #endregion
+    #endregion
 
     /// <summary>
     /// Method call when the launcher is first accessed to set a global instacne of launcher
@@ -41,6 +47,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         Instance = this;
     }
 
+    #region Connection Pipeline
+    //Methods Below establish a pipeline to see user properly connect to the server
     /// <summary>
     /// Method that triggers once on the creation and connects user to pre-determined photon master server.
     /// </summary>
@@ -69,7 +77,9 @@ public class Launcher : MonoBehaviourPunCallbacks
        // Debug.Log("Joined Lobby");
         PhotonNetwork.NickName = boot.bootObject.currentSettings.nickname;
     }
+    #endregion
 
+    #region Room Creation Methods
     /// <summary>
     /// Method that creates a new room within the photon lobby pased off of a textfield input
     /// </summary>
@@ -82,6 +92,46 @@ public class Launcher : MonoBehaviourPunCallbacks
         roomOptions.MaxPlayers = 16;
         PhotonNetwork.CreateRoom(roomNameInputField.text, roomOptions);
         MenuManager.Instance.OpenMenu("Connecting");
+    }
+
+    /// <summary>
+    /// Method switches host client if old host disconnects
+    /// </summary>
+    /// <param name="returnCode"></param>
+    /// <param name="message"></param>
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        errorText.text = "Error: Failed to Join Room: " + message;
+        MenuManager.Instance.OpenMenu("Error");
+    }
+    #endregion
+
+    #region Leaving and Joining Rooms
+    /// <summary>
+    /// Method allows user to leave a room and reconnects them to lobby and main menu
+    /// </summary>
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+        MenuManager.Instance.OpenMenu("Connecting");
+    }
+
+    /// <summary>
+    /// Method which joins a room based off of information passed through the parameter
+    /// </summary>
+    /// <param name="info"></param>
+    public void JoinRoom(RoomInfo info)
+    {
+        PhotonNetwork.JoinRoom(info.Name);
+        MenuManager.Instance.OpenMenu("Connecting");
+    }
+
+    /// <summary>
+    /// Method to return to main menu when leaving a room    
+    /// </summary>
+    public override void OnLeftRoom()
+    {
+        MenuManager.Instance.OpenMenu("MainMenu");
     }
 
     /// <summary>
@@ -113,55 +163,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         roomSettingsButton.SetActive(PhotonNetwork.IsMasterClient);
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
+    #endregion
 
-    /// <summary>
-    /// Method switches host client if old host disconnects
-    /// </summary>
-    /// <param name="newMasterClient"></param>
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        roomSettingsButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    /// <summary>
-    /// Method switches host client if old host disconnects
-    /// </summary>
-    /// <param name="returnCode"></param>
-    /// <param name="message"></param>
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        errorText.text = "Error: Failed to Join Room: " + message;
-        MenuManager.Instance.OpenMenu("Error");
-    }
-
-    /// <summary>
-    /// Method allows user to leave a room and reconnects them to lobby and main menu
-    /// </summary>
-    public void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-        MenuManager.Instance.OpenMenu("Connecting");
-    }
-
-    /// <summary>
-    /// Method which joins a room based off of information passed through the parameter
-    /// </summary>
-    /// <param name="info"></param>
-    public void JoinRoom(RoomInfo info)
-    {
-        PhotonNetwork.JoinRoom(info.Name);
-        MenuManager.Instance.OpenMenu("Connecting");
-    }
-
-    /// <summary>
-    /// Method to return to main menu when leaving a room    
-    /// </summary>
-    public override void OnLeftRoom()
-    {
-        MenuManager.Instance.OpenMenu("MainMenu");
-    }
-
+    #region Photon Room Update Methods
     /// <summary>
     /// Method that calls whenever a room is updated to update local runs of users
     /// </summary>
@@ -194,14 +198,34 @@ public class Launcher : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
+    /// Method switches host client if old host disconnects
+    /// </summary>
+    /// <param name="newMasterClient"></param>
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        roomSettingsButton.SetActive(PhotonNetwork.IsMasterClient);
+    }
+    #endregion
+
+    /// <summary>
     /// Method which starts the game for everyone in room when called
     /// </summary>
     public void StartGame()
     {
         roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
+        //Game Type Record
         if (roomSettings.ContainsKey("GameType"))
             roomSettings.Remove("GameType");
         roomSettings.Add("GameType", gameTypeDropdown.value);
+        //Game Length Record
+        if (roomSettings.ContainsKey("MatchLength"))
+            roomSettings.Remove("MatchLength");
+        roomSettings.Add("MatchLength", matchLengthDropdown.value);
+        //Game Length Record
+        if (roomSettings.ContainsKey("ScoreCheck"))
+            roomSettings.Remove("ScoreCheck");
+        roomSettings.Add("ScoreCheck", scoreCheckDropdown.value);
         //        roomSettings.Add("Pistol", true);
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
         Debug.Log((int)PhotonNetwork.CurrentRoom.CustomProperties["GameType"]);

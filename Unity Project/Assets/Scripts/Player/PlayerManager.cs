@@ -44,8 +44,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private int currentMatchTime;
     private Coroutine matchTimerCoroutine;
     private int matchLength = 600000;
-    private int arenaKills = 20;
-    private int tdmKills = 100;
+    private int scoreCheck = 0;
 
     private int itemHolder;
 
@@ -92,7 +91,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
             NewPlayer_S(localPlayerStats);
             refreshStats();
-            InitializeTimer();
+            InitializeMatch();
 
             if (PhotonNetwork.IsMasterClient)
             {
@@ -126,6 +125,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if(controller != null)
         {
+            /*
             for(int i = 0; i < items.Length; i++)
             {
                 if(i != controller.GetComponent<PlayerControllerModelled>().itemIndex)
@@ -134,6 +134,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
             items[controller.GetComponent<PlayerControllerModelled>().itemIndex].SetActive(true);
+            */
         }
     }
     #endregion
@@ -515,6 +516,10 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void ScoreCheck()
     {
+        //Exit method if the match isn't dependant on a certain kill amount
+        if (scoreCheck == 0)
+            return;
+
         // define temporary variables
         bool detectwin = false;
         if(GameSettings.GameMode == GameMode.FFA)
@@ -523,7 +528,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             foreach (PlayerStats a in playerStats)
             {
                 // free for all
-                if (a.kills >= arenaKills)
+                if (a.kills >= scoreCheck)
                 {
                     detectwin = true;
                     break;
@@ -546,7 +551,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     redKills += p.kills;
                 }
             }
-            if ((blueKills >= tdmKills) || (redKills >= tdmKills))
+            if ((blueKills >= scoreCheck) || (redKills >= scoreCheck))
             {
                 detectwin = true;
             }
@@ -594,7 +599,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         GameMenus.CloseAllMenus();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        GameMenus.GetComponent<Image>().enabled = true;
+        GameMenus.GetComponent<Image>().enabled = false;
 
         if (GameSettings.GameMode == GameMode.FFA)
         {
@@ -659,14 +664,34 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         StartCoroutine(End(6f));
     }
 
-    private void InitializeTimer()
+    private void InitializeMatch()
     {
-        currentMatchTime = matchLength;
-        RefreshTimerUI();
-
-        if (PhotonNetwork.IsMasterClient)
+        if (customRoomProperties.ContainsKey("MatchLength"))
         {
-            matchTimerCoroutine = StartCoroutine(MatchTimer());
+            if((int)customRoomProperties["MatchLength"] == 0)
+            {
+                timer.gameObject.SetActive(false);
+            }
+            else
+            {
+                matchLength = (int)customRoomProperties["MatchLength"] * 5 * 60;
+                currentMatchTime = matchLength;
+                RefreshTimerUI();
+
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    matchTimerCoroutine = StartCoroutine(MatchTimer());
+                }
+            }
+        } 
+        else
+        {
+            timer.text = "ERROR";
+        }
+
+        if (customRoomProperties.ContainsKey("ScoreCheck"))
+        {
+            scoreCheck = (int)customRoomProperties["ScoreCheck"] * 10;
         }
     }
 
@@ -864,8 +889,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         // reset ui
         refreshStats();
 
-        // reinitialize time
-        InitializeTimer();
+        // reinitialize match
+        InitializeMatch();
 
         // spawn
         openMM(Respawn);
