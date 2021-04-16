@@ -5482,7 +5482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2095427127729342547
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6981,7 +6981,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 98.8
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -9351,7 +9351,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 0}
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -9393,6 +9394,11 @@ MonoBehaviour:
   statsCard: {fileID: 1911852064186128969}
   endPlayerCard: {fileID: 3370302412570832103}
   endTeamCard: {fileID: 6315806419110859640}
+  items:
+  - {fileID: 5106604345573655992}
+  - {fileID: 3011021734843465471}
+  - {fileID: 6222647244819445518}
+  - {fileID: 6674701657899796720}
 --- !u!1 &8660831344018326122
 GameObject:
   m_ObjectHideFlags: 0
