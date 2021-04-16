@@ -62,8 +62,7 @@ public class SingleShotGun : Gun
             if ((GameSettings.GameMode == GameMode.TDM) && (hit.collider.gameObject.GetComponent<PlayerControllerModelled>()))
             {
                 //Check if the shooter and the shootee are on different teams
-                //Note that the teams need to match due to a small cascading fault
-                if (hit.collider.gameObject.GetComponent<PlayerControllerModelled>().blueTeam == GameSettings.IsBlueTeam)
+                if (hit.collider.gameObject.GetComponent<PlayerControllerModelled>().blueTeam != GameSettings.IsBlueTeam)
                 {
                     //check if hit object is damagable and apply damage
                     hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);

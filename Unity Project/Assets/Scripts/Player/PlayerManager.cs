@@ -47,12 +47,15 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private int arenaKills = 20;
     private int tdmKills = 100;
 
+    private int itemHolder;
+
     #region UI
     [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScore, redScore;
     public TMP_Text ammoCounter;
     [SerializeField] TMP_Text endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
     [SerializeField] Transform leaderBoard, endGame;
     [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard;
+    [SerializeField] GameObject[] items;
     #endregion
     #endregion
 
@@ -97,12 +100,12 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 openMM(Respawn);
             }
         }
-
+/*
         if (PhotonNetwork.IsMasterClient)
         {
             localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
             NewPlayer_S(localPlayerStats);
-        }
+        }*/
     }
 
     /// <summary>
@@ -119,6 +122,18 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             if (leaderBoard.gameObject.activeSelf) leaderBoard.gameObject.SetActive(false);
             else Leaderboard(leaderBoard);
+        }
+
+        if(controller != null)
+        {
+            for(int i = 0; i < items.Length; i++)
+            {
+                if(i != controller.GetComponent<PlayerControllerModelled>().itemIndex)
+                {
+                    items[i].SetActive(false);
+                }
+            }
+            items[controller.GetComponent<PlayerControllerModelled>().itemIndex].SetActive(true);
         }
     }
     #endregion
@@ -655,9 +670,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private Boolean CalculateTeam()
+    private bool CalculateTeam()
     {
-        Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
+        //Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
         return PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0;
     }
     #endregion

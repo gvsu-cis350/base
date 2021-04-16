@@ -27,7 +27,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #endregion
 
     #region Item Vars
-    int itemIndex;
+    public int itemIndex;
     int previousItemIndex = -1;
     #endregion
 
@@ -80,24 +80,25 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void Start()
     {
-        if (GameSettings.GameMode == GameMode.TDM)
-        {
-            PV.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
-            /*
-            if (GameSettings.IsAwayTeam)
-            {
-                ui_team.text = "red team";
-                ui_team.color = Color.red;
-            }
-            else
-            {
-                ui_team.text = "blue team";
-                ui_team.color = Color.blue;
-            }
-            */
-        }
+        
         if (PV.IsMine)
         {
+            if (GameSettings.GameMode == GameMode.TDM)
+            {
+                PV.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
+                /*
+                if (GameSettings.IsAwayTeam)
+                {
+                    ui_team.text = "red team";
+                    ui_team.color = Color.red;
+                }
+                else
+                {
+                    ui_team.text = "blue team";
+                    ui_team.color = Color.blue;
+                }
+                */
+            }
             //subscribe the mouse senstivity method to settings update event
             GameEvents.current.onSettingsUpdate += updateMouse;
             //Equip the first item available
@@ -125,6 +126,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             }
             Helmet.layer = 12;
             playerManager.ammoCounter.text = items[itemIndex].returnInfo().ToString();
+
+            
         } 
         else
         {
@@ -156,7 +159,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         if (!PV.IsMine)
             return;
         
-        blueTeam = GameSettings.IsBlueTeam;
+//        blueTeam = GameSettings.IsBlueTeam;
 
         //check to see if there is a the current game state is set to playing
         if ((int)playerManager.state == 2)
@@ -492,7 +495,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         if (GameSettings.GameMode == GameMode.TDM)
         {
-            photonView.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
+            PV.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
         }
     }
 
