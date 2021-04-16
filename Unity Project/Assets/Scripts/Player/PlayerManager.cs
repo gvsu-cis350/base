@@ -53,7 +53,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public TMP_Text ammoCounter;
     [SerializeField] TMP_Text endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
     [SerializeField] Transform leaderBoard, endGame;
-    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard;
+    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard, HUD;
     [SerializeField] GameObject[] items;
     public Slider shields;
     #endregion
@@ -84,8 +84,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (!PV.IsMine)
         {
             Destroy(GetComponentInChildren<Canvas>().gameObject);
-            Destroy(timer);
-            Destroy(ammoCounter);
+            Destroy(HUD);
         }
         else
         {
@@ -126,7 +125,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if(controller != null)
         {
-            /*
             for(int i = 0; i < items.Length; i++)
             {
                 if(i != controller.GetComponent<PlayerControllerModelled>().itemIndex)
@@ -135,7 +133,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
             items[controller.GetComponent<PlayerControllerModelled>().itemIndex].SetActive(true);
-            */
         }
     }
     #endregion
@@ -584,11 +581,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         currentMatchTime = 0;
         RefreshTimerUI();
 
+        PhotonNetwork.Destroy(controller);
         // disable room
         if (PhotonNetwork.IsMasterClient)
         {
             //PhotonNetwork.DestroyAll();
-            PhotonNetwork.Destroy(controller);
             if (!perpetual)
             {
                 PhotonNetwork.CurrentRoom.IsVisible = false;
