@@ -17,7 +17,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_Text errorText;
     [SerializeField] TMP_Text roomNameText;
-    [SerializeField] TMP_Dropdown mapSelectionDropdown, gameTypeDropdown;
+    [SerializeField] TMP_Dropdown mapSelectionDropdown, gameTypeDropdown, matchLengthDropdown, scoreCheckDropdown;
 
     //roomlist interactions through unity
     [SerializeField] Transform roomListContent;
@@ -199,9 +199,18 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
+        //Game Type Record
         if (roomSettings.ContainsKey("GameType"))
             roomSettings.Remove("GameType");
         roomSettings.Add("GameType", gameTypeDropdown.value);
+        //Game Length Record
+        if (roomSettings.ContainsKey("MatchLength"))
+            roomSettings.Remove("MatchLength");
+        roomSettings.Add("MatchLength", matchLengthDropdown.value);
+        //Game Length Record
+        if (roomSettings.ContainsKey("ScoreCheck"))
+            roomSettings.Remove("ScoreCheck");
+        roomSettings.Add("ScoreCheck", scoreCheckDropdown.value);
         //        roomSettings.Add("Pistol", true);
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
         Debug.Log((int)PhotonNetwork.CurrentRoom.CustomProperties["GameType"]);
