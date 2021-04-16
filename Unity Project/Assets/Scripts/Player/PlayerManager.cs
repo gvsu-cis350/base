@@ -591,7 +591,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.IsMasterClient)
         {
             //PhotonNetwork.DestroyAll();
-            
+
             if (!perpetual)
             {
                 PhotonNetwork.CurrentRoom.IsVisible = false;
