@@ -86,27 +86,27 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             Destroy(GetComponentInChildren<Canvas>().gameObject);
             Destroy(HUD);
         }
-        else
-        {
-            localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
-            NewPlayer_S(localPlayerStats);
-            refreshStats();
-            InitializeMatch();
+        //        else if (PV.IsMine)
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, PhotonNetwork.LocalPlayer.ActorNumber, 0, 0, CalculateTeam());
-                playerStats.Add(localPlayerStats);
-                playerAdded = true;
-                openMM(Respawn);
-            }
-        }
-/*
+        refreshStats();
+        InitializeMatch();
+
         if (PhotonNetwork.IsMasterClient)
         {
-            localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
+           // Debug.Log(PV.Owner.);
+            localPlayerStats = new PlayerStats(PV.Owner.NickName, 0, 0, 0, false);
             NewPlayer_S(localPlayerStats);
-        }*/
+            playerAdded = true;
+            openMM(Respawn);
+        }
+
+
+        /*
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
+                    NewPlayer_S(localPlayerStats);
+                }*/
     }
 
     /// <summary>
@@ -120,6 +120,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (state == GameState.Ending)
             return;
 
+        //Debug.Log(playerStats.Count);
         togglePause();
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -745,7 +746,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         object[] package = new object[5];
 
         package[0] = p.username;
-        package[1] = PhotonNetwork.LocalPlayer.ActorNumber;
+        package[1] = PV.Owner.ActorNumber;// PhotonNetwork.LocalPlayer.ActorNumber;
         package[2] = (short)0;
         package[3] = (short)0;
         package[4] = CalculateTeam();
