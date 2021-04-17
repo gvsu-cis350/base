@@ -46,16 +46,22 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private int matchLength = 600000;
     private int scoreCheck = 0;
 
-    private int itemHolder;
+    private List<string> weaponNamesMaster = new List<string>(5){ "MA37 Rifle", "M6G Pistol", "SRS99-AM Sniper", "M41 Launcher", "M45 Shotgun" };
+    private List<string> weaponNames = new List<string>();
+    private List<int> weaponIndex = new List<int>();
+    [HideInInspector] public int primaryWeaponPM;
+    [HideInInspector] public int secondaryWeaponPM;
+    private bool allWeapons;
 
     #region UI
     [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScore, redScore;
     public TMP_Text ammoCounter;
     [SerializeField] TMP_Text endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
     [SerializeField] Transform leaderBoard, endGame;
-    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard, HUD;
+    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard, HUD, primary, secondary;
     [SerializeField] GameObject[] items;
     public Slider shields;
+    [SerializeField] TMP_Dropdown primaryDropdown, secondaryDropdown;
     #endregion
     #endregion
 
@@ -80,13 +86,55 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     /// </summary>
     private void Start()
     {
+        //Set the local gameMode 
         GameSettings.GameMode = (GameMode)(int)customRoomProperties["GameType"];
+        
+        //Remove other player's charater's instances of menus
         if (!PV.IsMine)
         {
             Destroy(GetComponentInChildren<Canvas>().gameObject);
             Destroy(HUD);
         }
-        //        else if (PV.IsMine)
+        //Setup weapon selection
+        else
+        {
+            //record if we have access to all of the weapons in the game
+            if (customRoomProperties.ContainsKey("AllWeapons"))
+                allWeapons = (bool)customRoomProperties["AllWeapons"];
+            else
+                allWeapons = true;
+
+            if (allWeapons)
+            {
+                //Make sure that the settings are inactive
+                primary.SetActive(false);
+                secondary.SetActive(false);
+            }
+            else
+            {
+                //Make sure that the settings are active
+                primary.SetActive(true);
+                secondary.SetActive(true);
+
+                //Compare weapons in the hashtable to a master list that each player manager holds
+                int i = 0;
+                foreach(string s in weaponNamesMaster)
+                {
+                    if (customRoomProperties.ContainsKey(s))
+                    {
+                        weaponNames.Add(s);
+                        weaponIndex.Add(i);
+                    }
+                    i++;
+                }
+
+                primaryDropdown.ClearOptions();
+                secondaryDropdown.ClearOptions();
+
+                primaryDropdown.AddOptions(weaponNames);
+                secondaryDropdown.AddOptions(weaponNames);
+            }
+        }
 
         refreshStats();
         InitializeMatch();
@@ -99,14 +147,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             playerAdded = true;
             openMM(Respawn);
         }
-
-
-        /*
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
-                    NewPlayer_S(localPlayerStats);
-                }*/
     }
 
     /// <summary>
@@ -184,6 +224,12 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             //get a random spawnpoint
             Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
 
+            //Get the weapons if applicable
+            if (!allWeapons)
+            {
+                primaryWeaponPM = weaponIndex[primaryDropdown.value];
+                secondaryWeaponPM = weaponIndex[secondaryDropdown.value];
+            }
             //create a new controller at the spawnpoint prefab loaction
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerModelled"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
 
@@ -192,6 +238,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             //record an active playerController and close the respawn menu
             activeController = true;
+            HUD.SetActive(true);
             closeMM(Respawn);
         }
     }
@@ -203,6 +250,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         activeController = false;
         PhotonNetwork.Destroy(controller);
+        HUD.SetActive(false);
+        primaryDropdown.value = primaryWeaponPM;
+        secondaryDropdown.value = secondaryWeaponPM;
         openMM(Respawn);
         ChangeStat_S(PhotonNetwork.LocalPlayer.ActorNumber, 1, 1);
     }
@@ -957,4 +1007,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
     #endregion
+
+
 }

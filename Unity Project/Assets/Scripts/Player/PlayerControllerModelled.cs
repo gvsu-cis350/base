@@ -27,6 +27,9 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #endregion
 
     #region Item Vars
+    private bool allWeapons;
+    private int primaryWeapon;
+    private int secondaryWeapon;
     public int itemIndex;
     int previousItemIndex = -1;
     #endregion
@@ -105,10 +108,27 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 }
                 */
             }
+
+            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("AllWeapons"))
+            {
+                allWeapons = (bool)PhotonNetwork.CurrentRoom.CustomProperties["AllWeapons"];
+
+            }
+
+            if (allWeapons)
+            {
+                primaryWeapon = 0;
+            }
+            else
+            { 
+                primaryWeapon = playerManager.primaryWeaponPM;
+                secondaryWeapon = playerManager.secondaryWeaponPM;
+            }
+            
             //subscribe the mouse senstivity method to settings update event
             GameEvents.current.onSettingsUpdate += updateMouse;
             //Equip the first item available
-            EquipItem(1);
+            EquipItem(primaryWeapon);
             //Remove the material entry in the hashmap if there is one
             if (GameSettings.GameMode == GameMode.TDM)
             {
@@ -328,42 +348,94 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void weaponSwitch()
     {
-        //handle inputs from the number keys
-        for (int i = 0; i < items.Length; i++)
-        {
-            if (Input.GetKeyDown((i + 1).ToString()))
-            {
-                items[itemIndex].ResetItem(1);
-                EquipItem(i);
-                break;
-            }
-        }
+        //Note all reset items functions take 1 as a code to stop and reset the reload timer of that weapon
 
-        //handle inputs from the mouse scroll wheel
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+        //Check if all weapons are equiped or only 2
+        if (allWeapons)
         {
-            if (itemIndex >= items.Length - 1)
+            //handle inputs from the number keys
+            for (int i = 0; i < items.Length; i++)
             {
-                items[itemIndex].ResetItem(1);
-                EquipItem(0);
+                if (Input.GetKeyDown((i + 1).ToString()))
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(i);
+                    break;
+                }
             }
-            else
+
+            //handle inputs from the mouse scroll wheel going up
+            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
             {
-                items[itemIndex].ResetItem(1);
-                EquipItem(itemIndex + 1);
+                if (itemIndex >= items.Length - 1)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(0);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(itemIndex + 1);
+                }
+            }
+            //handle inputs from the mouse scroll wheel going down
+            else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+            {
+                if (itemIndex <= 0)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(items.Length - 1);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(itemIndex - 1);
+                }
             }
         }
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+        else
         {
-            if (itemIndex <= 0)
+            Debug.Log(primaryWeapon);
+            Debug.Log(secondaryWeapon);
+            //Check for number keys
+            if(Input.GetKeyDown((1).ToString()))
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(primaryWeapon);
+                }
+            if (Input.GetKeyDown((2).ToString()))
             {
                 items[itemIndex].ResetItem(1);
-                EquipItem(items.Length - 1);
+                EquipItem(secondaryWeapon);
             }
-            else
+
+            //handle inputs from the mouse scroll wheel going up
+            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
             {
-                items[itemIndex].ResetItem(1);
-                EquipItem(itemIndex - 1);
+                if(itemIndex == primaryWeapon)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(secondaryWeapon);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(primaryWeapon);
+                }
+            }
+            //handle inputs from the mouse scroll wheel goign down
+            else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+            {
+                if (itemIndex == primaryWeapon)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(secondaryWeapon);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(primaryWeapon);
+                }
             }
         }
     }
@@ -535,7 +607,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         }
     }
     #endregion
-    
+
+    #region Coroutines
     private IEnumerator tookDamage()
     {
         yield return new WaitForSeconds(1f);
@@ -609,4 +682,5 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             StartCoroutine(rechargeShields());
         }
     }
+    #endregion
 }
