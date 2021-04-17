@@ -32,7 +32,7 @@ public class SingleShotGun : Gun
         //Ammo available and not reloading
         if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0))
         {
-            Shoot();
+            RecoilShoot();
             ((GunInfo)itemInfo).currentAmmo--;
 
             //Create sound effect on gun and attach it to the gun
@@ -47,7 +47,7 @@ public class SingleShotGun : Gun
     }
 
     /// <summary>
-    /// Method creates a raycast from the center of the user's screen to hit target
+    /// Old method creates a raycast from the center of the user's screen to hit target
     /// </summary>
     private void Shoot()
     {
@@ -74,6 +74,63 @@ public class SingleShotGun : Gun
                 hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
             }
             //Debug.Log("We hit " + hit.collider.gameObject.name);
+        }
+    }
+
+
+
+    /// <summary>
+    /// Method creates a raycast from center of screen with an accuracy cone
+    /// </summary>
+    void RecoilShoot()
+    {
+        // Fire once for each shotPerRound value
+        for (int i = 0; i < ((GunInfo)itemInfo).shotsPerRound; i++)
+        {
+            // Calculate accuracy for this shot
+            float accuracyVary = (100 - ((GunInfo)itemInfo).currentAccuracy) / 1000;
+            Vector3 direction = cam.transform.forward;
+            direction.x += Random.Range(-accuracyVary, accuracyVary);
+            direction.y += Random.Range(-accuracyVary, accuracyVary);
+            direction.z += Random.Range(-accuracyVary, accuracyVary);
+            ((GunInfo)itemInfo).currentAccuracy -= ((GunInfo)itemInfo).accuracyDropPerShot;
+            if (((GunInfo)itemInfo).currentAccuracy <= 0.0f)
+                ((GunInfo)itemInfo).currentAccuracy = 0.0f;
+
+            // The ray that will be used for this shot
+            Ray ray = new Ray(cam.transform.position, direction);
+
+            //detect if the ray hit an object
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                //check to see if we are playing TDM
+                if ((GameSettings.GameMode == GameMode.TDM) && (hit.collider.gameObject.GetComponent<PlayerControllerModelled>()))
+                {
+                    //Check if the shooter and the shootee are on different teams
+                    if (hit.collider.gameObject.GetComponent<PlayerControllerModelled>().blueTeam != GameSettings.IsBlueTeam)
+                    {
+                        //check if hit object is damagable and apply damage
+                        hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
+                    }
+                }
+                else
+                {
+                    //check if hit object is damagable and apply damage
+                    hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
+                }
+//                Debug.Log("We hit " + hit.collider.gameObject.name);
+            }
+
+
+            /*
+            // Muzzle flash effects
+            if (makeMuzzleEffects)
+            {
+                GameObject muzfx = muzzleEffects[Random.Range(0, muzzleEffects.Length)];
+                if (muzfx != null)
+                    Instantiate(muzfx, muzzleEffectsPosition.position, muzzleEffectsPosition.rotation);
+            }
+            */
         }
     }
 }

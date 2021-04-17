@@ -17,4 +17,10 @@ MonoBehaviour:
   maxAmmo: 4
   currentAmmo: 4
   maxReloadTime: 6
-  reloadTime: 6
+  reloadTime: 0
+  accuracy: 100
+  currentAccuracy: 0
+  accuracyDropPerShot: 25
+  accuracyRecoverRate: 5
+  roundsPerMinute: 0
+  shotsPerRound: 1
