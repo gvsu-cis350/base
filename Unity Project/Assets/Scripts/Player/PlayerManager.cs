@@ -144,7 +144,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), Vector3.zero, Quaternion.identity, 0);
+                PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), Vector3.zero, Quaternion.identity, 0, null);
             }
         }
 

@@ -29,6 +29,24 @@ namespace Photon.Pun
     public class PhotonView : MonoBehaviour
     {
         #if UNITY_EDITOR
+        [UnityEditor.InitializeOnLoadMethod]
+        private static void SetPhotonViewExecutionOrder()
+        {
+            int photonViewExecutionOrder = -16000;
+            GameObject go = new GameObject();
+            PhotonView pv = go.AddComponent<PhotonView>();
+            MonoScript monoScript = MonoScript.FromMonoBehaviour(pv);
+
+            if (photonViewExecutionOrder != MonoImporter.GetExecutionOrder(monoScript))
+            {
+                MonoImporter.SetExecutionOrder(monoScript, photonViewExecutionOrder); // very early but allows other scripts to run even earlier...
+            }
+
+            DestroyImmediate(go); 
+        }
+        #endif
+
+        #if UNITY_EDITOR
         [ContextMenu("Open PUN Wizard")]
         void OpenPunWizard()
         {
@@ -173,7 +191,7 @@ namespace Photon.Pun
 
         
         /// <summary>
-        /// The owner of a PhotonView is the player who created the GameObject with that view. Objects in the scene don't have an owner.
+        /// The owner of a PhotonView is the creator of an object by default Ownership can be transferred and the owner may not be in the room anymore. Objects in the scene don't have an owner.
         /// </summary>
         /// <remarks>
         /// The owner/controller of a PhotonView is also the client which sends position updates of the GameObject.
@@ -201,7 +219,8 @@ namespace Photon.Pun
 
                 Player prevOwner = this.Owner;
                 this.ownerActorNr = value;
-                this.Owner = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(this.ownerActorNr);
+                this.Owner = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(this.ownerActorNr, true);
+                this.AmOwner = PhotonNetwork.LocalPlayer != null && PhotonNetwork.LocalPlayer.ActorNumber == value;
 
                 this.UpdateCallbackLists();
                 if (!ReferenceEquals(this.OnOwnerChangeCallbacks, null))
@@ -223,23 +242,22 @@ namespace Photon.Pun
             get { return this.controllerActorNr; }
             set
             {
-                if (value != 0 && this.controllerActorNr == value)
-                {
-                    return;
-                }
-
                 Player prevController = this.Controller;
-                this.controllerActorNr = value;
-                this.Controller = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(this.controllerActorNr);
-                this.IsMine = this.controllerActorNr == PhotonNetwork.LocalPlayer.ActorNumber;
 
-                this.UpdateCallbackLists();
+                this.Controller = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(value, true);
+                this.controllerActorNr = this.Controller != null ? this.Controller.ActorNumber : value;
 
-                if (!ReferenceEquals(this.OnControllerChangeCallbacks, null))
+                this.IsMine = PhotonNetwork.LocalPlayer != null && this.controllerActorNr == PhotonNetwork.LocalPlayer.ActorNumber;
+
+                if (!ReferenceEquals(this.Controller, prevController))
                 {
-                    for (int i = 0, cnt = this.OnControllerChangeCallbacks.Count; i < cnt; ++i)
+                    this.UpdateCallbackLists();
+                    if (!ReferenceEquals(this.OnControllerChangeCallbacks, null))
                     {
-                        this.OnControllerChangeCallbacks[i].OnControllerChange(this.Controller, prevController);
+                        for (int i = 0, cnt = this.OnControllerChangeCallbacks.Count; i < cnt; ++i)
+                        {
+                            this.OnControllerChangeCallbacks[i].OnControllerChange(this.Controller, prevController);
+                        }
                     }
                 }
             }
@@ -279,7 +297,7 @@ namespace Photon.Pun
 
                 this.viewIdField = value;
                 this.CreatorActorNr = value / PhotonNetwork.MAX_VIEW_IDS;   // the creator can be derived from the viewId. this is also the initial owner and creator.
-                this.OwnerActorNr = this.CreatorActorNr;        
+                this.OwnerActorNr = this.CreatorActorNr;
                 this.ControllerActorNr = this.CreatorActorNr;
                 this.RebuildControllerCache();
 
@@ -310,8 +328,10 @@ namespace Photon.Pun
             {
                 return;
             }
+            
             if (this.sceneViewId != 0)
             {
+                // PhotonNetwork.Instantiate will set a ViewID != 0 before the object awakes. So only objects loaded with the scene ever use the sceneViewId (even if the obj got pooled)
                 this.ViewID = this.sceneViewId;
             }
 
@@ -415,7 +435,8 @@ namespace Photon.Pun
         //    //            this.OnControllerChangeCallbacks[i].OnControllerChange(newController, prevController);
         //}
 
-        /// Called by OnJoinedRoom, OnMasterClientSwitched, OnPlayerEnteredRoom, OnPlayerLeftRoom and OnEvent for OwnershipUpdate
+        /// Called by OnJoinedRoom, OnMasterClientSwitched, OnPlayerEnteredRoom and OnEvent for OwnershipUpdate
+        /// OnPlayerLeftRoom will set a new controller directly, if the controller or owner left
         internal void RebuildControllerCache(bool ownerHasChanged = false)
         {
             //var prevController = this.controller;

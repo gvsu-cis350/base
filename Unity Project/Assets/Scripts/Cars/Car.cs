@@ -37,6 +37,7 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
     #region Player Vars
     Rigidbody rb;
     public PhotonView CarPV;
+    private PhotonView driverPV;
     private bool hasDriver = false;
     private Dictionary<string, Rider> riders = new Dictionary<string, Rider>();
     private Rider[] passengers;
@@ -90,20 +91,10 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
     /// </summary>
     private void Start()
     {
-        ExitVehicle();
+        driverPV = null;
+        CarPV.TransferOwnership(null);
+        hasDriver = false;
         m_Wheels = GetComponentsInChildren<WheelCollider>();
-
-        for (int i = 0; i < m_Wheels.Length; ++i)
-        {
-            var wheel = m_Wheels[i];
-
-            // Create wheel shapes only when needed.
-            if (wheelShape != null)
-            {
-                var ws = Instantiate(wheelShape);
-                ws.transform.parent = wheel.transform;
-            }
-        }
 
 
         passengers = GetComponentsInChildren<Rider>();
@@ -122,6 +113,9 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
     {
         //exit method if we are not on the local user's Photon View id
         if (!CarPV.IsMine)
+            return;
+
+        if (driverPV == null )
             return;
 
         m_Wheels[0].ConfigureVehicleSubsteps(criticalSpeed, stepsBelow, stepsAbove);
@@ -174,48 +168,6 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
                 }
             }
         }
-
-        //Move();
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            ExitVehicle();
-        }
-    }
-
-    #region Movement
-    /// <summary>
-    /// Method which takes keyboard inputs and stores that into a movement amount var
-    /// </summary>
-    private void Move()
-    {
-        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
-
-        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
-    }
-
-    /// <summary>
-    /// Public method to force grounded state if need be
-    /// </summary>
-    /// <param name="parGrounded"></param>
-    public void SetGroundedState(bool parGrounded)
-    {
-        grounded = parGrounded;
-
-    }
-    #endregion
-
-    /// <summary>
-    /// Method is called at a fixed rate instead of being tied to framerate like update() to move the character model around the game
-    /// </summary>
-    private void FixedUpdate()
-    {
-        //Debug.Log(hasDriver);
-        //exit method if PV ids don't match
-        if (!CarPV.IsMine)
-            return;
-
-        //rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
-
     }
 
     public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
@@ -235,32 +187,59 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
             return;
     }
 
-    public void NewDriverRequest()
+    public void OnOwnershipTransferFailed(PhotonView targetView, Player requestingPlayer)
     {
+        return;
+    }
+
+    public void NewDriverRequest(PhotonView newDriver)
+    {
+        driverPV = newDriver;
         base.photonView.RequestOwnership();
     }
-    public void ExitVehicle()
+
+    private void ObjectAttachToggle(int player, Rider seat, bool adding)
     {
-        CarPV.TransferOwnership(0);
-        hasDriver = false;
+        GameObject holder = PhotonView.Find(player).gameObject;
+        if (adding)
+        {
+            holder.transform.SetParent(seat.playerPostion.transform);
+            holder.transform.localPosition = new Vector3(0, 0, 0);
+            holder.transform.localRotation = new Quaternion(0, 0, 0, 0);
+        }
+        else
+        {
+            holder.transform.SetParent(null);
+        }
     }
 
-
     [PunRPC]
-    public void newPassenger(string newSeat, int carID)
+    public void NewPassenger(string newSeat, int carID, int player)
     {
         if (carID != CarPV.ViewID)
             return;
+
+        ObjectAttachToggle(player, riders[newSeat], true);
+
 
         riders[newSeat].occupied = true;
     }
 
     [PunRPC]
-    public void passengerExit(string newSeat, int carID)
+    public void ExitVehicle (string newSeat, int carID, int player)
     {
         if (carID != CarPV.ViewID)
             return;
 
+        ObjectAttachToggle(player, riders[newSeat], false);
+
         riders[newSeat].occupied = false;
+
+        if (newSeat.Equals("Driver"))
+        {
+            driverPV = null;
+            CarPV.TransferOwnership(null);
+            hasDriver = false;
+        }
     }
 }

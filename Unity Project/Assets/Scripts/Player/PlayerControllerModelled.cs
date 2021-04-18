@@ -49,8 +49,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     Animator Animation;
     public bool blueTeam = false;
     private bool inVehicle = false;
-    private Rider currentVehicle = null;
-    private string mySeat = null;
+    private Rider currentSeat = null;
     #endregion
 
     #region Health and Shield Vars
@@ -251,11 +250,11 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 {
                     if (hit.collider.gameObject.GetComponentInParent<Car>())
                     {
-                        if((!hit.collider.gameObject.GetComponent<Rider>().occupied))
+                        if(!hit.collider.gameObject.GetComponent<Rider>().occupied)
                         {
                             if (hit.collider.gameObject.GetComponent<Rider>().driver)
                             {
-                                hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest();
+                                hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest(boot.bootObject.localPV);
                             }
                             EnterVehicle(hit.collider.gameObject.GetComponent<Rider>());
                         }
@@ -560,6 +559,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     void Die()
     {
+        if (inVehicle)
+            ExitVehicle();
         playerManager.Die();
     }
     #endregion
@@ -731,25 +732,23 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
     private void EnterVehicle(Rider seat)
     {
-        this.gameObject.transform.transform.SetParent(seat.playerPostion.transform);
-        this.gameObject.transform.localPosition = new Vector3(0, 0, 0);
-        this.gameObject.transform.localRotation = new Quaternion(0, 0, 0, 0);
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        this.inVehicle = true;
-        currentVehicle = seat;
-        mySeat = seat.name;
-        currentVehicle.parentCar.CarPV.RPC("newPassenger", RpcTarget.All, currentVehicle.name, currentVehicle.parentCar.CarPV.ViewID);
+        inVehicle = true;
+        currentSeat = seat;
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
+
+        currentSeat.parentCar.CarPV.RPC("NewPassenger", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
+
+        Destroy(rb);
     }
 
     private void ExitVehicle()
     {
-        if(mySeat.Equals("Driver"))
-            currentVehicle.parentCar.ExitVehicle();
-        currentVehicle.parentCar.CarPV.RPC("passengerExit", RpcTarget.All, currentVehicle.name, currentVehicle.parentCar.CarPV.ViewID);
-        this.transform.SetParent(null);
+        currentSeat.parentCar.CarPV.RPC("ExitVehicle", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
+
+        currentSeat = null;
+        rb = this.gameObject.AddComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        this.inVehicle = false;
+        inVehicle = false;
     }
 }
