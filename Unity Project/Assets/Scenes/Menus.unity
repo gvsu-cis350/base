@@ -13081,7 +13081,13 @@ MonoBehaviour:
     m_Options:
     - m_Text: DevMap
       m_Image: {fileID: 0}
-    - m_Text: Game
+    - m_Text: Blood Gulch
+      m_Image: {fileID: 0}
+    - m_Text: Arena
+      m_Image: {fileID: 0}
+    - m_Text: Close Quarters
+      m_Image: {fileID: 0}
+    - m_Text: Crash Landing
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

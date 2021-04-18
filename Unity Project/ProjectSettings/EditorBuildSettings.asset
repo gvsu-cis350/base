@@ -15,9 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/DevMap.unity
     guid: be1dd5d49aa9fde4584bb0d4b61f4f3b
   - enabled: 1
-    path: Assets/Scenes/HaloBeta0.001 Has Crashed into Planet.unity
-    guid: 9b609da343c1ca14dbd300e7dbd42b79
-  - enabled: 1
     path: Assets/Scenes/Blood Glutch.unity
     guid: b9ecf37c3b7d8e845ac0da1e46390343
   - enabled: 1
@@ -26,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Close Quarters.unity
     guid: a976fbc2d07698f4cb1803a4296d573e
+  - enabled: 1
+    path: Assets/Scenes/HaloBeta0.001 Has Crashed into Planet.unity
+    guid: 5daf9e9aee5ba1d4ca43ca62ff8ac8cc
   m_configObjects: {}
