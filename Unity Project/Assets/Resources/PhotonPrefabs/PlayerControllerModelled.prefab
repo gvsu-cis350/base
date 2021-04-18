@@ -5061,6 +5061,7 @@ MonoBehaviour:
   rigBuilder: {fileID: 5586612325702600484}
   weaponLeftGrip: {fileID: 3421124853899436244}
   weaponRightGrip: {fileID: 3498765730678500885}
+  cam: {fileID: 8563530835685953445}
   itemIndex: 0
   playerManager: {fileID: 0}
   blueTeam: 0

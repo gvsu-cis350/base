@@ -52,15 +52,22 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     [HideInInspector] public int primaryWeaponPM;
     [HideInInspector] public int secondaryWeaponPM;
     private bool allWeapons;
+    private int redScoreCount = 0;
+    private int blueScoreCount = 0;
 
-    #region UI
-    [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScore, redScore;
-    public TMP_Text ammoCounter;
-    [SerializeField] TMP_Text endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
-    [SerializeField] Transform leaderBoard, endGame;
-    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard, HUD, primary, secondary;
     [SerializeField] GameObject[] items;
-    public Slider shields;
+    #region UI
+    //Text label variables
+    [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScoreText, redScoreText, endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
+    public TMP_Text ammoCounter;
+
+    //Leaderboard
+    [SerializeField] Transform leaderBoard, endGame;
+    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard;
+
+    //HUD
+    public GameObject HUD, primary, secondary, depletedShields;
+    public Slider shields, blueScoreSlider, redScoreSlider;
     [SerializeField] TMP_Dropdown primaryDropdown, secondaryDropdown;
     #endregion
     #endregion
@@ -133,6 +140,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
                 primaryDropdown.AddOptions(weaponNames);
                 secondaryDropdown.AddOptions(weaponNames);
+            }
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), Vector3.zero, Quaternion.identity, 0);
             }
         }
 
@@ -368,6 +380,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     #endregion
 
     #region Refresh Methods
+    /// <summary>
+    /// Method updates leaderboard with my current stats
+    /// </summary>
     private void refreshStats()
     {
         if (playerStats.Count > myIndex)
@@ -388,6 +403,37 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         string seconds = (currentMatchTime % 60).ToString("00");
         timer.text = $"{minutes}:{seconds}";
     }
+
+    /// <summary>
+    /// Method updates the blueScoreCount and RedScoreCount Variables
+    /// </summary>
+    private void UpdateTeamScores()
+    {
+        int blueKills = 0;
+        int redKills = 0;
+
+        // set scores
+        foreach (PlayerStats p in playerStats)
+        {
+            if (p.blueTeam)
+            {
+                blueKills += p.kills;
+            }
+            else
+            {
+                redKills += p.kills;
+            }
+        }
+
+        redScoreCount = redKills;
+        blueScoreCount = blueKills;
+
+        if (GameSettings.GameMode == GameMode.TDM)
+        {
+            blueScoreSlider.value = blueScoreCount;
+            redScoreSlider.value = redScoreCount;
+        }
+    }
     #endregion
 
     #region Leaderboard
@@ -403,30 +449,16 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if(GameSettings.GameMode == GameMode.FFA)
         {
             gameType.text = "Free For All";
-            blueScore.gameObject.SetActive(false);
-            redScore.gameObject.SetActive(false);
+            blueScoreText.gameObject.SetActive(false);
+            redScoreText.gameObject.SetActive(false);
         }
         else if (GameSettings.GameMode == GameMode.TDM)
         {
             gameType.text = "Team Deathmatch";
 
-            int blueKills = 0;
-            int redKills = 0;
-
-            // set scores
-            foreach (PlayerStats p in playerStats)
-            {
-                if (p.blueTeam)
-                {
-                    blueKills += p.kills;
-                }
-                else
-                {
-                    redKills += p.kills;
-                }
-            }
-            blueScore.text = blueKills.ToString();
-            redScore.text = redKills.ToString();
+            //Set Scores
+            blueScoreText.text = blueScoreCount.ToString();
+            redScoreText.text = redScoreCount.ToString();
         }
 
         map.text = SceneManager.GetActiveScene().name;
@@ -439,25 +471,25 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         List<PlayerStats> sorted = SortPlayers(playerStats);
 
         // display
-        bool t_alternateColors = false;
         foreach (PlayerStats a in sorted)
         {
             GameObject newcard = Instantiate(playercard, p_lb) as GameObject;
 
-            /*
-            if ((int)customProperties["GameType"] == 1)
-            {
-                newcard.transform.Find("red").gameObject.SetActive(!a.blueTeam);
-                newcard.transform.Find("blue").gameObject.SetActive(a.blueTeam);
-            }
-            */
-
-            //if (t_alternateColors) newcard.GetComponent<Image>().color = new Color32(0, 0, 0, 180);
-            //t_alternateColors = !t_alternateColors;
-
             newcard.transform.Find("Username").GetComponent<TMP_Text>().text = a.username;
             newcard.transform.Find("Kills Counter").GetComponent<TMP_Text>().text = a.kills.ToString();
             newcard.transform.Find("Deaths Counter").GetComponent<TMP_Text>().text = a.deaths.ToString();
+
+            if(GameSettings.GameMode == GameMode.TDM)
+            {
+                if (a.blueTeam)
+                {
+                    newcard.transform.Find("Base").GetComponent<Image>().color = new Color32(27, 27, 133, 255);
+                }
+                else
+                {
+                    newcard.transform.Find("Base").GetComponent<Image>().color = new Color32(133, 27, 27, 255);
+                }
+            }
 
             newcard.SetActive(true);
         }
@@ -744,9 +776,21 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             timer.text = "ERROR";
         }
 
+        if (GameSettings.GameMode != GameMode.TDM)
+        {
+            blueScoreSlider.gameObject.SetActive(false);
+            redScoreSlider.gameObject.SetActive(false);
+        }
+
         if (customRoomProperties.ContainsKey("ScoreCheck"))
         {
             scoreCheck = (int)customRoomProperties["ScoreCheck"] * 10;
+
+            if (GameSettings.GameMode == GameMode.TDM)
+            {
+                blueScoreSlider.maxValue = scoreCheck;
+                redScoreSlider.maxValue = scoreCheck;
+            }
         }
     }
 
@@ -914,6 +958,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
 
+        if (GameSettings.GameMode == GameMode.TDM)
+        {
+            UpdateTeamScores();
+        }
+
         ScoreCheck();
     }
     #endregion
@@ -941,6 +990,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             p.kills = 0;
             p.deaths = 0;
         }
+        redScoreCount = 0;
+        blueScoreCount = 0;
 
         // reset ui
         refreshStats();

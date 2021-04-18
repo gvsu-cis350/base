@@ -19,11 +19,11 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject weaponPivot;
     [SerializeField] Item[] items;
     [SerializeField] GameObject Helmet, Body;
-    [SerializeField] Material BlueHelmet, BlueBody, RedHelmet, RedBody; // RegularHelmet, RegularBody,
+    [SerializeField] Material BlueHelmet, BlueBody, RedHelmet, RedBody;
     [SerializeField] GameObject playerModel;
     [SerializeField] RigBuilder rigBuilder;
-    [SerializeField] Transform weaponLeftGrip;
-    [SerializeField] Transform weaponRightGrip;
+    [SerializeField] Transform weaponLeftGrip, weaponRightGrip;
+    [SerializeField] Camera cam;
     #endregion
 
     #region Item Vars
@@ -48,6 +48,9 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     Hashtable customProperties = new Hashtable();
     Animator Animation;
     public bool blueTeam = false;
+    private bool inVehicle = false;
+    private Rider currentVehicle = null;
+    private string mySeat = null;
     #endregion
 
     #region Health and Shield Vars
@@ -190,8 +193,11 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             //run basic movement methods and weapon switching methods
             Look();
-            Move();
-            Jump();
+            if (!inVehicle)
+            {
+                Move();
+                Jump();
+            }
             weaponSwitch();
 
             //check to see if the user fires their gun
@@ -214,14 +220,53 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             Animation.SetFloat("InputZ", 0);
         }
 
-        playerManager.shields.value = currentShields;
+
+        if (currentShields <= 0)
+        {
+            playerManager.shields.gameObject.SetActive(false);
+            playerManager.depletedShields.gameObject.SetActive(true);
+        }
+        else
+        {
+            playerManager.shields.gameObject.SetActive(true);
+            playerManager.depletedShields.gameObject.SetActive(false);
+            playerManager.shields.value = currentShields;
+        }
         //kill player controller if they fall into the void
         if (transform.position.y < -10f)
         {
             Die();
         }
 
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            if (!inVehicle)
+            {
+                //Initial raycast setup
+                Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+                ray.origin = cam.transform.position;
 
+                //detect if the ray hit an object
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    if (hit.collider.gameObject.GetComponentInParent<Car>())
+                    {
+                        if((!hit.collider.gameObject.GetComponent<Rider>().occupied))
+                        {
+                            if (hit.collider.gameObject.GetComponent<Rider>().driver)
+                            {
+                                hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest();
+                            }
+                            EnterVehicle(hit.collider.gameObject.GetComponent<Rider>());
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ExitVehicle();
+            }
+        }
     }
 
     #region Movement
@@ -395,8 +440,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         }
         else
         {
-            Debug.Log(primaryWeapon);
-            Debug.Log(secondaryWeapon);
             //Check for number keys
             if(Input.GetKeyDown((1).ToString()))
                 {
@@ -450,18 +493,20 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         if (!PV.IsMine)
             return;
 
-        //check to see a the game state is set to playing
-        if ((int)playerManager.state == 2)
+        if (!inVehicle)
         {
-
-            //rb.velocity = moveAmount;
-            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
-        }
-        //Allow player to move through the air in a pause state until they are on the ground
-        else if (((int)playerManager.state != 2) && !grounded)
-        {
-            //rb.velocity = moveAmount;
-            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+            //check to see a the game state is set to playing
+            if ((int)playerManager.state == 2)
+            {
+                //rb.velocity = moveAmount;
+                rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+            }
+            //Allow player to move through the air in a pause state until they are on the ground
+            else if (((int)playerManager.state != 2) && !grounded)
+            {
+                //rb.velocity = moveAmount;
+                rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+            }
         }
     }
 
@@ -683,4 +728,28 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         }
     }
     #endregion
+
+    private void EnterVehicle(Rider seat)
+    {
+        this.gameObject.transform.transform.SetParent(seat.playerPostion.transform);
+        this.gameObject.transform.localPosition = new Vector3(0, 0, 0);
+        this.gameObject.transform.localRotation = new Quaternion(0, 0, 0, 0);
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        this.inVehicle = true;
+        currentVehicle = seat;
+        mySeat = seat.name;
+        currentVehicle.parentCar.CarPV.RPC("newPassenger", RpcTarget.All, currentVehicle.name, currentVehicle.parentCar.CarPV.ViewID);
+        Animation.SetFloat("InputX", moveAmount.x);
+        Animation.SetFloat("InputZ", moveAmount.z);
+    }
+
+    private void ExitVehicle()
+    {
+        if(mySeat.Equals("Driver"))
+            currentVehicle.parentCar.ExitVehicle();
+        currentVehicle.parentCar.CarPV.RPC("passengerExit", RpcTarget.All, currentVehicle.name, currentVehicle.parentCar.CarPV.ViewID);
+        this.transform.SetParent(null);
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        this.inVehicle = false;
+    }
 }
