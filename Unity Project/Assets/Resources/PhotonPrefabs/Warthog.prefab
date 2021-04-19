@@ -156,10 +156,10 @@ WheelCollider:
   m_Radius: 0.6
   m_SuspensionSpring:
     spring: 44004.48
-    damper: 7040.7163
+    damper: 7040.7173
     targetPosition: 0.5
   m_SuspensionDistance: 0.19620001
-  m_ForceAppPointDistance: 0.78753877
+  m_ForceAppPointDistance: 0.6562851
   m_Mass: 20
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 388863418833248349}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.98, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children:
   - {fileID: 2223472210476921978}
   - {fileID: 388863419732746439}
@@ -378,11 +378,11 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.6
   m_SuspensionSpring:
-    spring: 44788.66
-    damper: 7166.186
+    spring: 44788.652
+    damper: 7166.1846
     targetPosition: 0.5
   m_SuspensionDistance: 0.19619998
-  m_ForceAppPointDistance: 0.78753877
+  m_ForceAppPointDistance: 0.6562851
   m_Mass: 20
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -440,11 +440,11 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.6
   m_SuspensionSpring:
-    spring: 30998.926
-    damper: 4959.828
+    spring: 30998.92
+    damper: 4959.8276
     targetPosition: 0.5
   m_SuspensionDistance: 0.19620001
-  m_ForceAppPointDistance: 0.78753877
+  m_ForceAppPointDistance: 0.6562851
   m_Mass: 20
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -502,11 +502,11 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.6
   m_SuspensionSpring:
-    spring: 30207.936
-    damper: 4833.2695
+    spring: 30207.941
+    damper: 4833.271
     targetPosition: 0.5
   m_SuspensionDistance: 0.1962
-  m_ForceAppPointDistance: 0.78753877
+  m_ForceAppPointDistance: 0.6562851
   m_Mass: 20
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -785,7 +785,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5829066729303324807}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.03912343, y: 0, z: 0}
+  m_LocalPosition: {x: 0.327, y: 0.056, z: 0.086}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 389994982004047700}

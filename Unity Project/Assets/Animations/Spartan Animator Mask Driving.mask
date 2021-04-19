@@ -1,0 +1,301 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Spartan Animator Mask Driving
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: 5_Body_1.0_0_0
+    m_Weight: 1
+  - m_Path: 5_Head_1.0_0_0
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 1
+  - m_Path: Armature/root
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/dyn_shoulder_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/dyn_shoulder_l/dyn_shoulder_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/dyn_shoulder_armor_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/dyn_shoulder_armor_l/dyn_shoulder_armor_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_metacarpal_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_metacarpal_l/index_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_metacarpal_l/index_01_l/index_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_metacarpal_l/index_01_l/index_02_l/index_03_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_metacarpal_l/index_01_l/index_02_l/index_03_l/index_03_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_metacarpal_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_metacarpal_l/middle_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_metacarpal_l/middle_01_l/middle_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_metacarpal_l/middle_01_l/middle_02_l/middle_03_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_metacarpal_l/middle_01_l/middle_02_l/middle_03_l/middle_03_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_metacarpal_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_metacarpal_l/pinky_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_metacarpal_l/pinky_01_l/pinky_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_metacarpal_l/pinky_01_l/pinky_02_l/pinky_03_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_metacarpal_l/pinky_01_l/pinky_02_l/pinky_03_l/pinky_03_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_metacarpal_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_metacarpal_l/ring_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_metacarpal_l/ring_01_l/ring_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_metacarpal_l/ring_01_l/ring_02_l/ring_03_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_metacarpal_l/ring_01_l/ring_02_l/ring_03_l/ring_03_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l/thumb_03_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l/thumb_03_l/thumb_03_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/lowerarm_twist_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/lowerarm_twist_01_l/lowerarm_twist_01_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/lowerarm_twist_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/lowerarm_l/lowerarm_twist_02_l/lowerarm_twist_02_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/upperarm_twist_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/upperarm_twist_01_l/upperarm_twist_01_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/upperarm_twist_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/upperarm_twist_02_l/dyn_arm_l_scale1
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_l/upperarm_l/upperarm_twist_02_l/dyn_arm_l_scale1/dyn_arm_l_scale1_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/dyn_shoulder_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/dyn_shoulder_r/dyn_shoulder_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/dyn_shoulder_armor_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/dyn_shoulder_armor_r/dyn_shoulder_armor_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_metacarpal_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_metacarpal_r/index_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_metacarpal_r/index_01_r/index_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_metacarpal_r/index_01_r/index_02_r/index_03_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_metacarpal_r/index_01_r/index_02_r/index_03_r/index_03_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_metacarpal_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_metacarpal_r/middle_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_metacarpal_r/middle_01_r/middle_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_metacarpal_r/middle_01_r/middle_02_r/middle_03_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_metacarpal_r/middle_01_r/middle_02_r/middle_03_r/middle_03_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_metacarpal_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_metacarpal_r/pinky_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_metacarpal_r/pinky_01_r/pinky_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_metacarpal_r/pinky_01_r/pinky_02_r/pinky_03_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_metacarpal_r/pinky_01_r/pinky_02_r/pinky_03_r/pinky_03_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_metacarpal_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_metacarpal_r/ring_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_metacarpal_r/ring_01_r/ring_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_metacarpal_r/ring_01_r/ring_02_r/ring_03_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_metacarpal_r/ring_01_r/ring_02_r/ring_03_r/ring_03_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r/thumb_03_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r/thumb_03_r/thumb_03_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/lowerarm_twist_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/lowerarm_twist_01_r/lowerarm_twist_01_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/lowerarm_twist_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/lowerarm_r/lowerarm_twist_02_r/lowerarm_twist_02_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/upperarm_twist_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/upperarm_twist_01_r/upperarm_twist_01_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/upperarm_twist_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/upperarm_twist_02_r/dyn_arm_r_scale1
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/clavicle_r/upperarm_r/upperarm_twist_02_r/dyn_arm_r_scale1/dyn_arm_r_scale1_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_chest
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_chest/dyn_chest_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_clav_chest_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_clav_chest_l/dyn_arm_socket_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_clav_chest_l/dyn_arm_socket_l/dyn_arm_socket_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_clav_chest_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_clav_chest_r/dyn_arm_socket_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/dyn_clav_chest_r/dyn_arm_socket_r/dyn_arm_socket_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/neck_01
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/neck_01/neck_02
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/neck_01/neck_02/head
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/spine_01/spine_02/spine_03/spine_04/spine_05/neck_01/neck_02/head/head_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l/calf_twist_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l/calf_twist_01_l/calf_twist_01_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l/calf_twist_02_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l/calf_twist_02_l/calf_twist_02_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l/foot_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l/foot_l/ball_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/calf_l/foot_l/ball_l/ball_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l1
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l1/dyn_leg_bracer_l1_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l2
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l2/dyn_leg_bracer_l2_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l3
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l3/dyn_leg_bracer_l3_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l4
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/dyn_master_l/dyn_leg_bracer_l4/dyn_leg_bracer_l4_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/thigh_twist_01_l
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_l/thigh_twist_01_l/thigh_twist_01_l_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r/calf_twist_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r/calf_twist_01_r/calf_twist_01_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r/calf_twist_02_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r/calf_twist_02_r/calf_twist_02_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r/foot_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r/foot_r/ball_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/calf_r/foot_r/ball_r/ball_r_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r1
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r1/dyn_leg_bracer_r1_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r2
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r2/dyn_leg_bracer_r2_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r3
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r3/dyn_leg_bracer_r3_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r4
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/dyn_master_r/dyn_leg_bracer_r4/dyn_leg_bracer_r4_end
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/thigh_twist_01_r
+    m_Weight: 1
+  - m_Path: Armature/root/pelvis/thigh_r/thigh_twist_01_r/thigh_twist_01_r_end
+    m_Weight: 1

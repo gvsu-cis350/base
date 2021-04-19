@@ -14,8 +14,11 @@ public class SpawnManager : MonoBehaviour
     Spawnpoint[] spawnpoints;
     List<Spawnpoint> bluepoints = new List<Spawnpoint>();
     List<Spawnpoint> redpoints = new List<Spawnpoint>();
+    VehicleSpawnpoint[] vehiclePoints;
 
-    public bool teamSpecificSpawns = false;
+    private bool teamSpecificSpawns = false;
+
+    public bool hasVehicles = false;
 
     /// <summary>
     /// When the class is referenced, set a global reference and compile an array of spawnpoints
@@ -23,6 +26,8 @@ public class SpawnManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        //Get player spawns and sort red and blue spawns out
         spawnpoints = GetComponentsInChildren<Spawnpoint>();
         foreach(Spawnpoint s in spawnpoints)
         {
@@ -34,6 +39,14 @@ public class SpawnManager : MonoBehaviour
             {
                 redpoints.Add(s);
             }
+        }
+
+        //Collect vehicle spawns and register if we have vehicles
+        vehiclePoints = GetComponentsInChildren<VehicleSpawnpoint>();
+
+        if(vehiclePoints.Length >= 1)
+        {
+            hasVehicles = true;
         }
     }
 
@@ -71,4 +84,9 @@ public class SpawnManager : MonoBehaviour
             return spawnpoints[Random.Range(0, spawnpoints.Length)].transform;
     }
     #endregion
+
+    public VehicleSpawnpoint[] GetVehiclePoint()
+    {
+        return vehiclePoints;
+    }
 }

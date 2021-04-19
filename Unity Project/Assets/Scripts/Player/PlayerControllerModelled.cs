@@ -731,6 +731,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         currentSeat = seat;
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
+        Animation.SetLayerWeight(2, 1);
 
         currentSeat.parentCar.CarPV.RPC("NewPassenger", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
 
@@ -745,5 +746,6 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         rb = this.gameObject.AddComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         inVehicle = false;
+        Animation.SetLayerWeight(2, 0);
     }
 }
