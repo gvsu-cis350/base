@@ -20,6 +20,8 @@ public class SingleShotGun : Gun
     /// </summary>
     public override void RefreshItem()
     {
+        temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[1].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
+        temp.transform.SetParent(itemGameObject.transform);
         ((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
         this.reloadTimerCoroutine = StartCoroutine(Timer());
     }
@@ -36,7 +38,7 @@ public class SingleShotGun : Gun
             ((GunInfo)itemInfo).currentAmmo--;
 
             //Create sound effect on gun and attach it to the gun
-            temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect.name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
+            temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[0].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
             temp.transform.SetParent(itemGameObject.transform);
         }
         //ammo unavailable

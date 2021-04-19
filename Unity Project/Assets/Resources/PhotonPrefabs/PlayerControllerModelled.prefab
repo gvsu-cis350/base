@@ -1319,8 +1319,9 @@ MonoBehaviour:
   itemGameObject: {fileID: 8306856615347620904}
   weaponLeftGrip: {fileID: 550926378279112196}
   weaponRightGrip: {fileID: 4366074158524253134}
-  soundEffect: {fileID: 9170767278710642988, guid: 6a664b5389dd9654f92852210ed03f4f,
-    type: 3}
+  soundEffect:
+  - {fileID: 9170767278710642988, guid: 6a664b5389dd9654f92852210ed03f4f, type: 3}
+  - {fileID: 9170767278710642988, guid: bb310b6ff4054c147a1629aeb37af2db, type: 3}
   cam: {fileID: 8563530835685953445}
 --- !u!114 &4970435814697237367
 MonoBehaviour:
@@ -1386,8 +1387,9 @@ MonoBehaviour:
   itemGameObject: {fileID: 3224814961396174300}
   weaponLeftGrip: {fileID: 7465803822790175658}
   weaponRightGrip: {fileID: 6450543368485186469}
-  soundEffect: {fileID: 9170767278710642988, guid: 6a664b5389dd9654f92852210ed03f4f,
-    type: 3}
+  soundEffect:
+  - {fileID: 9170767278710642988, guid: a2290f55123d0184f996233c2cb38819, type: 3}
+  - {fileID: 9170767278710642988, guid: 990e44973b841064e97c3509c49bc1fa, type: 3}
   cam: {fileID: 8563530835685953445}
 --- !u!82 &1161581016980039812
 AudioSource:
@@ -2102,8 +2104,9 @@ MonoBehaviour:
   itemGameObject: {fileID: 7729856249791732246}
   weaponLeftGrip: {fileID: 7396966305074607385}
   weaponRightGrip: {fileID: 1506333586391831634}
-  soundEffect: {fileID: 7722941763477025041, guid: bc6c6ea550e49924c824e18508222f15,
-    type: 3}
+  soundEffect:
+  - {fileID: 7722941763477025041, guid: bc6c6ea550e49924c824e18508222f15, type: 3}
+  - {fileID: 7722941763477025041, guid: 29aa707b630c29342bffb1df15b9b61c, type: 3}
   cam: {fileID: 8563530835685953445}
   projectile: {fileID: 100000, guid: 47d9cd783fee98240a869a76217393ec, type: 3}
   projectileSpawnSpot: {fileID: 4548535178934980816}
@@ -4250,8 +4253,9 @@ MonoBehaviour:
   itemGameObject: {fileID: 299948173792495642}
   weaponLeftGrip: {fileID: 3976493887353546354}
   weaponRightGrip: {fileID: 4376108940806018163}
-  soundEffect: {fileID: 9170767278710642988, guid: 0f1ff902b55a66b4782fc9989cd4516e,
-    type: 3}
+  soundEffect:
+  - {fileID: 9170767278710642988, guid: 0f1ff902b55a66b4782fc9989cd4516e, type: 3}
+  - {fileID: 9170767278710642988, guid: aa1bb3ef14511174c844113663717163, type: 3}
   cam: {fileID: 8563530835685953445}
 --- !u!1 &4360596638320897700
 GameObject:
@@ -6399,8 +6403,9 @@ MonoBehaviour:
   itemGameObject: {fileID: 9220425557616121887}
   weaponLeftGrip: {fileID: 6401415521637684134}
   weaponRightGrip: {fileID: 3458714311833682418}
-  soundEffect: {fileID: 9170767278710642988, guid: dc15b12acf90817459902025f1cdaa2e,
-    type: 3}
+  soundEffect:
+  - {fileID: 9170767278710642988, guid: dc15b12acf90817459902025f1cdaa2e, type: 3}
+  - {fileID: 9170767278710642988, guid: 77d89f2360aeb36469854731eccbd9a5, type: 3}
   cam: {fileID: 8563530835685953445}
 --- !u!114 &6187727949885104749
 MonoBehaviour:

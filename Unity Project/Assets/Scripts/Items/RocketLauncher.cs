@@ -19,6 +19,9 @@ public class RocketLauncher : Gun
 	/// </summary>
 	public override void RefreshItem()
 	{
+		temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[1].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
+		temp.transform.SetParent(itemGameObject.transform);
+
 		((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
 		this.reloadTimerCoroutine = StartCoroutine(Timer());
 	}
@@ -35,7 +38,7 @@ public class RocketLauncher : Gun
 			((GunInfo)itemInfo).currentAmmo--;
 
 			//Code to make and attach a sound effect object
-			temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect.name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
+			temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[0].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
 			temp.transform.SetParent(itemGameObject.transform);
 		}
     }

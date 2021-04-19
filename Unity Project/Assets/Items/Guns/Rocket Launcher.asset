@@ -16,7 +16,7 @@ MonoBehaviour:
   damage: 75
   maxAmmo: 2
   currentAmmo: 2
-  maxReloadTime: 7
+  maxReloadTime: 5
   reloadTime: 0
   accuracy: 100
   currentAccuracy: 0

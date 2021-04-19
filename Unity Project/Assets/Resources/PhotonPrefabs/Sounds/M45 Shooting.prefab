@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1793477440304303650}
   - component: {fileID: 9182368175192875037}
   m_Layer: 0
-  m_Name: MA37 Shooting
+  m_Name: M45 Shooting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,11 +44,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c2073f721e88bb749bc13e56e2c79b1f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 3563a56fadba4fb4c9900f0d7fd62817, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -142,8 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7143b5df026af1f40b22a67e4ece301f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  signal: 1
-  lifeTime: 2.377
+  signal: 0
+  lifeTime: 2.784
 --- !u!114 &1793477440304303650
 MonoBehaviour:
   m_ObjectHideFlags: 0

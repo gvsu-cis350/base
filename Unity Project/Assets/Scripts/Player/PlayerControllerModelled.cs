@@ -47,7 +47,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     public PlayerManager playerManager;
     Hashtable customProperties = new Hashtable();
     Animator Animation;
-    public bool blueTeam = false;
+    public bool blueTeam = GameSettings.IsBlueTeam;
     private bool inVehicle = false;
     private Rider currentSeat = null;
     #endregion
@@ -132,18 +132,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             //Equip the first item available
             EquipItem(primaryWeapon);
             //Remove the material entry in the hashmap if there is one
+            if (customProperties.ContainsKey("Team"))
+                customProperties.Remove("Team");
             if (GameSettings.GameMode == GameMode.TDM)
             {
-                if (!customProperties.ContainsKey("Team"))
-                {
-                    customProperties.Add("Team", blueTeam);
-                    changeAppearance(blueTeam);
-                    PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
-                }
-                else
-                {
-                    changeAppearance(blueTeam);
-                }
+                customProperties.Add("Team", blueTeam);
+                changeAppearance(blueTeam);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
             }
 
             //Set the entire player model to the static FOV camera layer

@@ -1785,6 +1785,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7702792516565155351, guid: c8b5a435cd8b0894fb84b380ca4685fa,
+        type: 3}
+      propertyPath: isBlueTeam
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8b5a435cd8b0894fb84b380ca4685fa, type: 3}
 --- !u!4 &443495743 stripped
@@ -3866,6 +3871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 687851d2b6f86384cbf6594134939120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teamSpecificSpawns: 1
 --- !u!1 &1247584423
 GameObject:
   m_ObjectHideFlags: 0
@@ -4251,6 +4257,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7702792516565155351, guid: c8b5a435cd8b0894fb84b380ca4685fa,
+        type: 3}
+      propertyPath: isBlueTeam
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8b5a435cd8b0894fb84b380ca4685fa, type: 3}

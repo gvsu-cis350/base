@@ -153,9 +153,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (PhotonNetwork.IsMasterClient)
         {
-           // Debug.Log(PV.Owner.);
-            localPlayerStats = new PlayerStats(PV.Owner.NickName, 0, 0, 0, false);
-            NewPlayer_S(localPlayerStats);
+            //Debug.Log("I ran");
+            NewPlayer_S();
             playerAdded = true;
             openMM(Respawn);
         }
@@ -234,7 +233,23 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PV.IsMine)
         {
             //get a random spawnpoint
-            Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
+            Transform spawnpoint = this.transform;
+            if (GameSettings.GameMode == GameMode.FFA)
+            {
+                spawnpoint = SpawnManager.Instance.GetSpawnpoint();
+            }
+            else if (GameSettings.GameMode == GameMode.TDM)
+            {
+                if (GameSettings.IsBlueTeam)
+                {
+                    spawnpoint = SpawnManager.Instance.GetBlueSpawnpoint();
+                }
+                else
+                {
+                    spawnpoint = SpawnManager.Instance.GetRedSpawnpoint();
+                }
+            }
+
 
             //Get the weapons if applicable
             if (!allWeapons)
@@ -790,14 +805,20 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 blueScoreSlider.maxValue = scoreCheck;
                 redScoreSlider.maxValue = scoreCheck;
+
+                if(scoreCheck == 0)
+                {
+                    blueScoreSlider.gameObject.SetActive(false);
+                    redScoreSlider.gameObject.SetActive(false);
+                }
             }
         }
     }
 
-    private bool CalculateTeam()
+    private bool CalculateTeam(int ActorNumber)
     {
         //Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
-        return PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0;
+        return ActorNumber % 2 == 0;
     }
     #endregion
 
@@ -835,15 +856,15 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     #region NewPlayer
-    public void NewPlayer_S(PlayerStats p)
+    public void NewPlayer_S()
     {
         object[] package = new object[5];
 
-        package[0] = p.username;
+        package[0] = PV.Owner.NickName;
         package[1] = PV.Owner.ActorNumber;// PhotonNetwork.LocalPlayer.ActorNumber;
         package[2] = (short)0;
         package[3] = (short)0;
-        package[4] = CalculateTeam();
+        package[4] = CalculateTeam(PV.Owner.ActorNumber);
 
         PhotonNetwork.RaiseEvent((byte)EventCodes.NewPlayer, package, new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient }, new SendOptions { Reliability = true });
     }
@@ -853,7 +874,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         PlayerStats p = new PlayerStats((string)data[0], (int)data[1], (short)data[2], (short)data[3], (bool)data[4]);
 
         playerStats.Add(p);
-
         
         //resync our local player information with the new player
         foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
