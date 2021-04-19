@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -6,16 +7,17 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.*;
+import org.w3c.dom.events.MouseEvent;
 
 // TODO: Fix bottom wall from being too low
 // TODO: Fix square bounding circles
 public class Main {
 
-    public static final int MAX_SPAWN = 10;
+    public static final int MAX_SPAWN = 100;
     public static final int RATE = 30;
-    public static final int GRAVITY = 1000;
+    public static final int GRAVITY = 0;
     public static final double DRAG = 0;
-    public static final double BOUNCE = .75;
+    public static final double BOUNCE = .99;
 
     public static int width;
     public static int height;
