@@ -1,24 +1,20 @@
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Entity {
-  protected double x, y, vx, vy;
+  protected double x, y, vx, vy, r;
   protected ArrayList<Accel> accelerations = new ArrayList<>();
 
-  public Entity(double x, double y, double vx, double vy) {
+  public Entity(double x, double y, double vx, double vy, double r) {
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
+    this.r = r;
   }
 
-  // Squares
-  public Entity(double x, double y, double vx, double vy, double w, double h) {
-
-  }
-
-  // Balls
-  public Entity(double x, double y, double vx, double vy, double r) {
-
+  public Vector2D velVector() {
+    return new Vector2D(this.vx(), this.vy);
   }
 
   public void applyDrag(double drag) {
@@ -49,6 +45,18 @@ public class Entity {
     this.x = newX;
     this.y = newY;
   }
+
+  public double getRadius() {
+    return this.r;
+  }
+
+  public Point2D getCenter() {
+    return new Point2D.Double(this.x + (this.dimX() / 2), this.y + (this.dimY() / 2));
+  }
+
+  public int dimX() { return (int) (this.r * 2); }
+
+  public int dimY() { return (int) (this.r * 2); }
 
   public double vx() {
     return this.vx;

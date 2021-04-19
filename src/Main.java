@@ -7,12 +7,15 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.*;
 
+// TODO: Fix bottom wall from being too low
+// TODO: Fix square bounding circles
 public class Main {
 
-    public static final int MAX_SPAWN = 2;
-    public static final int RATE = 100;
+    public static final int MAX_SPAWN = 10;
+    public static final int RATE = 30;
     public static final int GRAVITY = 1000;
     public static final double DRAG = 0;
+    public static final double BOUNCE = .75;
 
     public static int width;
     public static int height;
@@ -33,10 +36,10 @@ public class Main {
         width = 1000;
         height = 1000;
         initializeFrame();
-        // Thread moveEngine = new MoveEngine();
-        // moveEngine.start();
-         Thread makeLife = new MakeEntity();
-         makeLife.start();
+        Thread PhysicsEngine = new PhysicsEngine();
+        PhysicsEngine.start();
+        Thread makeLife = new MakeEntity();
+        makeLife.start();
         runAnimation();
     }
 
@@ -56,7 +59,6 @@ public class Main {
         frame = new JFrame("Demo");
         frame.setIgnoreRepaint(true); //what does this do?
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 
         // Create canvas (used for painting to frame)
         canvas = new Canvas();
@@ -126,7 +128,7 @@ public class Main {
                 // draw entities
                 for (int i = 0; i < world.size(); i++) {
                     at = new AffineTransform();
-                     at.translate(world.get(i).getX(), world.get(i).getY()); // get coords of entity
+                    at.translate(world.get(i).getX(), world.get(i).getY()); // get coords of entity
                     Entity entity = world.get(i);
                     g2D.setColor(Color.WHITE);
                     // for circles
