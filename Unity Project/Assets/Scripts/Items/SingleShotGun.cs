@@ -12,16 +12,25 @@ public class SingleShotGun : Gun
     //unity reference var
     [SerializeField] Camera cam;
 
-    //sound effect holder
-    private GameObject temp;
+    //sound effects
+    private AudioSource soundOutput;
+    private PhotonView weaponPV;
+
+    /// <summary>
+    /// Start method to get the PhotonView and Audio Source
+    /// </summary>
+    private void Start()
+    {
+        weaponPV = GetComponent<PhotonView>();
+        soundOutput = GetComponent<AudioSource>();
+    }
 
     /// <summary>
     /// Method starts the reloading of the gun when called
     /// </summary>
     public override void RefreshItem()
     {
-        temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[1].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
-        temp.transform.SetParent(itemGameObject.transform);
+        weaponPV.RPC("PlaySound", RpcTarget.All, 1, weaponPV.ViewID);
         ((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
         this.reloadTimerCoroutine = StartCoroutine(Timer());
     }
@@ -32,19 +41,19 @@ public class SingleShotGun : Gun
     public override void Use()
     {
         //Ammo available and not reloading
-        if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0))
+        if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0) && (!soundOutput.isPlaying))
         {
             RecoilShoot();
             ((GunInfo)itemInfo).currentAmmo--;
 
-            //Create sound effect on gun and attach it to the gun
-            temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[0].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
-            temp.transform.SetParent(itemGameObject.transform);
+            //Create sound effect on gun
+            weaponPV.RPC("PlaySound", RpcTarget.All, 0, weaponPV.ViewID);
         }
         //ammo unavailable
         else if (((GunInfo)itemInfo).currentAmmo <= 0)
         {
             //dryfire
+            weaponPV.RPC("PlaySound", RpcTarget.All, 0, weaponPV.ViewID);
         }
     }
 
@@ -134,5 +143,15 @@ public class SingleShotGun : Gun
             }
             */
         }
+    }
+
+    [PunRPC]
+    public void PlaySound(int soundID, int weaponPVID)
+    {
+        if (weaponPVID != weaponPV.ViewID)
+            return;
+
+        soundOutput.clip = soundEffect[soundID];
+        soundOutput.Play();
     }
 }

@@ -252,6 +252,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             roomSettings.Remove("AllWeapons");
         roomSettings.Add("AllWeapons", !allWeapons.isOn);
 
+        //Set properties and load scene
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
         PhotonNetwork.LoadLevel(mapSelectionDropdown.value + 2);
     }

@@ -15,7 +15,7 @@ public abstract class Gun : Item
 
     #region Vars
     protected Coroutine reloadTimerCoroutine;
-	public GameObject[] soundEffect;
+	public AudioClip[] soundEffect;
 	protected bool canFire = true;
 	#endregion
 

@@ -11,16 +11,25 @@ public class RocketLauncher : Gun
 	[SerializeField] GameObject projectile;
 	[SerializeField] Transform projectileSpawnSpot;
 
-	//Sound effect var holder
-	private GameObject temp;
+	//sound effects
+	private AudioSource soundOutput;
+	private PhotonView weaponPV;
+
+	/// <summary>
+	/// Start method to get the PhotonView and Audio Source
+	/// </summary>
+	private void Start()
+	{
+		weaponPV = GetComponent<PhotonView>();
+		soundOutput = GetComponent<AudioSource>();
+	}
 
 	/// <summary>
 	/// Method starts the reloading process when called
 	/// </summary>
 	public override void RefreshItem()
 	{
-		temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[1].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
-		temp.transform.SetParent(itemGameObject.transform);
+		weaponPV.RPC("PlaySound", RpcTarget.All, 1, weaponPV.ViewID);
 
 		((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
 		this.reloadTimerCoroutine = StartCoroutine(Timer());
@@ -32,14 +41,13 @@ public class RocketLauncher : Gun
 	public override void Use()
     {
 		//If we have ammo and aren't reloading
-		if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0))
+		if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0) && (!soundOutput.isPlaying))
         {
 			Shoot();
 			((GunInfo)itemInfo).currentAmmo--;
 
 			//Code to make and attach a sound effect object
-			temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[0].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
-			temp.transform.SetParent(itemGameObject.transform);
+			weaponPV.RPC("PlaySound", RpcTarget.All, 0, weaponPV.ViewID);
 		}
     }
 
@@ -58,4 +66,14 @@ public class RocketLauncher : Gun
             Debug.Log("Projectile to be instantiated is null.  Make sure to set the Projectile field in the inspector.");
         }
     }
+
+	[PunRPC]
+	public void PlaySound(int soundID, int weaponPVID)
+	{
+		if (weaponPVID != weaponPV.ViewID)
+			return;
+
+		soundOutput.clip = soundEffect[soundID];
+		soundOutput.Play();
+	}
 }

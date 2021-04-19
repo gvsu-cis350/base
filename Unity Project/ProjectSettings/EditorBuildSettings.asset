@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DevMap.unity
     guid: be1dd5d49aa9fde4584bb0d4b61f4f3b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Blood Glutch.unity
     guid: b9ecf37c3b7d8e845ac0da1e46390343
   - enabled: 0

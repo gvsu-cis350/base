@@ -17,7 +17,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 /// <summary>
 /// Class for managing players throughout their time in a game, instance of playerManagers are only destroyed upon leaving a room
 /// </summary>
-public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
+public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoomCallbacks
 {
     #region Vars
     #region Menus
@@ -616,6 +616,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    /// <summary>
+    /// Method to Check if a player or team has reached the score total
+    /// </summary>
     private void ScoreCheck()
     {
         //Exit method if the match isn't dependant on a certain kill amount
@@ -624,12 +627,13 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         // define temporary variables
         bool detectwin = false;
-        if(GameSettings.GameMode == GameMode.FFA)
+
+        //FFA
+        if (GameSettings.GameMode == GameMode.FFA)
         {
             // check to see if any player has met the win conditions
             foreach (PlayerStats a in playerStats)
             {
-                // free for all
                 if (a.kills >= scoreCheck)
                 {
                     detectwin = true;
@@ -637,10 +641,13 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
         }
+        //TDM
         else if (GameSettings.GameMode == GameMode.TDM)
         {
+            //Call method to calculate team scores
             UpdateTeamScores();
 
+            //Check if team scores meet threshold
             if ((blueScoreCount >= scoreCheck) || (redScoreCount >= scoreCheck))
             {
                 detectwin = true;
@@ -656,6 +663,32 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 // if so, tell the other players that a winner has been detected
                 UpdatePlayers_S((int)GameState.Ending, playerStats);
             }
+        }
+    }
+
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient && state != GameState.Ending)
+        {
+            List<PlayerStats> newPlayerStats = new List<PlayerStats>();
+            foreach (PlayerStats s in playerStats)
+            {
+                /*
+                Debug.Log(PhotonView.Find(s.viewID).IsOwnerActive);
+                if (!PhotonView.Find(s.viewID).IsOwnerActive)
+                {
+                    playerStats.Remove(s);
+                }
+                */
+                if(otherPlayer.ActorNumber != s.actor)
+                {
+                    newPlayerStats.Add(s);
+                }
+            }
+
+            playerStats = newPlayerStats;
+            UpdatePlayers_S((int)state, playerStats);
         }
     }
     #endregion
@@ -678,8 +711,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(controller);
-            //PhotonNetwork.DestroyAll();
-            // PhotonNetwork.
             if (!perpetual)
             {
                 PhotonNetwork.CurrentRoom.IsVisible = false;
@@ -693,6 +724,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         Cursor.visible = true;
         GameMenus.GetComponent<Image>().enabled = false;
 
+        //Display FFA Winner
         if (GameSettings.GameMode == GameMode.FFA)
         {
             endPlayerCard.SetActive(true);
@@ -711,6 +743,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             endKills.text = selection.kills.ToString();
             endPlayer.text = selection.username;
         }
+        //Display TDM Winner
         else if (GameSettings.GameMode == GameMode.TDM)
         {
             endTeamCard.SetActive(true);
@@ -794,22 +827,31 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
     }
-
+    
+    /// <summary>
+    /// Method calulates which team a player should be on via their actornumber
+    /// </summary>
+    /// <param name="ActorNumber"></param>
+    /// <returns></returns>
     private bool CalculateTeam(int ActorNumber)
     {
         //Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
         return ActorNumber % 2 == 0;
     }
 
+    /// <summary>
+    /// Method can be called to spawn vehicles in and update the master list of vehicles to newly created vehicles
+    /// </summary>
     private void CreateVehicles()
     {
+        //Check if the spawn manager allows for vehicles to be spawned
         if (SpawnManager.Instance.hasVehicles)
         {
+            //Get spawnpoints and add a new vehicle at the spawn point
             VehicleSpawnpoint[] points = SpawnManager.Instance.GetVehiclePoint();
 
             foreach(VehicleSpawnpoint p in points)
             {
-                //PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), Vector3.zero, Quaternion.identity, 0, null);
                 GameObject temp = PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), p.transform.position, p.transform.rotation, 0, null);
                 vehicles.Add(temp);
             }
@@ -854,20 +896,21 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     #region NewPlayer
     public void NewPlayer_S()
     {
-        object[] package = new object[5];
+        object[] package = new object[6];
 
         package[0] = PV.Owner.NickName;
         package[1] = PV.Owner.ActorNumber;// PhotonNetwork.LocalPlayer.ActorNumber;
         package[2] = (short)0;
         package[3] = (short)0;
         package[4] = CalculateTeam(PV.Owner.ActorNumber);
+        package[5] = PV.ViewID;
 
         PhotonNetwork.RaiseEvent((byte)EventCodes.NewPlayer, package, new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient }, new SendOptions { Reliability = true });
     }
 
     public void NewPlayer_R(object[] data)
     {
-        PlayerStats p = new PlayerStats((string)data[0], (int)data[1], (short)data[2], (short)data[3], (bool)data[4]);
+        PlayerStats p = new PlayerStats((string)data[0], (int)data[1], (short)data[2], (short)data[3], (bool)data[4], (int)data[5]);
 
         playerStats.Add(p);
         
@@ -877,8 +920,10 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             gameObject.GetComponent<PlayerControllerModelled>().TrySync();
         }
         
-
-        UpdatePlayers_S((int)state, playerStats);
+        if(PhotonNetwork.IsMasterClient && PV.IsMine)
+        {
+            UpdatePlayers_S((int)state, playerStats);
+        }
     }
     #endregion
 
@@ -890,13 +935,14 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         package[0] = state;
         for (int i = 0; i < info.Count; i++)
         {
-            object[] piece = new object[5];
+            object[] piece = new object[6];
 
             piece[0] = info[i].username;
             piece[1] = info[i].actor;
             piece[2] = info[i].kills;
             piece[3] = info[i].deaths;
             piece[4] = info[i].blueTeam;
+            piece[5] = info[i].viewID;
 
             package[i + 1] = piece;
         }
@@ -914,7 +960,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             object[] extract = (object[])data[i];
 
-            PlayerStats p = new PlayerStats((string)extract[0], (int)extract[1], (short)extract[2], (short)extract[3], (bool)extract[4]);
+            PlayerStats p = new PlayerStats((string)extract[0], (int)extract[1], (short)extract[2], (short)extract[3], (bool)extract[4], (int)extract[5]);
 
             playerStats.Add(p);
 

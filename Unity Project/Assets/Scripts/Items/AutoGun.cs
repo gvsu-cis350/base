@@ -12,10 +12,22 @@ public class AutoGun : Gun
     //unity reference var
     [SerializeField] Camera cam;
 
-    //sound effect holder
-    private GameObject temp;
-
     public float firerate;
+    private bool isFiring = false;
+
+    //sound effects
+    private AudioSource soundOutput;
+    private PhotonView weaponPV;
+
+    /// <summary>
+    /// Start method to get the PhotonView and Audio Source
+    /// </summary>
+    private void Start()
+    {
+        weaponPV = GetComponent<PhotonView>();
+        soundOutput = GetComponent<AudioSource>();
+    }
+
     /// <summary>
     /// Method starts the reloading of the gun when called
     /// </summary>
@@ -43,9 +55,12 @@ public class AutoGun : Gun
             Shoot();
             ((GunInfo)itemInfo).currentAmmo--;
 
-            //Create sound effect on gun and attach it to the gun
-            temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[0].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
-            temp.transform.SetParent(itemGameObject.transform);
+            //Create sound effect on gun
+            if (!isFiring)
+            {
+                isFiring = true;
+                weaponPV.RPC("PlaySoundAuto", RpcTarget.All, 0, weaponPV.ViewID, isFiring);
+            }
         }
         //ammo unavailable
         else if (((GunInfo)itemInfo).currentAmmo <= 0)
@@ -53,10 +68,16 @@ public class AutoGun : Gun
             //dryfire
         }
 
-        //Make sure that last hit is going to be greater than the recharge rates but not increase infinitely
+        Debug.Log(Input.GetMouseButton(0));
+
         if (Input.GetMouseButton(0))
         {
             StartCoroutine(nextShoot());
+        }
+        else
+        {
+            isFiring = false;
+            weaponPV.RPC("PlaySoundAuto", RpcTarget.All, 0, weaponPV.ViewID, isFiring);
         }
     }
 
@@ -88,6 +109,31 @@ public class AutoGun : Gun
                 hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
             }
             //Debug.Log("We hit " + hit.collider.gameObject.name);
+        }
+    }
+
+    [PunRPC]
+    public void PlaySoundAuto(int soundID, int weaponPVID, bool firing)
+    {
+        if (weaponPVID != weaponPV.ViewID)
+            return;
+
+        if(soundID == 0)
+        {
+            if (firing)
+            {
+                soundOutput.clip = soundEffect[soundID];
+                soundOutput.Play();
+            }
+            else
+            {
+                soundOutput.Stop();
+            }
+        }
+        else
+        {
+            soundOutput.clip = soundEffect[soundID];
+            soundOutput.Play();
         }
     }
 }
