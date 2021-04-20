@@ -5,7 +5,7 @@ using UnityEngine;
 public class SettingsAudioListener : MonoBehaviour
 {
     /// <summary>
-    /// Method subscribes to settings update event and loads the initial Maseter volume
+    /// Method subscribes to settings update event and loads the initial Master volume
     /// </summary>
     void Start()
     {
@@ -19,5 +19,13 @@ public class SettingsAudioListener : MonoBehaviour
     private void updateVolume()
     {
         AudioListener.volume = (float)(boot.bootObject.currentSettings.masterVolume) / 100f;
+    }
+
+    /// <summary>
+    /// Method removes this object from the gameEvents list if it gets destroyed
+    /// </summary>
+    private void OnDestroy()
+    {
+        GameEvents.current.onSettingsUpdate -= updateVolume;
     }
 }

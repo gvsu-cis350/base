@@ -5,7 +5,9 @@ using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
 
-
+/// <summary>
+/// Enum for drive type
+/// </summary>
 [Serializable]
 public enum DriveType
 {
@@ -14,26 +16,12 @@ public enum DriveType
     AllWheelDrive
 }
 
-
 /// <summary>
-/// Class is the controller for player controller and allows the player to move around
+/// Class is for player controlled cars and allows the player to move the car around
 /// </summary>
-public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamageable
+public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks
 {
     #region Vars
-    #region Inspector Reference Vars
-    [SerializeField] GameObject cameraHolder;
-    [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
-    #endregion
-
-
-    #region Location and Roatation Vars
-    float verticalLookRotation;
-    bool grounded;
-    Vector3 smoothMoveVelocity;
-    Vector3 moveAmount;
-    #endregion
-
     #region Player Vars
     Rigidbody rb;
     public PhotonView CarPV;
@@ -41,11 +29,7 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
     private bool hasDriver = false;
     private Dictionary<string, Rider> riders = new Dictionary<string, Rider>();
     private Rider[] passengers;
-    #endregion
-
-    #region Health Vars
-    const float maxHealth = 100f;
-    float currentHealth = maxHealth;
+    private Camera cam;
     #endregion
 
     #region Wheel Vars
@@ -73,30 +57,38 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
     #endregion
 
     /// <summary>
-    /// Method call which assigns objects to reference vars in script when script is referenced
+    /// Method call which assigns components to reference vars in script when script is referenced
     /// </summary>
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         CarPV = GetComponent<PhotonView>();
         PhotonNetwork.AddCallbackTarget(this);
+        cam = GetComponentInChildren<Camera>();
     }
 
+    /// <summary>
+    /// Method unsubscribes this object to the photonNetwork as this object is a room Object
+    /// </summary>
     private void OnDestroy()
     {
         PhotonNetwork.RemoveCallbackTarget(this);
     }
+
     /// <summary>
-    /// Method which is called when class is contructed, and deletes references to other user's controllers
+    /// Method establishes passenger and vehicle variables
     /// </summary>
     private void Start()
     {
+        //Remove driver and player ownership of vehicle
         driverPV = null;
         CarPV.TransferOwnership(null);
         hasDriver = false;
+
+        //Find wheels
         m_Wheels = GetComponentsInChildren<WheelCollider>();
 
-
+        //Collect seats
         passengers = GetComponentsInChildren<Rider>();
         foreach(Rider r in passengers)
         {
@@ -104,20 +96,27 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
         }
     }
 
-    
-
     /// <summary>
-    /// Update method called continously based on frame rate of user to handle local inputs
+    /// Update method called to move car around
     /// </summary>
     void Update()
     {
-        //exit method if we are not on the local user's Photon View id
+        //exit method if we do not own the car
         if (!CarPV.IsMine)
             return;
 
-        if (driverPV == null )
+        //Protection for master client owning this car upon instantiation
+        if (driverPV == null)
+        {
+            //Turns the camera off for the last driver as they still own this vehicle, but their PV is not logged as the current driver.
+            cam.enabled = false;
             return;
+        }
 
+        //Enable camera as we are have passed PhotonView checks
+        cam.enabled = true;
+
+        //Set wheels up
         m_Wheels[0].ConfigureVehicleSubsteps(criticalSpeed, stepsBelow, stepsAbove);
 
         float angle = maxAngle * Input.GetAxis("Horizontal");
@@ -170,10 +169,19 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
         }
     }
 
+    #region Ownership Transfer
+    /// <summary>
+    /// Method to gets called when someone tries to get ownership of the vehicle
+    /// </summary>
+    /// <param name="targetView">The PV of the object which is receiving the request</param>
+    /// <param name="requestingPlayer">The player sending the request</param>
     public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
     {
+        //Exit this method if the requested car is not this car
         if (targetView != CarPV)
             return;
+
+        //Only give ownership if there isn't a current driver
         if (!hasDriver)
         {
             CarPV.TransferOwnership(requestingPlayer);
@@ -181,65 +189,118 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
         }
     }
 
+    /// <summary>
+    /// Method to handle the specifics of what happens when ownership is transfered
+    /// </summary>
+    /// <param name="targetView"></param>
+    /// <param name="requestingPlayer"></param>
     public void OnOwnershipTransfered(PhotonView targetView, Player requestingPlayer)
     {
         if (targetView != CarPV)
             return;
     }
 
+    /// <summary>
+    /// Method to handle ownership Transfer failures
+    /// </summary>
+    /// <param name="targetView"></param>
+    /// <param name="requestingPlayer"></param>
     public void OnOwnershipTransferFailed(PhotonView targetView, Player requestingPlayer)
     {
         return;
     }
+    #endregion
 
+    /// <summary>
+    /// Method to gets called locally when someone enters the driver slot to update the local driverPV
+    /// </summary>
+    /// <param name="newDriver"></param>
     public void NewDriverRequest(PhotonView newDriver)
     {
         driverPV = newDriver;
         base.photonView.RequestOwnership();
     }
 
+    #region Passenger Methods
+    /// <summary>
+    /// Method attaches a player to a seat
+    /// </summary>
+    /// <param name="player">The PV ID of the player that needs to change transform</param>
+    /// <param name="seat">The seat that the player has selected</param>
+    /// <param name="adding">Wheter they are getting out (false) or entering (true)</param>
     private void ObjectAttachToggle(int player, Rider seat, bool adding)
     {
+        //Find the gameObject of the player with the passed ID
         GameObject holder = PhotonView.Find(player).gameObject;
+
+        //Check if they are entering vehicle
         if (adding)
         {
+            //Parent them to the seat's playerPosition
             holder.transform.SetParent(seat.playerPostion.transform);
             holder.transform.localPosition = new Vector3(0, 0, 0);
             holder.transform.localRotation = new Quaternion(0, 0, 0, 0);
         }
+        //Exiting vehicle
         else
         {
+            //Set parent to the seat's exitPostion
+            holder.transform.SetParent(seat.exitPosition.transform);
+            holder.transform.localPosition = new Vector3(0, 0, 0);
+            holder.transform.localRotation = new Quaternion(0, 0, 0, 0);
+
+            //Unparent the player
             holder.transform.SetParent(null);
         }
     }
 
+    /// <summary>
+    /// RPC to track a new player to the vehicle
+    /// </summary>
+    /// <param name="newSeat">The seat they have selected</param>
+    /// <param name="carID">The ID of the parent Car</param>
+    /// <param name="player">Their personal PV ID</param>
     [PunRPC]
     public void NewPassenger(string newSeat, int carID, int player)
     {
+        //Exit the method if this car doesn't match the passed car ID
         if (carID != CarPV.ViewID)
             return;
 
+        //Attach the player to their seat
         ObjectAttachToggle(player, riders[newSeat], true);
 
-
+        //Set the seat value to occupied
         riders[newSeat].occupied = true;
     }
 
+    /// <summary>
+    /// RPC to track a player leaving a vehicle
+    /// </summary>
+    /// <param name="newSeat">The Player's seat</param>
+    /// <param name="carID">The PV ID of the selected vehicle</param>
+    /// <param name="player">The PV ID of the player</param>
     [PunRPC]
     public void ExitVehicle (string newSeat, int carID, int player)
     {
+        //Exit the method if the car IDs don't match
         if (carID != CarPV.ViewID)
             return;
 
+        //Eject the player from their seat
         ObjectAttachToggle(player, riders[newSeat], false);
 
+        //Set the seat to being unoccupied
         riders[newSeat].occupied = false;
 
+        //Check if the seat was the driver's seat
         if (newSeat.Equals("Driver"))
         {
+            //Reset the driver's seat ids if it was
             driverPV = null;
             CarPV.TransferOwnership(null);
             hasDriver = false;
         }
     }
+    #endregion
 }

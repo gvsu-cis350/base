@@ -35,7 +35,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #endregion
 
     #region Location and Rotation Vars
-    float verticalLookRotation;
+    private float verticalLookRotation;
+    private float vehicleLookRotation;
     bool grounded;
     Vector3 smoothMoveVelocity;
     Vector3 moveAmount;
@@ -185,13 +186,21 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //check to see if there is a the current game state is set to playing
         if ((int)playerManager.state == 2)
         {
-            //run basic movement methods and weapon switching methods
-            Look();
+            //run basic movement methods and weapon switching methods depending on vehicle status
+            
+
             if (!inVehicle)
             {
+                Look();
                 Move();
                 Jump();
             }
+            else if (!currentSeat.name.Equals("Driver"))
+            {
+                Look();
+            }
+            
+
             weaponSwitch();
 
             //check to see if the user fires their gun
@@ -245,12 +254,17 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 {
                     if (hit.collider.gameObject.GetComponentInParent<Car>())
                     {
+                        //Check if the seat is occupied and only allow player to enter it if it is empty
                         if(!hit.collider.gameObject.GetComponent<Rider>().occupied)
                         {
+                            //Check if the seat is the driver seat
                             if (hit.collider.gameObject.GetComponent<Rider>().driver)
                             {
+                                //Send new driver request
                                 hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest(boot.bootObject.localPV);
                             }
+                            
+                            //enter seat
                             EnterVehicle(hit.collider.gameObject.GetComponent<Rider>());
                         }
                     }
@@ -310,7 +324,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <summary>
     /// Method which allows character to jump if they are on the ground
     /// </summary>
-    void Jump()
+    private void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
@@ -725,12 +739,20 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     }
     #endregion
 
+    #region Vehicles
     private void EnterVehicle(Rider seat)
     {
         inVehicle = true;
         currentSeat = seat;
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
+        Animation.SetLayerWeight(2, 1);
+        if (currentSeat.name.Equals("Driver"))
+        {
+            cam.enabled = false;
+            cam.transform.GetChild(0).gameObject.SetActive(false);
+        }
+        cameraHolder.transform.localEulerAngles = new Vector3(0, 0, 0);
 
         currentSeat.parentCar.CarPV.RPC("NewPassenger", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
 
@@ -745,5 +767,9 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         rb = this.gameObject.AddComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         inVehicle = false;
+        Animation.SetLayerWeight(2, 0);
+        cam.enabled = true;
+        cam.transform.GetChild(0).gameObject.SetActive(true);
     }
+    #endregion
 }

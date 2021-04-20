@@ -8,11 +8,13 @@ using UnityEngine;
 /// </summary>
 public class Menu : MonoBehaviour
 {
+    #region Vars
     //string to store the name of a menu for references in scripts
     public string menuName;
 
     //boolean to determine if the menu is active
     public bool open;
+    #endregion
 
     /// <summary>
     /// Method to set a menu object to active

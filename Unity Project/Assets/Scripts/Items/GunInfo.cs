@@ -20,8 +20,9 @@ public class GunInfo : ItemInfo
     public float accuracy = 80.0f;                      // How accurate this weapon is on a scale of 0 to 100
     [HideInInspector] public float currentAccuracy;     // Holds the current accuracy.  
     public float accuracyDropPerShot = 1.0f;            // How much the accuracy will decrease on each shot
-    public float accuracyRecoverRate = 0.1f;			// How quickly the accuracy recovers after each shot (value between 0 and 1)
+    public float accuracyRecoverRate = 0.1f;            // How quickly the accuracy recovers after each shot (value between 0 and 1)
 
+    [Tooltip("Leave empty if semi-auto/not applicable")]
     public float roundsPerMinute;                       // How many rounds a fully automatic weapon can fire per minute
     public int shotsPerRound;                           // How many bullets are fired per round in a multiShotGun
 }

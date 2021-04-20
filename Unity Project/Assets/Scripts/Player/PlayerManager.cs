@@ -17,7 +17,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 /// <summary>
 /// Class for managing players throughout their time in a game, instance of playerManagers are only destroyed upon leaving a room
 /// </summary>
-public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
+public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoomCallbacks
 {
     #region Vars
     #region Menus
@@ -54,6 +54,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private bool allWeapons;
     private int redScoreCount = 0;
     private int blueScoreCount = 0;
+
+    private List<GameObject> vehicles = new List<GameObject>();
 
     [SerializeField] GameObject[] items;
     #region UI
@@ -144,7 +146,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), Vector3.zero, Quaternion.identity, 0, null);
+                CreateVehicles();
             }
         }
 
@@ -249,7 +251,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     spawnpoint = SpawnManager.Instance.GetRedSpawnpoint();
                 }
             }
-
 
             //Get the weapons if applicable
             if (!allWeapons)
@@ -615,6 +616,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    /// <summary>
+    /// Method to Check if a player or team has reached the score total
+    /// </summary>
     private void ScoreCheck()
     {
         //Exit method if the match isn't dependant on a certain kill amount
@@ -623,12 +627,13 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         // define temporary variables
         bool detectwin = false;
-        if(GameSettings.GameMode == GameMode.FFA)
+
+        //FFA
+        if (GameSettings.GameMode == GameMode.FFA)
         {
             // check to see if any player has met the win conditions
             foreach (PlayerStats a in playerStats)
             {
-                // free for all
                 if (a.kills >= scoreCheck)
                 {
                     detectwin = true;
@@ -636,23 +641,14 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
         }
+        //TDM
         else if (GameSettings.GameMode == GameMode.TDM)
         {
-            int blueKills = 0;
-            int redKills = 0;
+            //Call method to calculate team scores
+            UpdateTeamScores();
 
-            foreach (PlayerStats p in playerStats)
-            {
-                if (p.blueTeam)
-                {
-                    blueKills += p.kills;
-                }
-                else
-                {
-                    redKills += p.kills;
-                }
-            }
-            if ((blueKills >= scoreCheck) || (redKills >= scoreCheck))
+            //Check if team scores meet threshold
+            if ((blueScoreCount >= scoreCheck) || (redScoreCount >= scoreCheck))
             {
                 detectwin = true;
             }
@@ -667,6 +663,32 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 // if so, tell the other players that a winner has been detected
                 UpdatePlayers_S((int)GameState.Ending, playerStats);
             }
+        }
+    }
+
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient && state != GameState.Ending)
+        {
+            List<PlayerStats> newPlayerStats = new List<PlayerStats>();
+            foreach (PlayerStats s in playerStats)
+            {
+                /*
+                Debug.Log(PhotonView.Find(s.viewID).IsOwnerActive);
+                if (!PhotonView.Find(s.viewID).IsOwnerActive)
+                {
+                    playerStats.Remove(s);
+                }
+                */
+                if(otherPlayer.ActorNumber != s.actor)
+                {
+                    newPlayerStats.Add(s);
+                }
+            }
+
+            playerStats = newPlayerStats;
+            UpdatePlayers_S((int)state, playerStats);
         }
     }
     #endregion
@@ -684,12 +706,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         currentMatchTime = 0;
         RefreshTimerUI();
 
-        PhotonNetwork.Destroy(controller);
+
         // disable room
         if (PhotonNetwork.IsMasterClient)
         {
-            //PhotonNetwork.DestroyAll();
-
+            PhotonNetwork.Destroy(controller);
             if (!perpetual)
             {
                 PhotonNetwork.CurrentRoom.IsVisible = false;
@@ -703,6 +724,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         Cursor.visible = true;
         GameMenus.GetComponent<Image>().enabled = false;
 
+        //Display FFA Winner
         if (GameSettings.GameMode == GameMode.FFA)
         {
             endPlayerCard.SetActive(true);
@@ -721,32 +743,21 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             endKills.text = selection.kills.ToString();
             endPlayer.text = selection.username;
         }
+        //Display TDM Winner
         else if (GameSettings.GameMode == GameMode.TDM)
         {
             endTeamCard.SetActive(true);
-            int blueKills = 0;
-            int redKills = 0;
+            UpdateTeamScores();
 
-            foreach (PlayerStats p in playerStats)
-            {
-                if (p.blueTeam)
-                {
-                    blueKills += p.kills;
-                }
-                else
-                {
-                    redKills += p.kills;
-                }
-            }
-            endBlueScore.text = blueKills.ToString();
-            endRedScore.text = redKills.ToString();
+            endBlueScore.text = blueScoreCount.ToString();
+            endRedScore.text = redScoreCount.ToString();
 
-            if (blueKills > redKills)
+            if (blueScoreCount > redScoreCount)
             {
                 endTeam.text = "Blue Team Wins";
                 endTeam.color = new Color(0, 0, 255);
             }
-            else if (blueKills < redKills)
+            else if (blueScoreCount < redScoreCount)
             {
                 endTeam.text = "Red Team Wins";
                 endTeam.color = new Color(255, 0, 0);
@@ -768,6 +779,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void InitializeMatch()
     {
+        //Code sets and or disables match timer depending on room parameters
         if (customRoomProperties.ContainsKey("MatchLength"))
         {
             if((int)customRoomProperties["MatchLength"] == 0)
@@ -791,6 +803,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             timer.text = "ERROR";
         }
 
+        //Game sets and or disables score checking based on room parameters
         if (GameSettings.GameMode != GameMode.TDM)
         {
             blueScoreSlider.gameObject.SetActive(false);
@@ -814,11 +827,36 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
     }
-
+    
+    /// <summary>
+    /// Method calulates which team a player should be on via their actornumber
+    /// </summary>
+    /// <param name="ActorNumber"></param>
+    /// <returns></returns>
     private bool CalculateTeam(int ActorNumber)
     {
         //Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
         return ActorNumber % 2 == 0;
+    }
+
+    /// <summary>
+    /// Method can be called to spawn vehicles in and update the master list of vehicles to newly created vehicles
+    /// </summary>
+    private void CreateVehicles()
+    {
+        //Check if the spawn manager allows for vehicles to be spawned
+        if (SpawnManager.Instance.hasVehicles)
+        {
+            //Get spawnpoints and add a new vehicle at the spawn point
+            VehicleSpawnpoint[] points = SpawnManager.Instance.GetVehiclePoint();
+
+            foreach(VehicleSpawnpoint p in points)
+            {
+                GameObject temp = PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), p.transform.position, p.transform.rotation, 0, null);
+                vehicles.Add(temp);
+            }
+        }
+
     }
     #endregion
 
@@ -881,8 +919,10 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             gameObject.GetComponent<PlayerControllerModelled>().TrySync();
         }
         
-
-        UpdatePlayers_S((int)state, playerStats);
+        if(PhotonNetwork.IsMasterClient && PV.IsMine)
+        {
+            UpdatePlayers_S((int)state, playerStats);
+        }
     }
     #endregion
 
@@ -990,6 +1030,12 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     #region NewMatch
     public void NewMatch_S()
     {
+        foreach(GameObject v in vehicles)
+        {
+            PhotonNetwork.Destroy(v);
+        }
+
+        CreateVehicles();
         PhotonNetwork.RaiseEvent((byte)EventCodes.NewMatch, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
     }
 
@@ -1078,6 +1124,4 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
     #endregion
-
-
 }

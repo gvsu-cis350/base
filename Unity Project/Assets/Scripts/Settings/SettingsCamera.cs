@@ -10,7 +10,7 @@ public class SettingsCamera : MonoBehaviour
     void Start()
     {
         GameEvents.current.onNewSettings += updateFOV;
-        this.gameObject.GetComponent<Camera>().fieldOfView = (float)boot.bootObject.currentSettings.fov;
+        GetComponent<Camera>().fieldOfView = (float)boot.bootObject.currentSettings.fov;
     }
 
     /// <summary>
@@ -18,6 +18,14 @@ public class SettingsCamera : MonoBehaviour
     /// </summary>
     void updateFOV()
     {
-        this.gameObject.GetComponent<Camera>().fieldOfView = (float) boot.bootObject.currentSettings.fov;
+        GetComponent<Camera>().fieldOfView = (float) boot.bootObject.currentSettings.fov;
+    }
+
+    /// <summary>
+    /// Method removes this object from the gameEvents list if it gets destroyed
+    /// </summary>
+    private void OnDestroy()
+    {
+        GameEvents.current.onNewSettings -= updateFOV;
     }
 }

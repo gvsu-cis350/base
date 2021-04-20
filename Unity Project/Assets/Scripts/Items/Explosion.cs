@@ -16,10 +16,13 @@ public class Explosion : MonoBehaviour
 	public float explosionForce = 5.0f;			// The force with which nearby objects will be blasted outwards
 	public float explosionRadius = 10.0f;		// The radius of the explosion
 
+	/// <summary>
+	/// Method to apply explosive force to objects near explosion
+	/// </summary>
+	/// <returns></returns>
 	IEnumerator Start()
 	{
-		// Wait one frame so that explosion force will be applied to debris which
-		// might not yet be instantiated
+		// Wait one frame so that explosion force will be applied to objects which might not yet be instantiated
 		yield return null;
 
 		// An array of nearby colliders

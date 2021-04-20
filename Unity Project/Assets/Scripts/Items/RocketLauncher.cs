@@ -6,24 +6,39 @@ using System.IO;
 
 public class RocketLauncher : Gun
 {
-    //unity reference var
+    #region Vars
+    #region Inspector Vars
     [SerializeField] Camera cam;
 	[SerializeField] GameObject projectile;
 	[SerializeField] Transform projectileSpawnSpot;
+    #endregion
 
-	//Sound effect var holder
-	private GameObject temp;
+    #region Components
+    private AudioSource soundOutput;
+	private PhotonView weaponPV;
+    #endregion
+    #endregion
+    
+	/// <summary>
+    /// Start method to get the PhotonView and Audio Source components
+    /// </summary>
+    private void Start()
+	{
+		weaponPV = GetComponent<PhotonView>();
+		soundOutput = GetComponent<AudioSource>();
+	}
 
 	/// <summary>
 	/// Method starts the reloading process when called
 	/// </summary>
 	public override void RefreshItem()
 	{
-		temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[1].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
-		temp.transform.SetParent(itemGameObject.transform);
+		//Play sound
+		weaponPV.RPC("PlaySound", RpcTarget.All, 1, weaponPV.ViewID);
 
+		//Start coroutine
 		((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
-		this.reloadTimerCoroutine = StartCoroutine(Timer());
+		reloadTimerCoroutine = StartCoroutine(Timer());
 	}
 
 	/// <summary>
@@ -32,14 +47,14 @@ public class RocketLauncher : Gun
 	public override void Use()
     {
 		//If we have ammo and aren't reloading
-		if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0))
+		if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0) && (!soundOutput.isPlaying))
         {
+			//Fire
 			Shoot();
 			((GunInfo)itemInfo).currentAmmo--;
 
-			//Code to make and attach a sound effect object
-			temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[0].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
-			temp.transform.SetParent(itemGameObject.transform);
+			//Play shoot sound effect
+			weaponPV.RPC("PlaySound", RpcTarget.All, 0, weaponPV.ViewID);
 		}
     }
 
@@ -58,4 +73,21 @@ public class RocketLauncher : Gun
             Debug.Log("Projectile to be instantiated is null.  Make sure to set the Projectile field in the inspector.");
         }
     }
+
+	/// <summary>
+	/// Method to play sound on this object
+	/// </summary>
+	/// <param name="soundID">Array Index of desired sound effect</param>
+	/// <param name="weaponPVID">PhotonView ID of object that sound will play on</param>
+	[PunRPC]
+	public void PlaySound(int soundID, int weaponPVID)
+	{
+		//Exit if the ID of this weapon doesn't match this object's
+		if (weaponPVID != weaponPV.ViewID)
+			return;
+
+		//Play sound effect
+		soundOutput.clip = soundEffect[soundID];
+		soundOutput.Play();
+	}
 }

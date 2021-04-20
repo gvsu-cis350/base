@@ -5,8 +5,15 @@ using System;
 
 public class GameEvents : MonoBehaviour
 {
+    #region Vars
     //Static game event reference for the entire game
     public static GameEvents current;
+
+    #region Settings Update Events
+    public event Action onSettingsUpdate;
+    public event Action onNewSettings;
+    #endregion
+    #endregion
 
     /// <summary>
     /// Set the current game event instance to the global reference and don't destroy this
@@ -16,11 +23,6 @@ public class GameEvents : MonoBehaviour
         current = this;
         DontDestroyOnLoad(transform.gameObject);
     }
-
-    #region Vars for Settings update
-    public event Action onSettingsUpdate;
-    public event Action onNewSettings;
-    #endregion
 
     /// <summary>
     /// Method establishes the hub which receives updates to the onSettingsUpdate event and throws the event to listeners
