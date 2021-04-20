@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #region Menus
     [SerializeField] MenuManager GameMenus;
     [SerializeField] Menu Respawn, Pause;
+    private bool pauseMenu = false;
     #endregion
 
     #region Photon
@@ -91,7 +92,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     }
 
     /// <summary>
-    /// Method called upon a PlayerManager creations which destroys the ingame menus of other users from the local user's run of the game if PV doesn't match and opens the respawn menu if PV does match
+    /// Method Triggerd on 1st frame to setup PlayerManager baselines
     /// </summary>
     private void Start()
     {
@@ -104,9 +105,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             Destroy(GetComponentInChildren<Canvas>().gameObject);
             Destroy(HUD);
         }
-        //Setup weapon selection
         else
         {
+            //Setup weapon selection
             //record if we have access to all of the weapons in the game
             if (customRoomProperties.ContainsKey("AllWeapons"))
                 allWeapons = (bool)customRoomProperties["AllWeapons"];
@@ -115,13 +116,13 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
 
             if (allWeapons)
             {
-                //Make sure that the settings are inactive
+                //Make sure that the 2 weapon settings are inactive
                 primary.SetActive(false);
                 secondary.SetActive(false);
             }
             else
             {
-                //Make sure that the settings are active
+                //Make sure that the 2 weapon settings are active
                 primary.SetActive(true);
                 secondary.SetActive(true);
 
@@ -137,25 +138,30 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
                     i++;
                 }
 
+                //Clear dropdowns
                 primaryDropdown.ClearOptions();
                 secondaryDropdown.ClearOptions();
 
+                //Set dropdowns to available weapons
                 primaryDropdown.AddOptions(weaponNames);
                 secondaryDropdown.AddOptions(weaponNames);
             }
 
+            //Method is nested here to create vehicles once when the master client playerManager starts
             if (PhotonNetwork.IsMasterClient)
             {
                 CreateVehicles();
             }
         }
 
+        //Refresh UI and Start Match
         refreshStats();
         InitializeMatch();
 
+        //Check to see if the master client is running on this script
         if (PhotonNetwork.IsMasterClient)
         {
-            //Debug.Log("I ran");
+            //If it is, send the master client's player manager the new player's information
             NewPlayer_S();
             playerAdded = true;
             openMM(Respawn);
@@ -167,23 +173,29 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// </summary>
     private void Update()
     {
+        //Exit the method if this isn't my playerManager
         if (!PV.IsMine)
             return;
 
+        //Exit the method if the game is ending
         if (state == GameState.Ending)
             return;
 
-        //Debug.Log(playerStats.Count);
+        Debug.Log(state);
+        //Check if the player is paused/pausing
         togglePause();
 
+        //Display the Leaderboard if the tab key is pressed
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (leaderBoard.gameObject.activeSelf) leaderBoard.gameObject.SetActive(false);
             else Leaderboard(leaderBoard);
         }
 
+        //If there is an acitve controller
         if(controller != null)
         {
+            //Set all of the weapon overlays off
             for(int i = 0; i < items.Length; i++)
             {
                 if(i != controller.GetComponent<PlayerControllerModelled>().itemIndex)
@@ -191,16 +203,25 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
                     items[i].SetActive(false);
                 }
             }
+
+            //Activate the weapon overlay for the current weapon
             items[controller.GetComponent<PlayerControllerModelled>().itemIndex].SetActive(true);
         }
     }
     #endregion
 
     #region Enable/Disable
+    /// <summary>
+    /// Method subscribes this object to the Photon Network when enabled
+    /// </summary>
     public override void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
     }
+
+    /// <summary>
+    /// Method unsubscribes this object to the Photon Network when disabled
+    /// </summary>
     public override void OnDisable()
     {
         PhotonNetwork.RemoveCallbackTarget(this);
@@ -208,6 +229,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #endregion
 
     #region Enums
+    /// <summary>
+    /// Enums for the Photon Event system of players
+    /// </summary>
     public enum EventCodes : byte
     {
         NewPlayer,
@@ -217,6 +241,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         RefreshTimer
     }
 
+    /// <summary>
+    /// Enums for the State of the Match
+    /// </summary>
     public enum GameState
     {
         Waiting = 0,
@@ -232,14 +259,18 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// </summary>
     public void CreateNewController()
     {
+        //Verify this is my playerManager
         if (PV.IsMine)
         {
             //get a random spawnpoint
             Transform spawnpoint = this.transform;
+
+            //Based on FFA rules
             if (GameSettings.GameMode == GameMode.FFA)
             {
                 spawnpoint = SpawnManager.Instance.GetSpawnpoint();
             }
+            //Based on TDM rules
             else if (GameSettings.GameMode == GameMode.TDM)
             {
                 if (GameSettings.IsBlueTeam)
@@ -258,6 +289,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
                 primaryWeaponPM = weaponIndex[primaryDropdown.value];
                 secondaryWeaponPM = weaponIndex[secondaryDropdown.value];
             }
+
             //create a new controller at the spawnpoint prefab loaction
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerModelled"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
 
@@ -276,12 +308,18 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// </summary>
     public void Die()
     {
+        //Remove controller
         activeController = false;
         PhotonNetwork.Destroy(controller);
+
+        //Set spawn menu to active
         HUD.SetActive(false);
         primaryDropdown.value = primaryWeaponPM;
         secondaryDropdown.value = secondaryWeaponPM;
         openMM(Respawn);
+        pauseMenu = false;
+
+        //Tell master client we died
         ChangeStat_S(PhotonNetwork.LocalPlayer.ActorNumber, 1, 1);
     }
     #endregion
@@ -292,26 +330,43 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// </summary>
     private void togglePause()
     {
+        //Escape was pressed
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            //PlayerManager is mine
             if (PV.IsMine)
             {
+                //We aren't playing
                 if (state != GameState.Playing)
                 {
-                    //logic statment to evaluate if the respawn menu needs to be opened when the pause menu is closed
+                    //We are currently in the game
                     if (activeController)
                     {
+                        //Close pause
                         closeMM(Pause);
                     }
                     else
                     {
-                        state = GameState.Playing;
-                        GameMenus.OpenMenu(Respawn);
+                        //If we are paused
+                        if (pauseMenu)
+                        {
+                            //Open respawn
+                            openMM(Respawn);
+                            pauseMenu = false;
+                        }
+                        else
+                        {
+                            //Open Pause
+                            openMM(Pause);
+                            pauseMenu = true;
+                        }
                     }
                 }
+                //Open Pause Menu
                 else
                 {
                     openMM(Pause);
+                    pauseMenu = true;
                 }
 
             }
@@ -332,8 +387,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             }
             else
             {
-                state = GameState.Playing;
-                GameMenus.OpenMenu(Respawn);
+                openMM(Respawn);
             }
         }
     }
@@ -852,11 +906,10 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
 
             foreach(VehicleSpawnpoint p in points)
             {
-                GameObject temp = PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), p.transform.position, p.transform.rotation, 0, null);
+                GameObject temp = PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warhog"), p.transform.position, p.transform.rotation, 0, null);
                 vehicles.Add(temp);
             }
         }
-
     }
     #endregion
 

@@ -18,6 +18,7 @@ public class PlayerGroundCheckModelled : MonoBehaviour
         playerController = GetComponentInParent<PlayerControllerModelled>();
     }
 
+    #region Trigger Methods
     /// <summary>
     /// Method changes bool when soemthing enters the Player's bottom box collider
     /// </summary>
@@ -53,7 +54,9 @@ public class PlayerGroundCheckModelled : MonoBehaviour
             return;
         playerController.SetGroundedState(true);
     }
+    #endregion
 
+    #region Collision Methods
     /// <summary>
     /// Method changes bool when a collision entity enters the Player's bottom box collider
     /// </summary>
@@ -89,4 +92,5 @@ public class PlayerGroundCheckModelled : MonoBehaviour
             return;
         playerController.SetGroundedState(true);
     }
+    #endregion
 }
