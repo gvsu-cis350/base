@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rider : MonoBehaviour
 {
-    public Transform playerPostion;
+    public Transform playerPostion, exitPosition;
     public bool occupied = false;
     public bool driver = false;
     public Car parentCar;

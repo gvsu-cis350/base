@@ -5,12 +5,12 @@ using UnityEngine;
 public class SettingsAudioSFX : MonoBehaviour
 {
     /// <summary>
-    /// Method subscribes to settings update event and loads the initial Maseter volume
+    /// Method subscribes to settings update event and loads the initial Master volume
     /// </summary>
     void Start()
     {
         GameEvents.current.onSettingsUpdate += updateVolume;
-        this.GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.sfxVolume) / 100f;
+        GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.sfxVolume) / 100f;
     }
 
     /// <summary>
@@ -18,6 +18,14 @@ public class SettingsAudioSFX : MonoBehaviour
     /// </summary>
     private void updateVolume()
     {
-        this.GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.sfxVolume) / 100f;
+        GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.sfxVolume) / 100f;
+    }
+
+    /// <summary>
+    /// Method removes this object from the gameEvents list if it gets destroyed
+    /// </summary>
+    private void OnDestroy()
+    {
+        GameEvents.current.onSettingsUpdate -= updateVolume;
     }
 }

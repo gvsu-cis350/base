@@ -8,12 +8,12 @@ using Photon.Pun;
 /// </summary>
 public abstract class Gun : Item
 {
-    #region Abstracts
-    public abstract override void Use();
+	#region Vars
+	#region Abstracts
+	public abstract override void Use();
     public abstract override void RefreshItem();
     #endregion
 
-    #region Vars
     protected Coroutine reloadTimerCoroutine;
 	public AudioClip[] soundEffect;
 	protected bool canFire = true;
@@ -34,7 +34,7 @@ public abstract class Gun : Item
 	/// <summary>
 	/// Method to reset various variables within a gun based on the level of reset that is passed
 	/// </summary>
-	/// <param name="level"></param>
+	/// <param name="level">Level code for resets, 0 = full reset, 1 = reloadtimer reset</param>
 	public override void ResetItem(int level)
 	{
 		//Level 0 fully resets the gun (intended to be called at the start of a match/upon respawn)

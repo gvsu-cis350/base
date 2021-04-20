@@ -10,7 +10,7 @@ public class SettingsAudioMusic : MonoBehaviour
     void Start()
     {
         GameEvents.current.onSettingsUpdate += updateVolume;
-        this.GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.musicVolume) / 100f;
+        GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.musicVolume) / 100f;
     }
 
     /// <summary>
@@ -18,6 +18,14 @@ public class SettingsAudioMusic : MonoBehaviour
     /// </summary>
     private void updateVolume()
     {
-        this.GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.musicVolume) / 100f;
+        GetComponent<AudioSource>().volume = (float)(boot.bootObject.currentSettings.musicVolume) / 100f;
+    }
+
+    /// <summary>
+    /// Method removes this object from the gameEvents list if it gets destroyed
+    /// </summary>
+    private void OnDestroy()
+    {
+        GameEvents.current.onSettingsUpdate -= updateVolume;
     }
 }

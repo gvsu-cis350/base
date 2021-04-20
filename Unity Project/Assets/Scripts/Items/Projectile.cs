@@ -24,6 +24,9 @@ public class Projectile : MonoBehaviour
 	private PhotonView PV;
     #endregion
 
+	/// <summary>
+	/// Method start projectile with proper values
+	/// </summary>
     void Start()
 	{
 		// Add the initial force to rigidbodyand get the Photon View
@@ -31,6 +34,9 @@ public class Projectile : MonoBehaviour
 		PV = GetComponent<PhotonView>();
 	}
 
+	/// <summary>
+	/// Method to maintain updates of projectile
+	/// </summary>
 	void Update()
 	{
 		// Update the timer
@@ -43,32 +49,34 @@ public class Projectile : MonoBehaviour
 		}
 
 		// Make the projectile move
-		//if (initialForce == 0)		// Only if initial force is not being used to propel this projectile
 		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 	}
 
+	/// <summary>
+	/// Method to make projectile explode when it hits another object
+	/// </summary>
+	/// <param name="col">Collision that this projectile entered into</param>
 	void OnCollisionEnter(Collision col)
 	{
-		// If the projectile collides with something, call the Hit() function
-		Hit(col);
-	}
-
-	void Hit(Collision col)
-	{
-		// Make the projectile explode
+		// If the projectile collides with something, call the Explode() function
 		Explode(col.GetContact(0).point);
 	}
 
+	/// <summary>
+	/// Method causes the projectile to explode based on its postion
+	/// </summary>
+	/// <param name="position"></param>
 	void Explode(Vector3 position)
 	{
 		// Instantiate the explosion
 		if (explosion != null)
 		{
-			//Create master expolosion on the shooters local machine so that kills can be tracked
+			//Create master expolosion on the shooter's local machine so that kills can be tracked
             if (PV.IsMine)
             {
 				Instantiate(explosionMaster, position, Quaternion.identity);
 			}
+			//Create force expolosion on everyone else's machine
             else
             {
 				Instantiate(explosion, position, Quaternion.identity);

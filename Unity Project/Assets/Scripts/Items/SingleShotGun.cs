@@ -9,15 +9,14 @@ using System.IO;
 /// </summary>
 public class SingleShotGun : Gun
 {
-    //unity reference var
+    #region Vars
     [SerializeField] Camera cam;
-
-    //sound effects
     private AudioSource soundOutput;
     private PhotonView weaponPV;
+    #endregion
 
     /// <summary>
-    /// Start method to get the PhotonView and Audio Source
+    /// Start method to get the PhotonView and Audio Source components
     /// </summary>
     private void Start()
     {
@@ -30,9 +29,12 @@ public class SingleShotGun : Gun
     /// </summary>
     public override void RefreshItem()
     {
+        //Play sound
         weaponPV.RPC("PlaySound", RpcTarget.All, 1, weaponPV.ViewID);
+
+        //Start reload timer
         ((GunInfo)itemInfo).reloadTime = ((GunInfo)itemInfo).maxReloadTime;
-        this.reloadTimerCoroutine = StartCoroutine(Timer());
+        reloadTimerCoroutine = StartCoroutine(Timer());
     }
 
     /// <summary>
@@ -43,6 +45,7 @@ public class SingleShotGun : Gun
         //Ammo available and not reloading
         if ((((GunInfo)itemInfo).currentAmmo > 0) && (((GunInfo)itemInfo).reloadTime <= 0) && (!soundOutput.isPlaying))
         {
+            //Fire weapon
             RecoilShoot();
             ((GunInfo)itemInfo).currentAmmo--;
 
@@ -57,6 +60,7 @@ public class SingleShotGun : Gun
         }
     }
 
+    #region Shoot Methods
     /// <summary>
     /// Old method creates a raycast from the center of the user's screen to hit target
     /// </summary>
@@ -84,14 +88,11 @@ public class SingleShotGun : Gun
                 //check if hit object is damagable and apply damage
                 hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
             }
-            //Debug.Log("We hit " + hit.collider.gameObject.name);
         }
     }
 
-
-
     /// <summary>
-    /// Method creates a raycast from center of screen with an accuracy cone
+    /// Method creates a raycast from center of screen within an accuracy cone
     /// </summary>
     void RecoilShoot()
     {
@@ -104,6 +105,8 @@ public class SingleShotGun : Gun
             direction.x += Random.Range(-accuracyVary, accuracyVary);
             direction.y += Random.Range(-accuracyVary, accuracyVary);
             direction.z += Random.Range(-accuracyVary, accuracyVary);
+
+            //Decrease the accuracy accordingly
             ((GunInfo)itemInfo).currentAccuracy -= ((GunInfo)itemInfo).accuracyDropPerShot;
             if (((GunInfo)itemInfo).currentAccuracy <= 0.0f)
                 ((GunInfo)itemInfo).currentAccuracy = 0.0f;
@@ -129,9 +132,7 @@ public class SingleShotGun : Gun
                     //check if hit object is damagable and apply damage
                     hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
                 }
-//                Debug.Log("We hit " + hit.collider.gameObject.name);
             }
-
 
             /*
             // Muzzle flash effects
@@ -144,13 +145,21 @@ public class SingleShotGun : Gun
             */
         }
     }
+    #endregion
 
+    /// <summary>
+    /// RPC Method to play sound on weapon
+    /// </summary>
+    /// <param name="soundID">Array Index of desired sound effect</param>
+    /// <param name="weaponPVID">PhotonView ID of the weapon</param>
     [PunRPC]
     public void PlaySound(int soundID, int weaponPVID)
     {
+        //Exit method if the passed ID doesn't match this weapon
         if (weaponPVID != weaponPV.ViewID)
             return;
 
+        //Play Sound
         soundOutput.clip = soundEffect[soundID];
         soundOutput.Play();
     }

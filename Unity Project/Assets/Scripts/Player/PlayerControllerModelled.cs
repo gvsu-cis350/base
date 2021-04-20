@@ -186,13 +186,20 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         //check to see if there is a the current game state is set to playing
         if ((int)playerManager.state == 2)
         {
-            //run basic movement methods and weapon switching methods
-            Look();
+            //run basic movement methods and weapon switching methods depending on vehicle status
+            
+
             if (!inVehicle)
             {
+                Look();
                 Move();
                 Jump();
             }
+            else if (!currentSeat.name.Equals("Driver"))
+            {
+                Look();
+            }
+            
 
             weaponSwitch();
 
@@ -735,11 +742,12 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
         Animation.SetLayerWeight(2, 1);
-        /*if (currentSeat.name.Equals("Driver"))
+        if (currentSeat.name.Equals("Driver"))
         {
-            cam.gameObject.SetActive(false);
-        }*/
-
+            cam.enabled = false;
+            cam.transform.GetChild(0).gameObject.SetActive(false);
+        }
+        cameraHolder.transform.localEulerAngles = new Vector3(0, 0, 0);
 
         currentSeat.parentCar.CarPV.RPC("NewPassenger", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
 
@@ -755,7 +763,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         inVehicle = false;
         Animation.SetLayerWeight(2, 0);
-        //cam.gameObject.SetActive(true);
+        cam.enabled = true;
+        cam.transform.GetChild(0).gameObject.SetActive(true);
     }
     #endregion
 }

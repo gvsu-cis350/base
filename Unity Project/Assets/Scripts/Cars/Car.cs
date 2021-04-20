@@ -21,19 +21,6 @@ public enum DriveType
 public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamageable
 {
     #region Vars
-    #region Inspector Reference Vars
-    [SerializeField] GameObject cameraHolder;
-    [SerializeField] float mouseSenstivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
-    #endregion
-
-
-    #region Location and Roatation Vars
-    float verticalLookRotation;
-    bool grounded;
-    Vector3 smoothMoveVelocity;
-    Vector3 moveAmount;
-    #endregion
-
     #region Player Vars
     Rigidbody rb;
     public PhotonView CarPV;
@@ -41,11 +28,7 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
     private bool hasDriver = false;
     private Dictionary<string, Rider> riders = new Dictionary<string, Rider>();
     private Rider[] passengers;
-    #endregion
-
-    #region Health Vars
-    const float maxHealth = 100f;
-    float currentHealth = maxHealth;
+    private Camera cam;
     #endregion
 
     #region Wheel Vars
@@ -80,6 +63,7 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
         rb = GetComponent<Rigidbody>();
         CarPV = GetComponent<PhotonView>();
         PhotonNetwork.AddCallbackTarget(this);
+        cam = GetComponentInChildren<Camera>();
     }
 
     private void OnDestroy()
@@ -115,8 +99,12 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
         if (!CarPV.IsMine)
             return;
 
-        if (driverPV == null )
+        if (driverPV == null)
+        {
+            cam.enabled = false;
             return;
+        }
+
 
         m_Wheels[0].ConfigureVehicleSubsteps(criticalSpeed, stepsBelow, stepsAbove);
 
@@ -168,6 +156,7 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
                 }
             }
         }
+        cam.enabled = true;
     }
 
     public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
@@ -209,6 +198,9 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
         }
         else
         {
+            holder.transform.SetParent(seat.exitPosition.transform);
+            holder.transform.localPosition = new Vector3(0, 0, 0);
+            holder.transform.localRotation = new Quaternion(0, 0, 0, 0);
             holder.transform.SetParent(null);
         }
     }
@@ -220,7 +212,6 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks // , IDamag
             return;
 
         ObjectAttachToggle(player, riders[newSeat], true);
-
 
         riders[newSeat].occupied = true;
     }
