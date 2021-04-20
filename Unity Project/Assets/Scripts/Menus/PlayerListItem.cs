@@ -10,15 +10,17 @@ using TMPro;
 /// </summary>
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
+    #region Vars
     //unity reference var
     [SerializeField] TMP_Text text;
     //empty reference var
     Player player;
+    #endregion
 
     /// <summary>
     /// Method which creates new player instances
     /// </summary>
-    /// <param name="parPlayer"></param>
+    /// <param name="parPlayer">New player which needs to be set up</param>
     public void SetUp(Player parPlayer)
     {
         player = parPlayer;
@@ -28,7 +30,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     /// <summary>
     /// Method which triggers to destroy a playerlistitem for the room when a player leaves a room
     /// </summary>
-    /// <param name="otherPlayer"></param>
+    /// <param name="otherPlayer">Player that left the room</param>
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         if(player == otherPlayer)

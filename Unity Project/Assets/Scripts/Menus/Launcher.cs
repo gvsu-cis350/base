@@ -216,24 +216,25 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public void StartGame()
     {
+        //Get the current settings
         roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
 
-        //Game Type Record
+        //Game Type remove-record
         if (roomSettings.ContainsKey("GameType"))
             roomSettings.Remove("GameType");
         roomSettings.Add("GameType", gameTypeDropdown.value);
 
-        //Game Length Record
+        //Game Length remove-record
         if (roomSettings.ContainsKey("MatchLength"))
             roomSettings.Remove("MatchLength");
         roomSettings.Add("MatchLength", matchLengthDropdown.value);
 
-        //Game Length Record
+        //Game Length remove-record
         if (roomSettings.ContainsKey("ScoreCheck"))
             roomSettings.Remove("ScoreCheck");
         roomSettings.Add("ScoreCheck", scoreCheckDropdown.value);
 
-        //Allowed weapons
+        //Allowed weapons remove-record
         int i = 0;
         foreach(Toggle t in weapons)
         {
@@ -247,7 +248,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             i++;
         }
 
-        //All Weapons Equipable
+        //All Weapons Equipable remove-record
         if (roomSettings.ContainsKey("AllWeapons"))
             roomSettings.Remove("AllWeapons");
         roomSettings.Add("AllWeapons", !allWeapons.isOn);

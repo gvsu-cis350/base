@@ -38,11 +38,16 @@ public class ExplosionMaster : MonoBehaviour
         //Iterate through all nearby objects
         foreach (Collider col in cols)
         {
+            /* Damage Calulation based on base damage and distance from explosion
             //Calculate damage from explosion length
             float damageAmount = damage * (1 / Vector3.Distance(transform.position, col.transform.position));
 
             //Apply Damage to all IDamageable objects
             col.GetComponent<Collider>().gameObject.GetComponent<IDamageable>()?.TakeDamage(damageAmount);
+            */
+
+            //Apply Damage to all IDamageable objects
+            col.GetComponent<Collider>().gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
 
             //Find rigidbodies in the list of nearby objects
             if (col.attachedRigidbody != null && !rigidbodies.Contains(col.attachedRigidbody))

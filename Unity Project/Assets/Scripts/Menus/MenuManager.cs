@@ -7,11 +7,13 @@ using UnityEngine;
 /// </summary>
 public class MenuManager : MonoBehaviour
 {
+    #region Vars
     //create a global instance of this menu to be referenced by everything
     public static MenuManager Instance;
 
     //Array of menus that this script can access and assigned through unity
     [SerializeField] Menu[] menus;
+    #endregion
 
     /// <summary>
     /// Set a globabl instance of menuManager when this script first referenced
@@ -24,15 +26,18 @@ public class MenuManager : MonoBehaviour
     /// <summary>
     /// Method to open menu based on a string. Opens menus matching the string name and closes any that are open and don't match
     /// </summary>
-    /// <param name="menuName"></param>
+    /// <param name="menuName">Name of menu to be opend</param>
     public void OpenMenu(string menuName)
     {
+        //iterate though all menus
         for(int i = 0; i <menus.Length; i++)
         {
+            //Open menu if name matches
             if(menus[i].menuName == menuName)
             {
                 menus[i].Open();
             }
+            //close menu if it is open and doesn't match
             else if (menus[i].open)
             {
                 CloseMenu(menus[i]);
@@ -43,9 +48,10 @@ public class MenuManager : MonoBehaviour
     /// <summary>
     /// Method to open menu based on a passed object. Closes all menus and then opens the matching menu object
     /// </summary>
-    /// <param name="menu"></param>
+    /// <param name="menu">Open a passed menu</param>
     public void OpenMenu(Menu menu)
     {
+        //Close all menus
         for(int i = 0; i < menus.Length; i++)
         {
             if (menus[i].open)
@@ -53,13 +59,14 @@ public class MenuManager : MonoBehaviour
                 CloseMenu(menus[i]);
             }
         }
+        //Open the specifically passed menu
         menu.Open();
     }
 
     /// <summary>
     /// Method calls the menu close method on a passed object parameter
     /// </summary>
-    /// <param name="menu"></param>
+    /// <param name="menu">Close passed menu</param>
     public void CloseMenu(Menu menu)
     {
         menu.Close();

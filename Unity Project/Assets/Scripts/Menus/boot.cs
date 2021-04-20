@@ -26,8 +26,9 @@ public class boot : MonoBehaviour
         bootObject = this;
         DontDestroyOnLoad(transform.gameObject);
         newload();
-
         currentSettings = DataSaver.loadData<PlayerInfo>("config");
+        
+        //Set resolution and leave scene
         Screen.SetResolution(currentSettings.resolutionWidth, currentSettings.resolutionHeight, currentSettings.fullscreen);
         SceneManager.LoadScene(1);
     }
@@ -55,7 +56,7 @@ public class boot : MonoBehaviour
     }
 
     /// <summary>
-    /// Method is called to determine if there is a current player config file and create one if there isn't one
+    /// Method is called to determine if there is a current player config file and create one with generic values if there isn't one
     /// </summary>
     private void newload()
     {

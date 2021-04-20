@@ -10,16 +10,18 @@ using UnityEngine;
 /// </summary>
 public class RoomListButton : MonoBehaviour
 {
+    #region Vars
     //unity reference var
     [SerializeField] TMP_Text text;
 
     //public var to reference photon's room data
     public RoomInfo info;
+    #endregion
 
     /// <summary>
     /// Method that creates a room button based on passed room info
     /// </summary>
-    /// <param name="parInfo"></param>
+    /// <param name="parInfo">Room info for the new room</param>
     public void SetUp(RoomInfo parInfo)
     {
         info = parInfo;

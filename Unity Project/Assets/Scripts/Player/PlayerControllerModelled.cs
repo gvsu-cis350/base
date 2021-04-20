@@ -254,12 +254,17 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 {
                     if (hit.collider.gameObject.GetComponentInParent<Car>())
                     {
+                        //Check if the seat is occupied and only allow player to enter it if it is empty
                         if(!hit.collider.gameObject.GetComponent<Rider>().occupied)
                         {
+                            //Check if the seat is the driver seat
                             if (hit.collider.gameObject.GetComponent<Rider>().driver)
                             {
+                                //Send new driver request
                                 hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest(boot.bootObject.localPV);
                             }
+                            
+                            //enter seat
                             EnterVehicle(hit.collider.gameObject.GetComponent<Rider>());
                         }
                     }
