@@ -896,21 +896,20 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #region NewPlayer
     public void NewPlayer_S()
     {
-        object[] package = new object[6];
+        object[] package = new object[5];
 
         package[0] = PV.Owner.NickName;
         package[1] = PV.Owner.ActorNumber;// PhotonNetwork.LocalPlayer.ActorNumber;
         package[2] = (short)0;
         package[3] = (short)0;
         package[4] = CalculateTeam(PV.Owner.ActorNumber);
-        package[5] = PV.ViewID;
 
         PhotonNetwork.RaiseEvent((byte)EventCodes.NewPlayer, package, new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient }, new SendOptions { Reliability = true });
     }
 
     public void NewPlayer_R(object[] data)
     {
-        PlayerStats p = new PlayerStats((string)data[0], (int)data[1], (short)data[2], (short)data[3], (bool)data[4], (int)data[5]);
+        PlayerStats p = new PlayerStats((string)data[0], (int)data[1], (short)data[2], (short)data[3], (bool)data[4]);
 
         playerStats.Add(p);
         
@@ -935,14 +934,13 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         package[0] = state;
         for (int i = 0; i < info.Count; i++)
         {
-            object[] piece = new object[6];
+            object[] piece = new object[5];
 
             piece[0] = info[i].username;
             piece[1] = info[i].actor;
             piece[2] = info[i].kills;
             piece[3] = info[i].deaths;
             piece[4] = info[i].blueTeam;
-            piece[5] = info[i].viewID;
 
             package[i + 1] = piece;
         }
@@ -960,7 +958,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         {
             object[] extract = (object[])data[i];
 
-            PlayerStats p = new PlayerStats((string)extract[0], (int)extract[1], (short)extract[2], (short)extract[3], (bool)extract[4], (int)extract[5]);
+            PlayerStats p = new PlayerStats((string)extract[0], (int)extract[1], (short)extract[2], (short)extract[3], (bool)extract[4]);
 
             playerStats.Add(p);
 

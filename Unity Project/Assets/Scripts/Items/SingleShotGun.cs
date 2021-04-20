@@ -50,10 +50,10 @@ public class SingleShotGun : Gun
             weaponPV.RPC("PlaySound", RpcTarget.All, 0, weaponPV.ViewID);
         }
         //ammo unavailable
-        else if (((GunInfo)itemInfo).currentAmmo <= 0)
+        else if ((((GunInfo)itemInfo).currentAmmo <= 0) && (!soundOutput.isPlaying))
         {
             //dryfire
-            weaponPV.RPC("PlaySound", RpcTarget.All, 0, weaponPV.ViewID);
+            weaponPV.RPC("PlaySound", RpcTarget.All, 2, weaponPV.ViewID);
         }
     }
 

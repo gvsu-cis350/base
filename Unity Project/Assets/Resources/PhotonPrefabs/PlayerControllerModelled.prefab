@@ -1325,6 +1325,7 @@ MonoBehaviour:
   soundEffect:
   - {fileID: 8300000, guid: a5d26d04f9b03fc43bd8153b41a63156, type: 3}
   - {fileID: 8300000, guid: 8394dd7a90282474ab7efe1e70d66640, type: 3}
+  - {fileID: 8300000, guid: 49ea1e4929f905b46a5efe8b2b3850f6, type: 3}
   cam: {fileID: 8563530835685953445}
 --- !u!114 &4970435814697237367
 MonoBehaviour:
@@ -1525,6 +1526,7 @@ MonoBehaviour:
   soundEffect:
   - {fileID: 8300000, guid: 3563a56fadba4fb4c9900f0d7fd62817, type: 3}
   - {fileID: 8300000, guid: ee22413f761b0ee49a45756f2b259dac, type: 3}
+  - {fileID: 8300000, guid: 49ea1e4929f905b46a5efe8b2b3850f6, type: 3}
   cam: {fileID: 8563530835685953445}
 --- !u!82 &1161581016980039812
 AudioSource:
@@ -4443,6 +4445,7 @@ MonoBehaviour:
   soundEffect:
   - {fileID: 8300000, guid: c2073f721e88bb749bc13e56e2c79b1f, type: 3}
   - {fileID: 8300000, guid: 7cac0d0b7e431ac4dac2bcc9747f1301, type: 3}
+  - {fileID: 8300000, guid: 49ea1e4929f905b46a5efe8b2b3850f6, type: 3}
   cam: {fileID: 8563530835685953445}
   firerate: 100
 --- !u!114 &892237801548914641
@@ -6728,6 +6731,7 @@ MonoBehaviour:
   soundEffect:
   - {fileID: 8300000, guid: 72d8a56a85d856a4296da78479ef5cb9, type: 3}
   - {fileID: 8300000, guid: e57fa96b575a72c44899351274855dce, type: 3}
+  - {fileID: 8300000, guid: 49ea1e4929f905b46a5efe8b2b3850f6, type: 3}
   cam: {fileID: 8563530835685953445}
 --- !u!114 &6187727949885104749
 MonoBehaviour:

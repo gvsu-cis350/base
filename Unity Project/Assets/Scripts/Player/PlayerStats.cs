@@ -14,7 +14,6 @@ public class PlayerStats
     public short kills;
     public short deaths;
     public bool blueTeam;
-    public int viewID;
 
     /// <summary>
     /// Contructor to create new playerInfo
@@ -24,13 +23,12 @@ public class PlayerStats
     /// <param name="k"></param>
     /// <param name="d"></param>
     /// <param name="t"></param>
-    public PlayerStats(string user, int a, short k, short d, bool t, int id)
+    public PlayerStats(string user, int a, short k, short d, bool t)
     {
         this.username = user;
         this.actor = a;
         this.kills = k;
         this.deaths = d;
         this.blueTeam = t;
-        this.viewID = id;
     }
 }

@@ -35,7 +35,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #endregion
 
     #region Location and Rotation Vars
-    float verticalLookRotation;
+    private float verticalLookRotation;
+    private float vehicleLookRotation;
     bool grounded;
     Vector3 smoothMoveVelocity;
     Vector3 moveAmount;
@@ -192,6 +193,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 Move();
                 Jump();
             }
+
             weaponSwitch();
 
             //check to see if the user fires their gun
@@ -310,7 +312,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <summary>
     /// Method which allows character to jump if they are on the ground
     /// </summary>
-    void Jump()
+    private void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
@@ -725,6 +727,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     }
     #endregion
 
+    #region Vehicles
     private void EnterVehicle(Rider seat)
     {
         inVehicle = true;
@@ -732,6 +735,11 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
         Animation.SetLayerWeight(2, 1);
+        /*if (currentSeat.name.Equals("Driver"))
+        {
+            cam.gameObject.SetActive(false);
+        }*/
+
 
         currentSeat.parentCar.CarPV.RPC("NewPassenger", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
 
@@ -747,5 +755,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         inVehicle = false;
         Animation.SetLayerWeight(2, 0);
+        //cam.gameObject.SetActive(true);
     }
+    #endregion
 }
