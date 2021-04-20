@@ -1,3 +1,6 @@
+/**
+ * Stores acceleration values for entities
+ */
 public class Accel {
   private double ax, ay;
 

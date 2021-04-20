@@ -1,5 +1,6 @@
-import java.awt.geom.Point2D;
-
+/**
+ * Ball entity used in drawing ball to frame
+ */
 public class Ball extends Entity {
 
   public Ball(double x, double y, double vx, double vy, double r) {

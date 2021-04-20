@@ -1,5 +1,6 @@
 import java.awt.*;
-import java.awt.event.MouseAdapter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -7,20 +8,32 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.*;
-import org.w3c.dom.events.MouseEvent;
 
-// TODO: Fix bottom wall from being too low
-// TODO: Fix square bounding circles
+/**************************************************************************************
+ *
+ *     GUI-Dancer is a small physics simulator in which users can experiment with
+ * small spheres with various different physical constants. This is our submission
+ * for the CIS 350 Final Project.
+ *
+ * @author Evan Johns
+ * @author Jacquelin Jimenez
+ * @author Abigail McDonald
+ * @author Donald Finn
+ *
+ * @version 05/20/2021
+ *
+ **************************************************************************************/
 public class Main {
 
-    public static final int MAX_SPAWN = 100;
-    public static final int RATE = 30;
+    public static final int MAX_SPAWN = 20;
+    public static final int RATE = 20;
     public static final int GRAVITY = 0;
-    public static final double DRAG = 0;
+    public static final double DRAG = 0.00;
     public static final double BOUNCE = .99;
 
     public static int width;
     public static int height;
+    public static Point mPoint;
     private static JFrame frame;
     private static Canvas canvas;
     public static BufferStrategy b;
@@ -32,11 +45,19 @@ public class Main {
     private static Graphics2D g2D;
     private static AffineTransform at;
     public static ArrayList<Entity> world = new ArrayList<>();
-    public static boolean isRunning = true;
+    public static boolean isRunning = false;
 
+    private static JMenuBar menus;
+    private static JMenu actionMenu;
+    private static JMenuItem resetItem;
+
+    /**
+     * Initialize Frame, start threads, and begin animation loop.
+     */
     public static void main(String[] args){
-        width = 1000;
-        height = 1000;
+        isRunning = true;
+        width = 600;
+        height = 600;
         initializeFrame();
         Thread PhysicsEngine = new PhysicsEngine();
         PhysicsEngine.start();
@@ -45,22 +66,57 @@ public class Main {
         runAnimation();
     }
 
+    /**
+     * Adds a Square to the ArrayList world
+     * @param square Square to be added
+     * @return if list is full, send 0
+     */
     public static synchronized int giveBirth(Square square) {
         if (world.size() >= MAX_SPAWN) return 1;
         world.add(square);
         return 0;
     }
 
+    /**
+     * Adds a Ball to the ArrayList world
+     * @param ball Ball to be added
+     * @return if list is full, send 0
+     */
     public static synchronized int giveBirth(Ball ball) {
         if (world.size() >= MAX_SPAWN) return 1;
         world.add(ball);
         return 0;
     }
 
+    /**
+     * Initializes the JFrame and graphics utilities used in drawing to the Frame
+     */
     public static void initializeFrame() {
         frame = new JFrame("Demo");
         frame.setIgnoreRepaint(true); //what does this do?
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Menu bar setup
+        menus = new JMenuBar();
+        actionMenu = new JMenu("Action");
+        resetItem = new JMenuItem("Reset");
+
+        actionMenu.add(resetItem);
+        menus.add(actionMenu);
+
+        // Action Listener for resetItem
+        resetItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object comp = e.getSource();
+                if (resetItem == comp) {
+
+                }
+            }
+        });
+
+        // Add Menu bar to frame
+        frame.setJMenuBar(menus);
 
         // Create canvas (used for painting to frame)
         canvas = new Canvas();
@@ -69,7 +125,10 @@ public class Main {
         canvas.setBackground(Color.DARK_GRAY);
 
         // Add to display
-        frame.add(canvas);
+        Container content = new Container();
+        content.add(canvas);
+        content.setPreferredSize(new Dimension(width, height));
+        frame.setContentPane(content);
         frame.pack();
 
         // Center to display
@@ -93,6 +152,9 @@ public class Main {
         g2D = null;
     }
 
+    /**
+     * Main loop of the program. Updates the Frame with each entity's new position every iteration
+     */
     public static void runAnimation() {
 
         // Vars for debug stats
@@ -116,6 +178,10 @@ public class Main {
                 }
                 ++frames;
 
+                // Get mouse location
+
+                if (frame.getMousePosition() != null) mPoint = frame.getMousePosition();
+
                 // Adds adjustable walls, can be taken out if problematic
                 width = frame.getWidth();
                 height = frame.getHeight();
@@ -135,10 +201,10 @@ public class Main {
                     g2D.setColor(Color.WHITE);
                     // for circles
                     if (entity instanceof Ball) {
-                        g2D.draw(new Ellipse2D.Double(entity.getX(), entity.getY(), ((Ball) entity).getRadius() * 2, ((Ball) entity).getRadius() * 2));
+                        g2D.fill(new Ellipse2D.Double(entity.getX(), entity.getY(), ((Ball) entity).getRadius() * 2, ((Ball) entity).getRadius() * 2));
                     }
                     if (entity instanceof Square) {
-                        g2D.draw(new Rectangle2D.Double(entity.getX(), entity.getY(), ((Square) entity).getWidth(), ((Square) entity).getHeight()));
+                        g2D.fill(new Rectangle2D.Double(entity.getX(), entity.getY(), ((Square) entity).getWidth(), ((Square) entity).getHeight()));
                     }
                 }
 
@@ -146,12 +212,16 @@ public class Main {
                 g2D.setFont(new Font("Courier New", Font.PLAIN, 12));
                 g2D.setColor(Color.GREEN);
                 g2D.drawString(String.format("FPS: %s", fps), 20, 20);
+                g2D.drawString(String.format("X: %s", mPoint.x), 20, 30);
+                g2D.drawString(String.format("Y: %s", mPoint.y), 20, 40);
                 graphics = b.getDrawGraphics();
                 graphics.drawImage(buffer, 0, 0, null);
                 if (!b.contentsLost()) b.show();
+
                 // Let the OS have a little time
                 Thread.sleep(15);
             } catch (InterruptedException ie) {
+            } catch (NullPointerException ne) {
             } finally {
                 // release resources
                 if (graphics != null) graphics.dispose();

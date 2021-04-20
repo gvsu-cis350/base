@@ -1,5 +1,6 @@
-import java.awt.geom.Point2D;
-
+/**
+ * Square entity used in drawing square to Frame
+ */
 public class Square extends Entity {
   private double w, h;
 
