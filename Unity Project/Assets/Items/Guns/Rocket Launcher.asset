@@ -15,6 +15,12 @@ MonoBehaviour:
   itemName: Rocket Launcher
   damage: 75
   maxAmmo: 2
-  currentAmmo: 0
-  maxReloadTime: 7
-  reloadTime: -9
+  currentAmmo: 2
+  maxReloadTime: 5
+  reloadTime: 0
+  accuracy: 100
+  currentAccuracy: 0
+  accuracyDropPerShot: 25
+  accuracyRecoverRate: 5
+  roundsPerMinute: 0
+  shotsPerRound: 1

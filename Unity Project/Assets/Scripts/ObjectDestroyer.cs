@@ -20,15 +20,29 @@ public class ObjectDestroyer : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-        if (!signal)
+        if(GetComponent<PhotonView>() != null)
         {
-			Destroy(gameObject, lifeTime);
-		}
+            if (!signal)
+            {
+                StartCoroutine(End(lifeTime));
+            }
+        }
+        else
+        {
+            Destroy(gameObject, lifeTime);
+        }
 	}
 
     [PunRPC]
     public void RPC_DestroyObject()
     {
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    private IEnumerator End(float p_wait)
+    {
+        yield return new WaitForSeconds(p_wait);
+
+        PhotonNetwork.Destroy(gameObject);
     }
 }

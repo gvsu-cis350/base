@@ -15,6 +15,8 @@ public class SpawnManager : MonoBehaviour
     List<Spawnpoint> bluepoints = new List<Spawnpoint>();
     List<Spawnpoint> redpoints = new List<Spawnpoint>();
 
+    public bool teamSpecificSpawns = false;
+
     /// <summary>
     /// When the class is referenced, set a global reference and compile an array of spawnpoints
     /// </summary>
@@ -51,7 +53,10 @@ public class SpawnManager : MonoBehaviour
     /// <returns></returns>
     public Transform GetBlueSpawnpoint()
     {
-        return bluepoints[Random.Range(0, spawnpoints.Length)].transform;
+        if(teamSpecificSpawns)
+            return bluepoints[Random.Range(0, bluepoints.Count)].transform;
+        else
+            return spawnpoints[Random.Range(0, spawnpoints.Length)].transform;
     }
 
     /// <summary>
@@ -60,7 +65,10 @@ public class SpawnManager : MonoBehaviour
     /// <returns></returns>
     public Transform GetRedSpawnpoint()
     {
-        return redpoints[Random.Range(0, spawnpoints.Length)].transform;
+        if (teamSpecificSpawns)
+            return redpoints[Random.Range(0, redpoints.Count)].transform;
+        else
+            return spawnpoints[Random.Range(0, spawnpoints.Length)].transform;
     }
     #endregion
 }

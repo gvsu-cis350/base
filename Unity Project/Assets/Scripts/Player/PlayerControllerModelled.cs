@@ -19,14 +19,17 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject weaponPivot;
     [SerializeField] Item[] items;
     [SerializeField] GameObject Helmet, Body;
-    [SerializeField] Material BlueHelmet, BlueBody, RedHelmet, RedBody; // RegularHelmet, RegularBody,
+    [SerializeField] Material BlueHelmet, BlueBody, RedHelmet, RedBody;
     [SerializeField] GameObject playerModel;
     [SerializeField] RigBuilder rigBuilder;
-    [SerializeField] Transform weaponLeftGrip;
-    [SerializeField] Transform weaponRightGrip;
+    [SerializeField] Transform weaponLeftGrip, weaponRightGrip;
+    [SerializeField] Camera cam;
     #endregion
 
     #region Item Vars
+    private bool allWeapons;
+    private int primaryWeapon;
+    private int secondaryWeapon;
     public int itemIndex;
     int previousItemIndex = -1;
     #endregion
@@ -44,7 +47,9 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     public PlayerManager playerManager;
     Hashtable customProperties = new Hashtable();
     Animator Animation;
-    public bool blueTeam = false;
+    public bool blueTeam = GameSettings.IsBlueTeam;
+    private bool inVehicle = false;
+    private Rider currentSeat = null;
     #endregion
 
     #region Health and Shield Vars
@@ -105,23 +110,35 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 }
                 */
             }
+
+            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("AllWeapons"))
+            {
+                allWeapons = (bool)PhotonNetwork.CurrentRoom.CustomProperties["AllWeapons"];
+
+            }
+
+            if (allWeapons)
+            {
+                primaryWeapon = 0;
+            }
+            else
+            { 
+                primaryWeapon = playerManager.primaryWeaponPM;
+                secondaryWeapon = playerManager.secondaryWeaponPM;
+            }
+            
             //subscribe the mouse senstivity method to settings update event
             GameEvents.current.onSettingsUpdate += updateMouse;
             //Equip the first item available
-            EquipItem(1);
+            EquipItem(primaryWeapon);
             //Remove the material entry in the hashmap if there is one
+            if (customProperties.ContainsKey("Team"))
+                customProperties.Remove("Team");
             if (GameSettings.GameMode == GameMode.TDM)
             {
-                if (!customProperties.ContainsKey("Team"))
-                {
-                    customProperties.Add("Team", blueTeam);
-                    changeAppearance(blueTeam);
-                    PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
-                }
-                else
-                {
-                    changeAppearance(blueTeam);
-                }
+                customProperties.Add("Team", blueTeam);
+                changeAppearance(blueTeam);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
             }
 
             //Set the entire player model to the static FOV camera layer
@@ -170,8 +187,11 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             //run basic movement methods and weapon switching methods
             Look();
-            Move();
-            Jump();
+            if (!inVehicle)
+            {
+                Move();
+                Jump();
+            }
             weaponSwitch();
 
             //check to see if the user fires their gun
@@ -194,14 +214,53 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             Animation.SetFloat("InputZ", 0);
         }
 
-        playerManager.shields.value = currentShields;
+
+        if (currentShields <= 0)
+        {
+            playerManager.shields.gameObject.SetActive(false);
+            playerManager.depletedShields.gameObject.SetActive(true);
+        }
+        else
+        {
+            playerManager.shields.gameObject.SetActive(true);
+            playerManager.depletedShields.gameObject.SetActive(false);
+            playerManager.shields.value = currentShields;
+        }
         //kill player controller if they fall into the void
         if (transform.position.y < -10f)
         {
             Die();
         }
 
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            if (!inVehicle)
+            {
+                //Initial raycast setup
+                Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+                ray.origin = cam.transform.position;
 
+                //detect if the ray hit an object
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    if (hit.collider.gameObject.GetComponentInParent<Car>())
+                    {
+                        if(!hit.collider.gameObject.GetComponent<Rider>().occupied)
+                        {
+                            if (hit.collider.gameObject.GetComponent<Rider>().driver)
+                            {
+                                hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest(boot.bootObject.localPV);
+                            }
+                            EnterVehicle(hit.collider.gameObject.GetComponent<Rider>());
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ExitVehicle();
+            }
+        }
     }
 
     #region Movement
@@ -328,42 +387,92 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void weaponSwitch()
     {
-        //handle inputs from the number keys
-        for (int i = 0; i < items.Length; i++)
-        {
-            if (Input.GetKeyDown((i + 1).ToString()))
-            {
-                items[itemIndex].ResetItem(1);
-                EquipItem(i);
-                break;
-            }
-        }
+        //Note all reset items functions take 1 as a code to stop and reset the reload timer of that weapon
 
-        //handle inputs from the mouse scroll wheel
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+        //Check if all weapons are equiped or only 2
+        if (allWeapons)
         {
-            if (itemIndex >= items.Length - 1)
+            //handle inputs from the number keys
+            for (int i = 0; i < items.Length; i++)
             {
-                items[itemIndex].ResetItem(1);
-                EquipItem(0);
+                if (Input.GetKeyDown((i + 1).ToString()))
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(i);
+                    break;
+                }
             }
-            else
+
+            //handle inputs from the mouse scroll wheel going up
+            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
             {
-                items[itemIndex].ResetItem(1);
-                EquipItem(itemIndex + 1);
+                if (itemIndex >= items.Length - 1)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(0);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(itemIndex + 1);
+                }
+            }
+            //handle inputs from the mouse scroll wheel going down
+            else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+            {
+                if (itemIndex <= 0)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(items.Length - 1);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(itemIndex - 1);
+                }
             }
         }
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+        else
         {
-            if (itemIndex <= 0)
+            //Check for number keys
+            if(Input.GetKeyDown((1).ToString()))
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(primaryWeapon);
+                }
+            if (Input.GetKeyDown((2).ToString()))
             {
                 items[itemIndex].ResetItem(1);
-                EquipItem(items.Length - 1);
+                EquipItem(secondaryWeapon);
             }
-            else
+
+            //handle inputs from the mouse scroll wheel going up
+            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
             {
-                items[itemIndex].ResetItem(1);
-                EquipItem(itemIndex - 1);
+                if(itemIndex == primaryWeapon)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(secondaryWeapon);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(primaryWeapon);
+                }
+            }
+            //handle inputs from the mouse scroll wheel goign down
+            else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+            {
+                if (itemIndex == primaryWeapon)
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(secondaryWeapon);
+                }
+                else
+                {
+                    items[itemIndex].ResetItem(1);
+                    EquipItem(primaryWeapon);
+                }
             }
         }
     }
@@ -378,18 +487,20 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         if (!PV.IsMine)
             return;
 
-        //check to see a the game state is set to playing
-        if ((int)playerManager.state == 2)
+        if (!inVehicle)
         {
-
-            //rb.velocity = moveAmount;
-            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
-        }
-        //Allow player to move through the air in a pause state until they are on the ground
-        else if (((int)playerManager.state != 2) && !grounded)
-        {
-            //rb.velocity = moveAmount;
-            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+            //check to see a the game state is set to playing
+            if ((int)playerManager.state == 2)
+            {
+                //rb.velocity = moveAmount;
+                rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+            }
+            //Allow player to move through the air in a pause state until they are on the ground
+            else if (((int)playerManager.state != 2) && !grounded)
+            {
+                //rb.velocity = moveAmount;
+                rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
+            }
         }
     }
 
@@ -443,6 +554,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     void Die()
     {
+        if (inVehicle)
+            ExitVehicle();
         playerManager.Die();
     }
     #endregion
@@ -535,7 +648,8 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         }
     }
     #endregion
-    
+
+    #region Coroutines
     private IEnumerator tookDamage()
     {
         yield return new WaitForSeconds(1f);
@@ -608,5 +722,28 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         {
             StartCoroutine(rechargeShields());
         }
+    }
+    #endregion
+
+    private void EnterVehicle(Rider seat)
+    {
+        inVehicle = true;
+        currentSeat = seat;
+        Animation.SetFloat("InputX", moveAmount.x);
+        Animation.SetFloat("InputZ", moveAmount.z);
+
+        currentSeat.parentCar.CarPV.RPC("NewPassenger", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
+
+        Destroy(rb);
+    }
+
+    private void ExitVehicle()
+    {
+        currentSeat.parentCar.CarPV.RPC("ExitVehicle", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
+
+        currentSeat = null;
+        rb = this.gameObject.AddComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        inVehicle = false;
     }
 }

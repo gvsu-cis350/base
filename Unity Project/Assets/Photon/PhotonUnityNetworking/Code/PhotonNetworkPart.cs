@@ -62,11 +62,18 @@ namespace Photon.Pun
         }
 
         /// <summary>
-        /// Returns an iterable collection of current photon views.
+        /// Returns a new iterable collection of current photon views.
         /// </summary>
+        /// <remarks>
+        /// You can iterate over all PhotonViews in a simple foreach loop.
+        /// To use this in a while-loop, assign the new iterator to a variable and then call MoveNext on that.
+        /// </remarks>
         public static NonAllocDictionary<int, PhotonView>.ValueIterator PhotonViewCollection
         {
-            get { return photonViewList.Values; }
+            get
+            {
+                return photonViewList.Values;
+            }
         }
 
         public static int ViewCount
@@ -78,6 +85,8 @@ namespace Photon.Pun
         private static event Action<PhotonView, Player> OnOwnershipRequestEv;
         /// <summary>Parameters: PhotonView for which ownership was requested, player who requests ownership.</summary>
         private static event Action<PhotonView, Player> OnOwnershipTransferedEv;
+        /// <summary>Parameters: PhotonView for which ownership was requested, player who requested (but didn't get) ownership.</summary>
+        private static event Action<PhotonView, Player> OnOwnershipTransferFailedEv;
 
         /// <summary>
         /// Registers an object for callbacks for the implemented callback-interfaces.
@@ -101,6 +110,7 @@ namespace Photon.Pun
             {
                 OnOwnershipRequestEv += punOwnershipCallback.OnOwnershipRequest;
                 OnOwnershipTransferedEv += punOwnershipCallback.OnOwnershipTransfered;
+                OnOwnershipTransferFailedEv += punOwnershipCallback.OnOwnershipTransferFailed;
             }
 
             NetworkingClient.AddCallbackTarget(target);
@@ -129,6 +139,7 @@ namespace Photon.Pun
             {
                 OnOwnershipRequestEv -= punOwnershipCallback.OnOwnershipRequest;
                 OnOwnershipTransferedEv -= punOwnershipCallback.OnOwnershipTransfered;
+                OnOwnershipTransferFailedEv -= punOwnershipCallback.OnOwnershipTransferFailed;
             }
 
             NetworkingClient.RemoveCallbackTarget(target);
@@ -2325,13 +2336,15 @@ namespace Photon.Pun
                                     {
                                         PhotonNetwork.OnOwnershipTransferedEv(requestedView, prevOwner);
                                     }
-
-                                    // JF IPunOwnershipCallbacks callback handling refactoring
-                                    //requestedView.OnOwnershipTransfered(requestedView, previousOwner);
                                 }
                                 else
                                 {
-                                    Debug.LogWarning("requestedView.OwnershipTransfer was ignored! ");
+
+                                    if (PhotonNetwork.OnOwnershipTransferFailedEv != null)
+                                    {
+                                        PhotonNetwork.OnOwnershipTransferFailedEv(requestedView, originatingPlayer);
+                                    }
+                                    //Debug.LogWarning("requestedView.OwnershipTransfer was ignored! ");
                                 }
                                 break;
 
@@ -2340,13 +2353,6 @@ namespace Photon.Pun
                                 {
                                     PhotonNetwork.OnOwnershipRequestEv(requestedView, originatingPlayer);
                                 }
-                                // JF IPunOwnershipCallbacks callback handling refactoring
-                                //if (requestedView.IsMine)
-                                //{
-                                //    // a request goes to the controller of a PV. the master client might control a view if the actual owner is inactive! this is covered by PV.IsMine
-                                //    requestedView.OnOwnershipRequest(requestedView, originatingPlayer);
-
-                                //}
                                 break;
 
                             default:
@@ -2418,7 +2424,7 @@ namespace Photon.Pun
 
                             PhotonView view = GetPhotonView(viewId);
                             Player prevOwner = view.Owner;
-                            Player newOwner = CurrentRoom.GetPlayer(newOwnerId);
+                            Player newOwner = CurrentRoom.GetPlayer(newOwnerId, true);
 
                             view.OwnerActorNr= newOwnerId;
                             view.ControllerActorNr = newOwnerId;

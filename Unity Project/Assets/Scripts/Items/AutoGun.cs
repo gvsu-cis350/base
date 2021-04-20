@@ -44,7 +44,7 @@ public class AutoGun : Gun
             ((GunInfo)itemInfo).currentAmmo--;
 
             //Create sound effect on gun and attach it to the gun
-            temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect.name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
+            temp = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Sounds", soundEffect[0].name), weaponLeftGrip.position, weaponLeftGrip.rotation, 0, new object[] { boot.bootObject.localPV.ViewID });
             temp.transform.SetParent(itemGameObject.transform);
         }
         //ammo unavailable

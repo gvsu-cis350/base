@@ -46,16 +46,29 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private int matchLength = 600000;
     private int scoreCheck = 0;
 
-    private int itemHolder;
+    private List<string> weaponNamesMaster = new List<string>(5){ "MA37 Rifle", "M6G Pistol", "SRS99-AM Sniper", "M41 Launcher", "M45 Shotgun" };
+    private List<string> weaponNames = new List<string>();
+    private List<int> weaponIndex = new List<int>();
+    [HideInInspector] public int primaryWeaponPM;
+    [HideInInspector] public int secondaryWeaponPM;
+    private bool allWeapons;
+    private int redScoreCount = 0;
+    private int blueScoreCount = 0;
 
-    #region UI
-    [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScore, redScore;
-    public TMP_Text ammoCounter;
-    [SerializeField] TMP_Text endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
-    [SerializeField] Transform leaderBoard, endGame;
-    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard, HUD;
     [SerializeField] GameObject[] items;
-    public Slider shields;
+    #region UI
+    //Text label variables
+    [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScoreText, redScoreText, endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
+    public TMP_Text ammoCounter;
+
+    //Leaderboard
+    [SerializeField] Transform leaderBoard, endGame;
+    [SerializeField] GameObject statsCard, endPlayerCard, endTeamCard;
+
+    //HUD
+    public GameObject HUD, primary, secondary, depletedShields;
+    public Slider shields, blueScoreSlider, redScoreSlider;
+    [SerializeField] TMP_Dropdown primaryDropdown, secondaryDropdown;
     #endregion
     #endregion
 
@@ -80,33 +93,71 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     /// </summary>
     private void Start()
     {
+        //Set the local gameMode 
         GameSettings.GameMode = (GameMode)(int)customRoomProperties["GameType"];
+        
+        //Remove other player's charater's instances of menus
         if (!PV.IsMine)
         {
             Destroy(GetComponentInChildren<Canvas>().gameObject);
             Destroy(HUD);
         }
+        //Setup weapon selection
         else
         {
-            localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
-            NewPlayer_S(localPlayerStats);
-            refreshStats();
-            InitializeMatch();
+            //record if we have access to all of the weapons in the game
+            if (customRoomProperties.ContainsKey("AllWeapons"))
+                allWeapons = (bool)customRoomProperties["AllWeapons"];
+            else
+                allWeapons = true;
+
+            if (allWeapons)
+            {
+                //Make sure that the settings are inactive
+                primary.SetActive(false);
+                secondary.SetActive(false);
+            }
+            else
+            {
+                //Make sure that the settings are active
+                primary.SetActive(true);
+                secondary.SetActive(true);
+
+                //Compare weapons in the hashtable to a master list that each player manager holds
+                int i = 0;
+                foreach(string s in weaponNamesMaster)
+                {
+                    if (customRoomProperties.ContainsKey(s))
+                    {
+                        weaponNames.Add(s);
+                        weaponIndex.Add(i);
+                    }
+                    i++;
+                }
+
+                primaryDropdown.ClearOptions();
+                secondaryDropdown.ClearOptions();
+
+                primaryDropdown.AddOptions(weaponNames);
+                secondaryDropdown.AddOptions(weaponNames);
+            }
 
             if (PhotonNetwork.IsMasterClient)
             {
-                localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, PhotonNetwork.LocalPlayer.ActorNumber, 0, 0, CalculateTeam());
-                playerStats.Add(localPlayerStats);
-                playerAdded = true;
-                openMM(Respawn);
+                PhotonNetwork.InstantiateRoomObject(Path.Combine("PhotonPrefabs", "Warthog"), Vector3.zero, Quaternion.identity, 0, null);
             }
         }
-/*
+
+        refreshStats();
+        InitializeMatch();
+
         if (PhotonNetwork.IsMasterClient)
         {
-            localPlayerStats = new PlayerStats(boot.bootObject.currentSettings.nickname, 0, 0, 0, false);
-            NewPlayer_S(localPlayerStats);
-        }*/
+            //Debug.Log("I ran");
+            NewPlayer_S();
+            playerAdded = true;
+            openMM(Respawn);
+        }
     }
 
     /// <summary>
@@ -120,6 +171,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (state == GameState.Ending)
             return;
 
+        //Debug.Log(playerStats.Count);
         togglePause();
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -181,8 +233,30 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PV.IsMine)
         {
             //get a random spawnpoint
-            Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
+            Transform spawnpoint = this.transform;
+            if (GameSettings.GameMode == GameMode.FFA)
+            {
+                spawnpoint = SpawnManager.Instance.GetSpawnpoint();
+            }
+            else if (GameSettings.GameMode == GameMode.TDM)
+            {
+                if (GameSettings.IsBlueTeam)
+                {
+                    spawnpoint = SpawnManager.Instance.GetBlueSpawnpoint();
+                }
+                else
+                {
+                    spawnpoint = SpawnManager.Instance.GetRedSpawnpoint();
+                }
+            }
 
+
+            //Get the weapons if applicable
+            if (!allWeapons)
+            {
+                primaryWeaponPM = weaponIndex[primaryDropdown.value];
+                secondaryWeaponPM = weaponIndex[secondaryDropdown.value];
+            }
             //create a new controller at the spawnpoint prefab loaction
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerModelled"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
 
@@ -191,6 +265,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             //record an active playerController and close the respawn menu
             activeController = true;
+            HUD.SetActive(true);
             closeMM(Respawn);
         }
     }
@@ -202,6 +277,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         activeController = false;
         PhotonNetwork.Destroy(controller);
+        HUD.SetActive(false);
+        primaryDropdown.value = primaryWeaponPM;
+        secondaryDropdown.value = secondaryWeaponPM;
         openMM(Respawn);
         ChangeStat_S(PhotonNetwork.LocalPlayer.ActorNumber, 1, 1);
     }
@@ -317,6 +395,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     #endregion
 
     #region Refresh Methods
+    /// <summary>
+    /// Method updates leaderboard with my current stats
+    /// </summary>
     private void refreshStats()
     {
         if (playerStats.Count > myIndex)
@@ -337,6 +418,37 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         string seconds = (currentMatchTime % 60).ToString("00");
         timer.text = $"{minutes}:{seconds}";
     }
+
+    /// <summary>
+    /// Method updates the blueScoreCount and RedScoreCount Variables
+    /// </summary>
+    private void UpdateTeamScores()
+    {
+        int blueKills = 0;
+        int redKills = 0;
+
+        // set scores
+        foreach (PlayerStats p in playerStats)
+        {
+            if (p.blueTeam)
+            {
+                blueKills += p.kills;
+            }
+            else
+            {
+                redKills += p.kills;
+            }
+        }
+
+        redScoreCount = redKills;
+        blueScoreCount = blueKills;
+
+        if (GameSettings.GameMode == GameMode.TDM)
+        {
+            blueScoreSlider.value = blueScoreCount;
+            redScoreSlider.value = redScoreCount;
+        }
+    }
     #endregion
 
     #region Leaderboard
@@ -352,30 +464,16 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if(GameSettings.GameMode == GameMode.FFA)
         {
             gameType.text = "Free For All";
-            blueScore.gameObject.SetActive(false);
-            redScore.gameObject.SetActive(false);
+            blueScoreText.gameObject.SetActive(false);
+            redScoreText.gameObject.SetActive(false);
         }
         else if (GameSettings.GameMode == GameMode.TDM)
         {
             gameType.text = "Team Deathmatch";
 
-            int blueKills = 0;
-            int redKills = 0;
-
-            // set scores
-            foreach (PlayerStats p in playerStats)
-            {
-                if (p.blueTeam)
-                {
-                    blueKills += p.kills;
-                }
-                else
-                {
-                    redKills += p.kills;
-                }
-            }
-            blueScore.text = blueKills.ToString();
-            redScore.text = redKills.ToString();
+            //Set Scores
+            blueScoreText.text = blueScoreCount.ToString();
+            redScoreText.text = redScoreCount.ToString();
         }
 
         map.text = SceneManager.GetActiveScene().name;
@@ -388,25 +486,25 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         List<PlayerStats> sorted = SortPlayers(playerStats);
 
         // display
-        bool t_alternateColors = false;
         foreach (PlayerStats a in sorted)
         {
             GameObject newcard = Instantiate(playercard, p_lb) as GameObject;
 
-            /*
-            if ((int)customProperties["GameType"] == 1)
-            {
-                newcard.transform.Find("red").gameObject.SetActive(!a.blueTeam);
-                newcard.transform.Find("blue").gameObject.SetActive(a.blueTeam);
-            }
-            */
-
-            //if (t_alternateColors) newcard.GetComponent<Image>().color = new Color32(0, 0, 0, 180);
-            //t_alternateColors = !t_alternateColors;
-
             newcard.transform.Find("Username").GetComponent<TMP_Text>().text = a.username;
             newcard.transform.Find("Kills Counter").GetComponent<TMP_Text>().text = a.kills.ToString();
             newcard.transform.Find("Deaths Counter").GetComponent<TMP_Text>().text = a.deaths.ToString();
+
+            if(GameSettings.GameMode == GameMode.TDM)
+            {
+                if (a.blueTeam)
+                {
+                    newcard.transform.Find("Base").GetComponent<Image>().color = new Color32(27, 27, 133, 255);
+                }
+                else
+                {
+                    newcard.transform.Find("Base").GetComponent<Image>().color = new Color32(133, 27, 27, 255);
+                }
+            }
 
             newcard.SetActive(true);
         }
@@ -693,16 +791,34 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             timer.text = "ERROR";
         }
 
+        if (GameSettings.GameMode != GameMode.TDM)
+        {
+            blueScoreSlider.gameObject.SetActive(false);
+            redScoreSlider.gameObject.SetActive(false);
+        }
+
         if (customRoomProperties.ContainsKey("ScoreCheck"))
         {
             scoreCheck = (int)customRoomProperties["ScoreCheck"] * 10;
+
+            if (GameSettings.GameMode == GameMode.TDM)
+            {
+                blueScoreSlider.maxValue = scoreCheck;
+                redScoreSlider.maxValue = scoreCheck;
+
+                if(scoreCheck == 0)
+                {
+                    blueScoreSlider.gameObject.SetActive(false);
+                    redScoreSlider.gameObject.SetActive(false);
+                }
+            }
         }
     }
 
-    private bool CalculateTeam()
+    private bool CalculateTeam(int ActorNumber)
     {
         //Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
-        return PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0;
+        return ActorNumber % 2 == 0;
     }
     #endregion
 
@@ -740,15 +856,15 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     #region NewPlayer
-    public void NewPlayer_S(PlayerStats p)
+    public void NewPlayer_S()
     {
         object[] package = new object[5];
 
-        package[0] = p.username;
-        package[1] = PhotonNetwork.LocalPlayer.ActorNumber;
+        package[0] = PV.Owner.NickName;
+        package[1] = PV.Owner.ActorNumber;// PhotonNetwork.LocalPlayer.ActorNumber;
         package[2] = (short)0;
         package[3] = (short)0;
-        package[4] = CalculateTeam();
+        package[4] = CalculateTeam(PV.Owner.ActorNumber);
 
         PhotonNetwork.RaiseEvent((byte)EventCodes.NewPlayer, package, new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient }, new SendOptions { Reliability = true });
     }
@@ -758,7 +874,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         PlayerStats p = new PlayerStats((string)data[0], (int)data[1], (short)data[2], (short)data[3], (bool)data[4]);
 
         playerStats.Add(p);
-
         
         //resync our local player information with the new player
         foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
@@ -863,6 +978,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
 
+        if (GameSettings.GameMode == GameMode.TDM)
+        {
+            UpdateTeamScores();
+        }
+
         ScoreCheck();
     }
     #endregion
@@ -890,6 +1010,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
             p.kills = 0;
             p.deaths = 0;
         }
+        redScoreCount = 0;
+        blueScoreCount = 0;
 
         // reset ui
         refreshStats();
@@ -956,4 +1078,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
     #endregion
+
+
 }

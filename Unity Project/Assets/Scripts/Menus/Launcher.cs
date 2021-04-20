@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
@@ -33,6 +34,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     #region Match Settings Vars
     [SerializeField] GameObject startGameButton, roomSettingsButton;
     [SerializeField] TMP_Dropdown mapSelectionDropdown, gameTypeDropdown, matchLengthDropdown, scoreCheckDropdown;
+    [SerializeField] Toggle[] weapons;
+    [SerializeField] Toggle allWeapons;
 
     Hashtable roomSettings = new Hashtable();
     #endregion
@@ -214,21 +217,42 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
+
         //Game Type Record
         if (roomSettings.ContainsKey("GameType"))
             roomSettings.Remove("GameType");
         roomSettings.Add("GameType", gameTypeDropdown.value);
+
         //Game Length Record
         if (roomSettings.ContainsKey("MatchLength"))
             roomSettings.Remove("MatchLength");
         roomSettings.Add("MatchLength", matchLengthDropdown.value);
+
         //Game Length Record
         if (roomSettings.ContainsKey("ScoreCheck"))
             roomSettings.Remove("ScoreCheck");
         roomSettings.Add("ScoreCheck", scoreCheckDropdown.value);
-        //        roomSettings.Add("Pistol", true);
+
+        //Allowed weapons
+        int i = 0;
+        foreach(Toggle t in weapons)
+        {
+            if (roomSettings.ContainsKey(t.name))
+                roomSettings.Remove(t.name);
+
+            if (t.isOn)
+            {
+                roomSettings.Add(t.name, true);
+            }
+            i++;
+        }
+
+        //All Weapons Equipable
+        if (roomSettings.ContainsKey("AllWeapons"))
+            roomSettings.Remove("AllWeapons");
+        roomSettings.Add("AllWeapons", !allWeapons.isOn);
+
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
-        Debug.Log((int)PhotonNetwork.CurrentRoom.CustomProperties["GameType"]);
         PhotonNetwork.LoadLevel(mapSelectionDropdown.value + 2);
     }
 }
