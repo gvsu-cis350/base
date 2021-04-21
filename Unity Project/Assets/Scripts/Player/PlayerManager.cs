@@ -20,6 +20,8 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoomCallbacks
 {
     #region Vars
+    private List<GameObject> vehicles = new List<GameObject>();
+
     #region Menus
     [SerializeField] MenuManager GameMenus;
     [SerializeField] Menu Respawn, Pause;
@@ -42,23 +44,27 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     private bool playerAdded;
     #endregion
 
+    #region Length and Scores
     private int currentMatchTime;
     private Coroutine matchTimerCoroutine;
     private int matchLength = 600000;
     private int scoreCheck = 0;
+    private int redScoreCount = 0;
+    private int blueScoreCount = 0;
+    #endregion
+
+    #region Weapons
+    [SerializeField] GameObject[] items;
 
     private List<string> weaponNamesMaster = new List<string>(5){ "MA37 Rifle", "M6G Pistol", "SRS99-AM Sniper", "M41 Launcher", "M45 Shotgun" };
     private List<string> weaponNames = new List<string>();
     private List<int> weaponIndex = new List<int>();
+
     [HideInInspector] public int primaryWeaponPM;
     [HideInInspector] public int secondaryWeaponPM;
     private bool allWeapons;
-    private int redScoreCount = 0;
-    private int blueScoreCount = 0;
+    #endregion
 
-    private List<GameObject> vehicles = new List<GameObject>();
-
-    [SerializeField] GameObject[] items;
     #region UI
     //Text label variables
     [SerializeField] TMP_Text kills, deaths, map, gameType, timer, blueScoreText, redScoreText, endKills, endDeaths, endPlayer, endBlueScore, endRedScore, endTeam;
@@ -376,16 +382,19 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// Method which exits pause when called. Made specifically for the resume button in the pause menu
     /// </summary>
     public void exitPause()
-    {
+    { 
+        //Check if this is my PlayerManager
         if (PV.IsMine)
         {
-            //logic statment to evaluate if the respawn menu needs to be opened when the pause menu is closed
+            //If we are alive
             if (activeController)
             {
+                //Resume Game
                 closeMM(Pause);
             }
             else
             {
+                //Go to the respawn menu
                 openMM(Respawn);
             }
         }
@@ -394,34 +403,48 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
 
     #region Menus
     /// <summary>
-    /// Private method which closes the passed menu, locks the cursor to the screen, makes the cursor and menu background invisable, and sets pause bool to false
+    /// Private method which closes the passed menu and executes other commands with that
     /// </summary>
-    /// <param name="menuName"></param>
+    /// <param name="menuName">Menu object that we want to close</param>
     private void closeMM(Menu menuName)
     {
+        //If this is my PlayerManager
         if (!PV.IsMine)
             return;
+
+        //Start playing
         state = GameState.Playing;
+
+        //Close this menu and background
         GameMenus.CloseMenu(menuName);
+        GameMenus.GetComponent<Image>().enabled = false;
+
+        //Lock the cursor to the game
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        GameMenus.GetComponent<Image>().enabled = false;
     }
 
     /// <summary>
-    /// Private method which opens the passed menu, unlocks the cursor, makes the cursor and menu background visable, and sets pause bool to true
+    /// Private method which opens the passed menu and executes other commands with that
     /// </summary>
-    /// <param name="menuName"></param>
+    /// <param name="menuName">Menu object that we want to open</param>
     private void openMM(Menu menuName)
     {
+        //If this is my PlayerManager
         if (!PV.IsMine)
             return;
+
+        //Open menu and ensusre only the menu is open
         leaderBoard.gameObject.SetActive(false);
-        state = GameState.Waiting;
         GameMenus.OpenMenu(menuName);
+        GameMenus.GetComponent<Image>().enabled = true;
+
+        //Enter pause state
+        state = GameState.Waiting;
+        
+        //Unlock the Cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        GameMenus.GetComponent<Image>().enabled = true;
     }
 
     /// <summary>
@@ -434,16 +457,28 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #endregion
 
     #region Kill Methods
+    /// <summary>
+    /// Method calls RPC to tell another player that they killed this player
+    /// </summary>
+    /// <param name="shooter">The PhotonView ID of the player who killed this player</param>
     public void killedPlayer(int shooter)
     {
+        //Call this RPC with the Shooter's PhotonView
         PhotonView.Find(shooter).RPC("RPC_KilledPlayer", RpcTarget.All);
     }
 
+
+    /// <summary>
+    /// RPC Method to register if this player killed another player
+    /// </summary>
     [PunRPC]
     public void RPC_KilledPlayer()
     {
+        //Exit this method if we are not the player who got the kill
         if (!PV.IsMine)
             return;
+
+        //Call even to tell the master Client that we got a kill
         ChangeStat_S(PhotonNetwork.LocalPlayer.ActorNumber, 0, 1);
     }
     #endregion
@@ -454,22 +489,31 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// </summary>
     private void refreshStats()
     {
+        //f my index is in the playerStats list
         if (playerStats.Count > myIndex)
         {
+            //Display the most up to date kills and deaths
             kills.text = $"{playerStats[myIndex].kills} kills";
             deaths.text = $"{playerStats[myIndex].deaths} deaths";
         }
         else
         {
+            //If we are not in the list the reset our counters
             kills.text = "0 kills";
             deaths.text = "0 deaths";
         }
     }
 
+    /// <summary>
+    /// Method refreshes the TimerUI
+    /// </summary>
     private void RefreshTimerUI()
     {
+        //Calculate the minutes
         string minutes = (currentMatchTime / 60).ToString("00");
         string seconds = (currentMatchTime % 60).ToString("00");
+
+        //Display the remaining time
         timer.text = $"{minutes}:{seconds}";
     }
 
@@ -478,10 +522,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// </summary>
     private void UpdateTeamScores()
     {
+        //Disposable variables
         int blueKills = 0;
         int redKills = 0;
 
-        // set scores
+        // Iterate through the list and calculate the total kills
         foreach (PlayerStats p in playerStats)
         {
             if (p.blueTeam)
@@ -494,9 +539,11 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             }
         }
 
+        //Save the calcualted kill counts
         redScoreCount = redKills;
         blueScoreCount = blueKills;
 
+        //Update the score sliders
         if (GameSettings.GameMode == GameMode.TDM)
         {
             blueScoreSlider.value = blueScoreCount;
@@ -506,15 +553,19 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #endregion
 
     #region Leaderboard
+    /// <summary>
+    /// Method updates and creates the leaderboard with current stats when called
+    /// </summary>
+    /// <param name="p_lb">The transform that the leaderboard is activating</param>
     private void Leaderboard(Transform p_lb)
     { 
-        // clean up
+        //Clean up the old leaderboard, set to index after 2 as the first 2 children are the header card and template card
         for (int i = 2; i < p_lb.childCount; i++)
         {
             Destroy(p_lb.GetChild(i).gameObject);
         }
 
-        // set details
+        //Change leaderbaord acording to the game mode
         if(GameSettings.GameMode == GameMode.FFA)
         {
             gameType.text = "Free For All";
@@ -530,60 +581,78 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             redScoreText.text = redScoreCount.ToString();
         }
 
+        //Set the map name
         map.text = SceneManager.GetActiveScene().name;
 
-        // cache prefab
+        //Find the template player card and save it
         GameObject playercard = p_lb.GetChild(1).gameObject;
         playercard.SetActive(false);
 
-        // sort
+        //Sort the players
         List<PlayerStats> sorted = SortPlayers(playerStats);
 
-        // display
+        //Instantiate a player card for each player
         foreach (PlayerStats a in sorted)
         {
+            //Create new card
             GameObject newcard = Instantiate(playercard, p_lb) as GameObject;
 
+            //Set this card's stats
             newcard.transform.Find("Username").GetComponent<TMP_Text>().text = a.username;
             newcard.transform.Find("Kills Counter").GetComponent<TMP_Text>().text = a.kills.ToString();
             newcard.transform.Find("Deaths Counter").GetComponent<TMP_Text>().text = a.deaths.ToString();
 
+            //If we are in TDM mode then change the background color of the card
             if(GameSettings.GameMode == GameMode.TDM)
             {
+                //Blue team players get blue
                 if (a.blueTeam)
                 {
                     newcard.transform.Find("Base").GetComponent<Image>().color = new Color32(27, 27, 133, 255);
                 }
+                //Red team players get ret
                 else
                 {
                     newcard.transform.Find("Base").GetComponent<Image>().color = new Color32(133, 27, 27, 255);
                 }
             }
 
+            //Activate the new card
             newcard.SetActive(true);
         }
 
-        // activate
+        //Activate the leaderboard
         p_lb.gameObject.SetActive(true);
         p_lb.parent.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Method to sort players based on team and kills
+    /// </summary>
+    /// <param name="p_info">The PlayerStats list that needs to be sorted</param>
+    /// <returns></returns>
     private List<PlayerStats> SortPlayers(List<PlayerStats> p_info)
     {
+        //Create a new temporary list
         List<PlayerStats> sorted = new List<PlayerStats>();
 
+        //Check for FFA mode
         if (GameSettings.GameMode == GameMode.FFA)
         {
+            //Keep running until the sorted list is equal in length to the passed playerStats list
             while (sorted.Count < p_info.Count)
             {
-                // set defaults
+                //Set defaults
                 short highest = -1;
                 PlayerStats selection = p_info[0];
 
-                // grab next highest player
+                //Iterate through all players
                 foreach (PlayerStats a in p_info)
                 {
+                    //Exit this run if we already have this player sorted
                     if (sorted.Contains(a)) continue;
+
+                    //Check if this player has a higher kill count
                     if (a.kills > highest)
                     {
                         selection = a;
@@ -591,35 +660,45 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
                     }
                 }
 
-                // add player
+                //Add player
                 sorted.Add(selection);
             }
         } 
+        //Check for TDM mode
         else if (GameSettings.GameMode == GameMode.TDM)
         {
+            //Create temporary lists for red and blue teams
             List<PlayerStats> redSorted = new List<PlayerStats>();
             List<PlayerStats> blueSorted = new List<PlayerStats>();
 
+            //vars to insure that we get all players
             int blueSize = 0;
             int redSize = 0;
 
+            //Iterate through the passed list and get the total players
             foreach (PlayerStats p in p_info)
             {
                 if (p.blueTeam) blueSize++;
                 else redSize++;
             }
 
+            //Run while there are still users that haven't been counted for the red team
             while (redSorted.Count < redSize)
             {
-                // set defaults
+                //Set defaults
                 short highest = -1;
                 PlayerStats selection = p_info[0];
 
-                // grab next highest player
+                //Iterate through all players
                 foreach (PlayerStats a in p_info)
                 {
+                    //Exit run if this player is on the blue team
                     if (a.blueTeam) continue;
+
+                    //Exit run if this player is already sorted
                     if (redSorted.Contains(a)) continue;
+
+                    //Check if this player has the highest kill count
                     if (a.kills > highest)
                     {
                         selection = a;
@@ -627,21 +706,26 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
                     }
                 }
 
-                // add player
+                //Add player
                 redSorted.Add(selection);
             }
-
+            //Run while there are still users that haven't been counted for the blue team
             while (blueSorted.Count < blueSize)
             {
-                // set defaults
+                //Set defaults
                 short highest = -1;
                 PlayerStats selection = p_info[0];
 
-                // grab next highest player
+                //Iterate through all playres
                 foreach (PlayerStats a in p_info)
                 {
+                    //Exit run if player is on the red team
                     if (!a.blueTeam) continue;
+
+                    //Exit run if this player has already been sorted
                     if (blueSorted.Contains(a)) continue;
+
+                    //Check if this player has the highest kill count of the remaining players
                     if (a.kills > highest)
                     {
                         selection = a;
@@ -649,22 +733,29 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
                     }
                 }
 
-                // add player
+                //Add player
                 blueSorted.Add(selection);
             }
 
+            //Add blue and red lists together
             sorted.AddRange(redSorted);
             sorted.AddRange(blueSorted);
         }
+
+        //Return the sorted list
         return sorted;
     }
     #endregion
 
     #region Checks
+    /// <summary>
+    /// Method to get that the State of the game is ending
+    /// </summary>
     private void StateCheck()
     {
         if (state == GameState.Ending)
         {
+            //If it is call the end game method
             EndGame();
         }
     }
@@ -678,13 +769,13 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         if (scoreCheck == 0)
             return;
 
-        // define temporary variables
+        //Define temporary variables
         bool detectwin = false;
 
         //FFA
         if (GameSettings.GameMode == GameMode.FFA)
         {
-            // check to see if any player has met the win conditions
+            //Check to see if any player has met the win conditions
             foreach (PlayerStats a in playerStats)
             {
                 if (a.kills >= scoreCheck)
@@ -707,39 +798,42 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             }
         }
 
-        // did we find a winner?
+        //Did we find a winner?
         if (detectwin)
         {
-            // are we the master client? is the game still going?
+            //Are we the master client? is the game still going?
             if (PhotonNetwork.IsMasterClient && state != GameState.Ending)
             {
-                // if so, tell the other players that a winner has been detected
+                //If so, tell the other players that a winner has been detected
                 UpdatePlayers_S((int)GameState.Ending, playerStats);
             }
         }
     }
 
-
+    /// <summary>
+    /// Method to detect if a player leaves the match
+    /// </summary>
+    /// <param name="otherPlayer">The player that left the match</param>
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        //Check if we are the master client and that the game isn't ending at the moment
         if (PhotonNetwork.IsMasterClient && state != GameState.Ending)
         {
+            //Temporary list
             List<PlayerStats> newPlayerStats = new List<PlayerStats>();
+
+            //Iterate through all of the players in playerStats
             foreach (PlayerStats s in playerStats)
             {
-                /*
-                Debug.Log(PhotonView.Find(s.viewID).IsOwnerActive);
-                if (!PhotonView.Find(s.viewID).IsOwnerActive)
-                {
-                    playerStats.Remove(s);
-                }
-                */
+                //If this player's actor number doesn't match the actor number of the player who left
                 if(otherPlayer.ActorNumber != s.actor)
                 {
+                    //Add them to the new temporary list
                     newPlayerStats.Add(s);
                 }
             }
 
+            //Update the playerStats list and tell other users to as well
             playerStats = newPlayerStats;
             UpdatePlayers_S((int)state, playerStats);
         }
@@ -747,20 +841,24 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #endregion
 
     #region Random
+    /// <summary>
+    /// Method to end a match
+    /// </summary>
     private void EndGame()
     {
         // set game state to ending
         state = GameState.Ending;
 
+        //Disable the leaderboard
         leaderBoard.gameObject.SetActive(false);
 
-        // set timer to 0
+        //Set timer to 0 and disable the timer
         if (matchTimerCoroutine != null) StopCoroutine(matchTimerCoroutine);
         currentMatchTime = 0;
         RefreshTimerUI();
 
 
-        // disable room
+        //Disable room is need be and remove our player if they are active
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(controller);
@@ -771,16 +869,22 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             }
         }
 
-        //Run commands to turn off all menus
+        //Turn off all menus
         GameMenus.CloseAllMenus();
+        GameMenus.GetComponent<Image>().enabled = false;
+
+        //Unlock cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        GameMenus.GetComponent<Image>().enabled = false;
+
 
         //Display FFA Winner
         if (GameSettings.GameMode == GameMode.FFA)
         {
+            //Activaet the FFA end screen
             endPlayerCard.SetActive(true);
+
+            //Find the winner of the match
             int highest = -1;
             PlayerStats selection = playerStats[0];
             foreach (PlayerStats a in playerStats)
@@ -792,6 +896,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
                 }
             }
 
+            //Update the text to display the winner
             endDeaths.text = selection.deaths.ToString();
             endKills.text = selection.kills.ToString();
             endPlayer.text = selection.username;
@@ -799,22 +904,27 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         //Display TDM Winner
         else if (GameSettings.GameMode == GameMode.TDM)
         {
+            //Find the winning team
             endTeamCard.SetActive(true);
             UpdateTeamScores();
 
+            //Display the final scores
             endBlueScore.text = blueScoreCount.ToString();
             endRedScore.text = redScoreCount.ToString();
 
+            //Blue team wins
             if (blueScoreCount > redScoreCount)
             {
                 endTeam.text = "Blue Team Wins";
                 endTeam.color = new Color(0, 0, 255);
             }
+            //Red team wins
             else if (blueScoreCount < redScoreCount)
             {
                 endTeam.text = "Red Team Wins";
                 endTeam.color = new Color(255, 0, 0);
             }
+            //Draw
             else
             {
                 endTeam.text = "Draw";
@@ -822,56 +932,69 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             }
         }
 
-        // show end game ui
+        //Show end game ui
         endGame.gameObject.SetActive(true);
         Leaderboard(leaderBoard);
 
-        // wait X seconds and then return to main menu
+        //Wait X seconds and then return to main menu
         StartCoroutine(End(6f));
     }
 
+    /// <summary>
+    /// Method to start a match
+    /// </summary>
     private void InitializeMatch()
     {
-        //Code sets and or disables match timer depending on room parameters
+        //If there is a match timer
         if (customRoomProperties.ContainsKey("MatchLength"))
         {
+            //If 0, then disable
             if((int)customRoomProperties["MatchLength"] == 0)
             {
                 timer.gameObject.SetActive(false);
             }
+            //Start timer if not
             else
             {
+                //Reset the timer
                 matchLength = (int)customRoomProperties["MatchLength"] * 5 * 60;
                 currentMatchTime = matchLength;
                 RefreshTimerUI();
 
+                //Master user starts the match timer
                 if (PhotonNetwork.IsMasterClient)
                 {
                     matchTimerCoroutine = StartCoroutine(MatchTimer());
                 }
             }
         } 
+        //Error catch
         else
         {
             timer.text = "ERROR";
         }
 
-        //Game sets and or disables score checking based on room parameters
+        //Disble socre trackers if not TDM mode
         if (GameSettings.GameMode != GameMode.TDM)
         {
             blueScoreSlider.gameObject.SetActive(false);
             redScoreSlider.gameObject.SetActive(false);
         }
 
+        //Verify score setting exists
         if (customRoomProperties.ContainsKey("ScoreCheck"))
         {
+            //Set score threshold
             scoreCheck = (int)customRoomProperties["ScoreCheck"] * 10;
 
+            //If TDM
             if (GameSettings.GameMode == GameMode.TDM)
             {
+                //Set socre slider maximums
                 blueScoreSlider.maxValue = scoreCheck;
                 redScoreSlider.maxValue = scoreCheck;
 
+                //Disable if score = 0
                 if(scoreCheck == 0)
                 {
                     blueScoreSlider.gameObject.SetActive(false);
@@ -884,7 +1007,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     /// <summary>
     /// Method calulates which team a player should be on via their actornumber
     /// </summary>
-    /// <param name="ActorNumber"></param>
+    /// <param name="ActorNumber">Actor number for a player</param>
     /// <returns></returns>
     private bool CalculateTeam(int ActorNumber)
     {
@@ -913,14 +1036,20 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #endregion
 
     #region Photon Events
-
+    /// <summary>
+    /// Method to handle photon Event codes
+    /// </summary>
+    /// <param name="photonEvent">Event that was raised</param>
     public void OnEvent(EventData photonEvent)
     {
+        //If this is a pre-defined photon event
         if (photonEvent.Code >= 200) return;
 
+        //Find the code for the event, and get the attached data
         EventCodes e = (EventCodes)photonEvent.Code;
         object[] o = (object[])photonEvent.CustomData;
 
+        //Raise the appropriate event
         switch (e)
         {
             case EventCodes.NewPlayer:
@@ -946,31 +1075,44 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     }
 
     #region NewPlayer
+    /// <summary>
+    /// Send method for new player
+    /// </summary>
     public void NewPlayer_S()
     {
+        //Create new data package
         object[] package = new object[5];
 
-        package[0] = PV.Owner.NickName;
-        package[1] = PV.Owner.ActorNumber;// PhotonNetwork.LocalPlayer.ActorNumber;
-        package[2] = (short)0;
-        package[3] = (short)0;
-        package[4] = CalculateTeam(PV.Owner.ActorNumber);
+        //Fill the package out
+        package[0] = PV.Owner.NickName;                     //Name of player
+        package[1] = PV.Owner.ActorNumber;                  //Player's actor number
+        package[2] = (short)0;                              //Kills
+        package[3] = (short)0;                              //Deaths
+        package[4] = CalculateTeam(PV.Owner.ActorNumber);   //Team based on player's actor number
 
+        //Send the package to the master client
         PhotonNetwork.RaiseEvent((byte)EventCodes.NewPlayer, package, new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient }, new SendOptions { Reliability = true });
     }
 
+    /// <summary>
+    /// Recieve method for new player
+    /// </summary>
+    /// <param name="data">Data package for the new player</param>
     public void NewPlayer_R(object[] data)
     {
+        //Create a new playerStats instance with the given data
         PlayerStats p = new PlayerStats((string)data[0], (int)data[1], (short)data[2], (short)data[3], (bool)data[4]);
 
+        //Add it to the master list
         playerStats.Add(p);
         
-        //resync our local player information with the new player
+        //Resync our local player information with the new player
         foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
         {
             gameObject.GetComponent<PlayerControllerModelled>().TrySync();
         }
         
+        //Check so only the master client's player manager sends update event
         if(PhotonNetwork.IsMasterClient && PV.IsMine)
         {
             UpdatePlayers_S((int)state, playerStats);
@@ -979,11 +1121,20 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
     #endregion
 
     #region UpdatePlayers
+    /// <summary>
+    /// Send method to update players
+    /// </summary>
+    /// <param name="state">Current state of the game according to the master user</param>
+    /// <param name="info">PlayerStats list that players need to get</param>
     public void UpdatePlayers_S(int state, List<PlayerStats> info)
     {
+        //Create package for sending
         object[] package = new object[info.Count + 1];
 
+        //Frist record game state
         package[0] = state;
+
+        //Add all player's information to the package
         for (int i = 0; i < info.Count; i++)
         {
             object[] piece = new object[5];
@@ -997,28 +1148,40 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             package[i + 1] = piece;
         }
 
+        //Raise this event for everyone
         PhotonNetwork.RaiseEvent((byte)EventCodes.UpdatePlayers, package, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
     }
 
+    /// <summary>
+    /// Receive mehtod to update players
+    /// </summary>
+    /// <param name="data">New data package for all players</param>
     public void UpdatePlayers_R(object[] data)
     {
+        //Record game state
         state = (GameState)data[0];
 
+        //Clear out current player stats list
         playerStats = new List<PlayerStats>();
 
         for (int i = 1; i < data.Length; i++)
         {
+            //Create object for extraction
             object[] extract = (object[])data[i];
 
+            //Create new playerStats from information
             PlayerStats p = new PlayerStats((string)extract[0], (int)extract[1], (short)extract[2], (short)extract[3], (bool)extract[4]);
 
+            //Add playerStats to the main list
             playerStats.Add(p);
 
+            //Check if we are in the list
             if (PhotonNetwork.LocalPlayer.ActorNumber == p.actor)
             {
+                //Record the index of where we are in the list
                 myIndex = i - 1;
 
-                //if we have been waiting to be added to the game then spawn us in
+                //if we have been waiting to be added to the game then open the respawn menu
                 if (!playerAdded)
                 {
                     playerAdded = true;
@@ -1028,81 +1191,113 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
             }
         }
 
+        //Run a check to see if the game is ending
         StateCheck();
     }
     #endregion
 
     #region ChangeStat
+    /// <summary>
+    /// Send method to update kill or death count for this player
+    /// </summary>
+    /// <param name="actor">Actor number of player</param>
+    /// <param name="stat">The stat that needs to be changed</param>
+    /// <param name="amt">The amount with which the stat changed</param>
     public void ChangeStat_S(int actor, byte stat, byte amt)
     {
+        //Create new data package based on parameters
         object[] package = new object[] { actor, stat, amt };
 
+        //Send it to everyone
         PhotonNetwork.RaiseEvent((byte)EventCodes.ChangeStat, package, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
     }
+
+    /// <summary>
+    /// Receive method of changeStat pair
+    /// </summary>
+    /// <param name="data">New stats of the player</param>
     public void ChangeStat_R(object[] data)
     {
+        //Get the information from the data package
         int actor = (int)data[0];
         byte stat = (byte)data[1];
         byte amt = (byte)data[2];
 
+        //Iterate through all players
         for (int i = 0; i < playerStats.Count; i++)
         {
+            //Find the player whose stats changed
             if (playerStats[i].actor == actor)
             {
+                //Get the stat that is changing
                 switch (stat)
                 {
                     case 0: //kills
                         playerStats[i].kills += amt;
-//                        Debug.Log($"Player {playerStats[i].username} : kills = {playerStats[i].kills}");
+                        //Debug.Log($"Player {playerStats[i].username} : kills = {playerStats[i].kills}");
                         break;
 
                     case 1: //deaths
                         playerStats[i].deaths += amt;
- //                       Debug.Log($"Player {playerStats[i].username} : deaths = {playerStats[i].deaths}");
+                        //Debug.Log($"Player {playerStats[i].username} : deaths = {playerStats[i].deaths}");
                         break;
                 }
 
+                //Refresh our stats if we are the player who changged
                 if (i == myIndex) refreshStats();
+                //Exit if not our PlayerManager. Protection against null pointer as other playerManager's leaderboards are destroyed
                 if (!PV.IsMine) break;
+                //If the leaderboard is active, then call its activation method to update it
                 if (leaderBoard.gameObject.activeSelf) Leaderboard(leaderBoard);
 
+                //Stop iterating through players
                 break;
             }
         }
 
+        //If we are in TDM mode
         if (GameSettings.GameMode == GameMode.TDM)
         {
+            //make sure that team scores are up to date
             UpdateTeamScores();
         }
 
+        //Check if someone won the game
         ScoreCheck();
     }
     #endregion
 
     #region NewMatch
+    /// <summary>
+    /// Send method for new matches
+    /// </summary>
     public void NewMatch_S()
     {
+        //Before new match, destory all vehicles
         foreach(GameObject v in vehicles)
         {
             PhotonNetwork.Destroy(v);
         }
-
+        
+        //Run a create vehicles command
         CreateVehicles();
+
+        //Raise new match event
         PhotonNetwork.RaiseEvent((byte)EventCodes.NewMatch, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
     }
 
+    /// <summary>
+    /// Receive method for new matches
+    /// </summary>
     public void NewMatch_R()
     {
-        // set game state to waiting
+        //Set game state to waiting
         state = GameState.Waiting;
 
-        // deactivate map camera
-        //            mapcam.SetActive(false);
-
-        // hide end game ui
+        //Hide end game ui
         endGame.gameObject.SetActive(false);
 
-        // reset scores
+        //Reset scores
         foreach (PlayerStats p in playerStats)
         {
             p.kills = 0;
@@ -1111,44 +1306,66 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         redScoreCount = 0;
         blueScoreCount = 0;
 
-        // reset ui
+        //Reset ui
         refreshStats();
 
-        // reinitialize match
+        //Reinitialize match
         InitializeMatch();
 
-        // spawn
+        //Open respawn menu
         openMM(Respawn);
     }
     #endregion
 
     #region Timer
+    /// <summary>
+    /// Send method for the timer updates
+    /// </summary>
     public void RefreshTimer_S()
     {
+        //Package the current match time
         object[] package = new object[] { currentMatchTime };
 
+        //Raise event with all players in room
         PhotonNetwork.RaiseEvent((byte)EventCodes.RefreshTimer, package, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
     }
+
+    /// <summary>
+    /// Receive method for timer updates
+    /// </summary>
+    /// <param name="data">Data on the current timer</param>
     public void RefreshTimer_R(object[] data)
     {
+        //Set the current timer to the passed data
         currentMatchTime = (int)data[0];
+
+        //Update the timer UI
         RefreshTimerUI();
     }
     #endregion
     #endregion
 
     #region Coroutines
+    /// <summary>
+    /// Coroutine for match timer waits one second before running
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator MatchTimer()
     {
+        //Wait one second
         yield return new WaitForSeconds(1f);
 
+        //Decrease match time
         currentMatchTime -= 1;
 
+        //Check if the match is over
         if (currentMatchTime <= 0)
         {
+            //Stop the coroutine and update everyone to end the match
             matchTimerCoroutine = null;
             UpdatePlayers_S((int)GameState.Ending, playerStats);
         }
+        //Continue with the timer
         else
         {
             RefreshTimer_S();
@@ -1156,21 +1373,28 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         }
     }
 
+    /// <summary>
+    /// Coroutiune for the end of the match
+    /// </summary>
+    /// <param name="p_wait">Time in seconds of how long to wait on the win screen</param>
+    /// <returns></returns>
     private IEnumerator End(float p_wait)
     {
+        //Wait for the passed time on the end screen
         yield return new WaitForSeconds(p_wait);
 
+        //If this match should restart
         if (perpetual)
         {
-            // new match
+            //Start a new match
             if (PhotonNetwork.IsMasterClient)
             {
                 NewMatch_S();
             }
         }
+        //Kick players from room
         else
         {
-            // disconnect
             PhotonNetwork.AutomaticallySyncScene = false;
             PhotonNetwork.LeaveRoom();
         }
