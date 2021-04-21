@@ -251,6 +251,7 @@ public class Car : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks
 
             //Unparent the player
             holder.transform.SetParent(null);
+            holder.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
     }
 

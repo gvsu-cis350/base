@@ -181,7 +181,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IOnEventCallback, IInRoo
         if (state == GameState.Ending)
             return;
 
-        Debug.Log(state);
         //Check if the player is paused/pausing
         togglePause();
 
