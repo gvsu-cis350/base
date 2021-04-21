@@ -30,6 +30,8 @@ public class Main {
     public static final int GRAVITY = 0;
     public static final double DRAG = 0.00;
     public static final double BOUNCE = .99;
+    public static boolean DRAW_DANCE = true;
+    public static boolean DRAW_DEBUG = false;
 
     public static int width;
     public static int height;
@@ -49,7 +51,8 @@ public class Main {
 
     private static JMenuBar menus;
     private static JMenu actionMenu;
-    private static JMenuItem resetItem;
+    private static JMenuItem danceToggleItem;
+    private static JMenuItem debugItem;
 
     /**
      * Initialize Frame, start threads, and begin animation loop.
@@ -98,22 +101,30 @@ public class Main {
 
         // Menu bar setup
         menus = new JMenuBar();
-        actionMenu = new JMenu("Action");
-        resetItem = new JMenuItem("Reset");
+        actionMenu = new JMenu("Settings");
+        danceToggleItem = new JMenuItem("Toggle Dance");
+        debugItem = new JMenuItem("Debug Stats");
 
-        actionMenu.add(resetItem);
+        actionMenu.add(danceToggleItem);
+        actionMenu.add(debugItem);
         menus.add(actionMenu);
 
-        // Action Listener for resetItem
-        resetItem.addActionListener(new ActionListener() {
+        // Action Listener for danceToggleItem
+        danceToggleItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object comp = e.getSource();
-                if (resetItem == comp) {
-
-                }
+                DRAW_DANCE = !DRAW_DANCE;
             }
         });
+
+        debugItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DRAW_DEBUG = !DRAW_DEBUG;
+            }
+        });
+
+
 
         // Add Menu bar to frame
         frame.setJMenuBar(menus);
@@ -193,12 +204,14 @@ public class Main {
                 g2D.setColor(Color.GRAY);
                 g2D.fillRect(0, 0, width, height);
 
+                if (DRAW_DANCE) Dancer.drawDancer(g2D, frames/20);
+
                 // draw entities
                 for (int i = 0; i < world.size(); i++) {
                     at = new AffineTransform();
                     at.translate(world.get(i).getX(), world.get(i).getY()); // get coords of entity
                     Entity entity = world.get(i);
-                    g2D.setColor(Color.WHITE);
+                    g2D.setColor(Color.BLACK);
                     // for circles
                     if (entity instanceof Ball) {
                         g2D.fill(new Ellipse2D.Double(entity.getX(), entity.getY(), ((Ball) entity).getRadius() * 2, ((Ball) entity).getRadius() * 2));
@@ -209,11 +222,13 @@ public class Main {
                 }
 
                 // display debug stats in frame
-                g2D.setFont(new Font("Courier New", Font.PLAIN, 12));
-                g2D.setColor(Color.GREEN);
-                g2D.drawString(String.format("FPS: %s", fps), 20, 20);
-                g2D.drawString(String.format("X: %s", mPoint.x), 20, 30);
-                g2D.drawString(String.format("Y: %s", mPoint.y), 20, 40);
+                if (DRAW_DEBUG) {
+                    g2D.setFont(new Font("Courier New", Font.PLAIN, 12));
+                    g2D.setColor(Color.GREEN);
+                    g2D.drawString(String.format("FPS: %s", fps), 20, 20);
+                    g2D.drawString(String.format("X: %s", mPoint.x), 20, 30);
+                    g2D.drawString(String.format("Y: %s", mPoint.y), 20, 40);
+                }
                 graphics = b.getDrawGraphics();
                 graphics.drawImage(buffer, 0, 0, null);
                 if (!b.contentsLost()) b.show();
