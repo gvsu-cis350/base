@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 388863418833248351}
   - component: {fileID: 388863418833248348}
   m_Layer: 0
-  m_Name: Warthog
+  m_Name: Warhog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -22,5 +22,5 @@ MonoBehaviour:
   currentAccuracy: 0
   accuracyDropPerShot: 8
   accuracyRecoverRate: 3
-  roundsPerMinute: 0
+  roundsPerMinute: 600
   shotsPerRound: 1
