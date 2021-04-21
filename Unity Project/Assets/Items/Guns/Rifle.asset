@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Rifle
   damage: 6
   maxAmmo: 32
-  currentAmmo: 32
+  currentAmmo: 31
   maxReloadTime: 3
   reloadTime: 0
   accuracy: 80

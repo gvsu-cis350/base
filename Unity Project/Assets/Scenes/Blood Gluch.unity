@@ -97,9 +97,9 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: ef682b84ecee68140a312010a1d6275b,
+  m_LightingDataAsset: {fileID: 112000000, guid: 77fd1f5334f6a094b83cf47939e9711c,
     type: 2}
-  m_LightingSettings: {fileID: 4890085278179872738, guid: d79cde98d8986fe4ba7b9628333fb1b6,
+  m_LightingSettings: {fileID: 4890085278179872738, guid: e660613b11de2954e8e22bfaa95063e2,
     type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -514,6 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 687851d2b6f86384cbf6594134939120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teamSpecificSpawns: 0
   hasVehicles: 1
 --- !u!4 &1328157534
 Transform:
