@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
@@ -88,55 +87,51 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     }
 
     /// <summary>
-    /// Method which is called when class is contructed, and deletes references to other user's controllers
+    /// Method which is called on 1st frame after construction, updates player with proper settings
     /// </summary>
     private void Start()
     {
+        //Remove the material entry in the hashmap if there is one for this player
+        if (customProperties.ContainsKey("Team"))
+            customProperties.Remove("Team");
 
+        //If this is my playerController
         if (PV.IsMine)
         {
+            //Sync team if TDM mode
             if (GameSettings.GameMode == GameMode.TDM)
             {
                 PV.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
-                /*
-                if (GameSettings.IsAwayTeam)
-                {
-                    ui_team.text = "red team";
-                    ui_team.color = Color.red;
-                }
-                else
-                {
-                    ui_team.text = "blue team";
-                    ui_team.color = Color.blue;
-                }
-                */
             }
 
+            //Get settings for 2 weapons or all weapons
             if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("AllWeapons"))
             {
                 allWeapons = (bool)PhotonNetwork.CurrentRoom.CustomProperties["AllWeapons"];
-
             }
 
+            //Ignore 2 weapon settings if all weapons
             if (allWeapons)
             {
                 primaryWeapon = 0;
             }
+            //Set up 2 weapon system
             else
             { 
                 primaryWeapon = playerManager.primaryWeaponPM;
                 secondaryWeapon = playerManager.secondaryWeaponPM;
             }
             
-            //subscribe the mouse senstivity method to settings update event
+            //Subscribe the mouse senstivity method to settings update event
             GameEvents.current.onSettingsUpdate += updateMouse;
+
             //Equip the first item available
             EquipItem(primaryWeapon);
-            //Remove the material entry in the hashmap if there is one
-            if (customProperties.ContainsKey("Team"))
-                customProperties.Remove("Team");
+
+            //If TDM mode
             if (GameSettings.GameMode == GameMode.TDM)
             {
+                //Change apperance based on team
                 customProperties.Add("Team", blueTeam);
                 changeAppearance(blueTeam);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
@@ -148,14 +143,13 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
             {
                 go.gameObject.layer = 10;
             }
+
+            //Remove helemt from disaplaying on the user's cameras
             Helmet.layer = 12;
-            playerManager.ammoCounter.text = items[itemIndex].returnInfo().ToString();
-
-
         }
         else
         {
-            //remove components that will conflict with the local copies of those componenets
+            //Remove components of local copies of playerControllers that this player doesn't own
             rigBuilder.layers.RemoveAt(1);
             Destroy(playerModel.gameObject.GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
@@ -177,18 +171,16 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <summary>
     /// Update method called continously based on frame rate of user to handle local inputs
     /// </summary>
-    void Update()
+    private void Update()
     {
-        //exit method if we are not on the local user's Photon View id
+        //Exit method if we are not on the local user's Photon View id
         if (!PV.IsMine)
             return;
 
-        //check to see if there is a the current game state is set to playing
+        //Check to see if there is a the current game state is set to playing
         if ((int)playerManager.state == 2)
         {
-            //run basic movement methods and weapon switching methods depending on vehicle status
-            
-
+            //Run basic movement methods and weapon switching methods depending on vehicle status
             if (!inVehicle)
             {
                 Look();
@@ -200,17 +192,19 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 Look();
             }
             
-
+            //Method to handle weapon switching
             weaponSwitch();
 
-            //check to see if the user fires their gun
+            //Check to see if the user fires their gun
             if (Input.GetMouseButtonDown(0))
             {
                 items[itemIndex].Use();
             }
 
+            //Update the ammo counter
             playerManager.ammoCounter.text = "" + items[itemIndex].returnInfo()["currentAmmo"].ToString() + "/" + items[itemIndex].returnInfo()["maxAmmo"].ToString();
 
+            //Check for reload input
             if (Input.GetKeyDown(KeyCode.R))
             {
                 items[itemIndex].RefreshItem();
@@ -218,63 +212,33 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
         }
         else
         {
-            //make sure that the character only animates the idle animation while paused
+            //Make sure that the character only animates the idle animation while paused
             Animation.SetFloat("InputX", 0);
             Animation.SetFloat("InputZ", 0);
         }
 
-
+        //Show depleted shields if applicable
         if (currentShields <= 0)
         {
             playerManager.shields.gameObject.SetActive(false);
             playerManager.depletedShields.gameObject.SetActive(true);
         }
+        //Show regular sheilds if applicalble
         else
         {
             playerManager.shields.gameObject.SetActive(true);
             playerManager.depletedShields.gameObject.SetActive(false);
             playerManager.shields.value = currentShields;
         }
+
         //kill player controller if they fall into the void
         if (transform.position.y < -10f)
         {
             Die();
         }
 
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            if (!inVehicle)
-            {
-                //Initial raycast setup
-                Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-                ray.origin = cam.transform.position;
-
-                //detect if the ray hit an object
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    if (hit.collider.gameObject.GetComponentInParent<Car>())
-                    {
-                        //Check if the seat is occupied and only allow player to enter it if it is empty
-                        if(!hit.collider.gameObject.GetComponent<Rider>().occupied)
-                        {
-                            //Check if the seat is the driver seat
-                            if (hit.collider.gameObject.GetComponent<Rider>().driver)
-                            {
-                                //Send new driver request
-                                hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest(boot.bootObject.localPV);
-                            }
-                            
-                            //enter seat
-                            EnterVehicle(hit.collider.gameObject.GetComponent<Rider>());
-                        }
-                    }
-                }
-            }
-            else
-            {
-                ExitVehicle();
-            }
-        }
+        //Run method to check if player attempted to enter/exit vehicle
+        VehicleCheck();
     }
 
     #region Movement
@@ -346,37 +310,35 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <summary>
     /// Method call for equiping items pased on a passed integer
     /// </summary>
-    /// <param name="parIndex"></param>
+    /// <param name="parIndex">Index of the weapon that we are equiping</param>
     void EquipItem(int parIndex)
     {
-        //exit if the previous and passed itemIndexes are the same
+        //Exit if the previous and passed itemIndexes are the same
         if (parIndex == previousItemIndex)
             return;
 
-        //set the itemIndex to passed value and make that object active in the game
+        //Set the itemIndex to passed value and make that object active in the game
         itemIndex = parIndex;
         items[itemIndex].itemGameObject.SetActive(true);
 
-        //set previously held item to inactive
+        //Set previously held item to inactive
         if (previousItemIndex != -1)
         {
             items[previousItemIndex].itemGameObject.SetActive(false);
         }
 
-        //make currently held item the previously held item
+        //Make the previously held item equal to the currently held item
         previousItemIndex = itemIndex;
 
-        //check to see if we are the local player
+        //Check to see if this is my player
         if (PV.IsMine)
         {
-            //add our item index to the hashtable
+            //Add our item index to the custom properties for my player
             if (customProperties.ContainsKey("itemIndex"))
-            {
                 customProperties.Remove("itemIndex");
-            }
-            //hash.Add("itemIndex", itemIndex);
             customProperties.Add("itemIndex", itemIndex);
-            //send the hashtable over the photon network
+
+            //Send the hashtable over the photon network
             PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
 
             //Select all of the items held in the local player's hand
@@ -389,7 +351,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
 
         }
 
-        //Set new hand locations based on stored hand locations
+        //Set new hand locations based on stored hand locations for the Animation Rig
         weaponLeftGrip.transform.localPosition = items[itemIndex].weaponLeftGrip.transform.localPosition;
         weaponLeftGrip.transform.localRotation = items[itemIndex].weaponLeftGrip.transform.localRotation;
         weaponRightGrip.transform.localPosition = items[itemIndex].weaponRightGrip.transform.localPosition;
@@ -403,10 +365,10 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     {
         //Note all reset items functions take 1 as a code to stop and reset the reload timer of that weapon
 
-        //Check if all weapons are equiped or only 2
+        //Check if all weapons are equiped or only 2 weapons are allowed
         if (allWeapons)
         {
-            //handle inputs from the number keys
+            //Handle inputs from the number keys
             for (int i = 0; i < items.Length; i++)
             {
                 if (Input.GetKeyDown((i + 1).ToString()))
@@ -417,7 +379,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 }
             }
 
-            //handle inputs from the mouse scroll wheel going up
+            //Handle inputs from the mouse scroll wheel going up
             if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
             {
                 if (itemIndex >= items.Length - 1)
@@ -431,7 +393,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                     EquipItem(itemIndex + 1);
                 }
             }
-            //handle inputs from the mouse scroll wheel going down
+            //Handle inputs from the mouse scroll wheel going down
             else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
             {
                 if (itemIndex <= 0)
@@ -446,21 +408,22 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                 }
             }
         }
+        //We are only allowed 2 weapons
         else
         {
             //Check for number keys
-            if(Input.GetKeyDown((1).ToString()))
-                {
-                    items[itemIndex].ResetItem(1);
-                    EquipItem(primaryWeapon);
-                }
+            if (Input.GetKeyDown((1).ToString()))
+            {
+                items[itemIndex].ResetItem(1);
+                EquipItem(primaryWeapon);
+            }
             if (Input.GetKeyDown((2).ToString()))
             {
                 items[itemIndex].ResetItem(1);
                 EquipItem(secondaryWeapon);
             }
 
-            //handle inputs from the mouse scroll wheel going up
+            //Handle inputs from the mouse scroll wheel going up
             if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
             {
                 if(itemIndex == primaryWeapon)
@@ -474,7 +437,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
                     EquipItem(primaryWeapon);
                 }
             }
-            //handle inputs from the mouse scroll wheel goign down
+            //Handle inputs from the mouse scroll wheel going down
             else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
             {
                 if (itemIndex == primaryWeapon)
@@ -497,13 +460,14 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     private void FixedUpdate()
     {
-        //exit method if PV ids don't match
+        //Exit method if this player isn't mine
         if (!PV.IsMine)
             return;
 
+        //Don't move if we are in a vehicle
         if (!inVehicle)
         {
-            //check to see a the game state is set to playing
+            //Check to see a the game state is set to playing
             if ((int)playerManager.state == 2)
             {
                 //rb.velocity = moveAmount;
@@ -522,40 +486,48 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <summary>
     /// Method calls when the local player hits a damagable enitity and this method tells that entity that they need to take damage through photon RPC.
     /// </summary>
-    /// <param name="damage"></param>
+    /// <param name="damage">Amount of damage that this player needs to take</param>
     public void TakeDamage(float damage)
     {
         PV.RPC("RPC_TakeDamage", RpcTarget.All, damage, boot.bootObject.localPV.ViewID);
     }
 
     /// <summary>
-    /// Method is established as a Remote Procedure Call where other users are told to take damage when they are hit
+    /// RPC method for this player to take damage
     /// </summary>
-    /// <param name="damage"></param>
+    /// <param name="damage">Amount of damage that needs to be taken</param>
+    /// <param name="shooter">The PhotonView ID of the player dealing the damage to this player</param>
     [PunRPC]
     void RPC_TakeDamage(float damage, int shooter)
     {
-        //exit method if PV ids don't match
+        //Exit method if PV ids don't match
         if (!PV.IsMine)
             return;
 
+        //Var to seperate damage between shields and helath
         float remainingDamage = damage;
 
+        //Reset the time that this player last took damage and start the regen coroutine
         lastHit = 0;
         StartCoroutine(tookDamage());
+
+        //Check if the sheilds can handle the full damage
         if(currentShields < remainingDamage)
         {
+            //They can't
             remainingDamage -= currentShields;
             currentShields = 0;
 
+            //So deal damage to the health
             currentHealth -= remainingDamage;
         }
         else if(currentShields >= remainingDamage)
         {
+            //They can and take the full damage
             currentShields -= remainingDamage;
         }
 
-        //trigger the die method if current health is not above 1
+        //Trigger the die method if current health is 0 or below
         if (currentHealth <= 0)
         {
             playerManager.killedPlayer(shooter);
@@ -568,6 +540,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// </summary>
     void Die()
     {
+        //Exit the vehicle before death
         if (inVehicle)
             ExitVehicle();
         playerManager.Die();
@@ -602,13 +575,16 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <summary>
     /// Method to change the material of the player controller
     /// </summary>
-    public void changeAppearance(bool t)
+    /// <param name="t">The bool for the team that this player need to go too</param>
+    public void changeAppearance(bool team)
     {
-        if (t)
+        //Blue team
+        if (team)
         {
             Helmet.GetComponent<SkinnedMeshRenderer>().material = BlueHelmet;
             Body.GetComponent<SkinnedMeshRenderer>().material = BlueBody;
         }
+        //Red team
         else
         {
             Helmet.GetComponent<SkinnedMeshRenderer>().material = RedHelmet;
@@ -619,7 +595,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <summary>
     /// Method forces all players to update their custom properties whenever a new player joins in order to ensure that there is proper syncing
     /// </summary>
-    /// <param name="newPlayer"></param>
+    /// <param name="newPlayer">The new player who joined</param>
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
@@ -635,37 +611,40 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     }
 
     #region Sync
+    /// <summary>
+    /// Method to attempt to sync this player view to everyone else
+    /// </summary>
     public void TrySync()
     {
+        //Exit if this PhotonView is not mine
         if (!photonView.IsMine) return;
 
-        //photonView.RPC("SyncProfile", RpcTarget.All, Launcher.myProfile.username, Launcher.myProfile.level, Launcher.myProfile.xp);
-
+        //Send data if the gameMode is TDM
         if (GameSettings.GameMode == GameMode.TDM)
         {
             PV.RPC("SyncTeam", RpcTarget.All, GameSettings.IsBlueTeam);
         }
     }
 
+    /// <summary>
+    /// Method sets team based on sync method
+    /// </summary>
+    /// <param name="p_blueTeam">Which team is passed</param>
     [PunRPC]
     private void SyncTeam(bool p_blueTeam)
     {
         blueTeam = p_blueTeam;
-
-        if (blueTeam)
-        {
-            // ColorTeamIndicators(Color.red);
-        }
-        else
-        {
-            //   ColorTeamIndicators(Color.blue);
-        }
     }
     #endregion
 
     #region Coroutines
+    /// <summary>
+    /// Coroutine to monitor when this character last took damage
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator tookDamage()
     {
+        //Wait 1 second
         yield return new WaitForSeconds(1f);
 
         //Start the rechargeShields loop
@@ -694,7 +673,9 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <returns></returns>
     private IEnumerator rechargeHealth()
     {
+        //Wait a tenth of a second
         yield return new WaitForSeconds(0.1f);
+
         //Add health if current health is below max health
         if (currentHealth < maxHealth)
         {
@@ -719,6 +700,7 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     /// <returns></returns>
     private IEnumerator rechargeShields()
     {
+        //Method to wait a tenth of a second
         yield return new WaitForSeconds(0.1f);
 
         //Add shields if the current shields are below max shields
@@ -740,34 +722,111 @@ public class PlayerControllerModelled : MonoBehaviourPunCallbacks, IDamageable
     #endregion
 
     #region Vehicles
+    /// <summary>
+    /// Method checks for input and enters or exits a vehicle if applciable
+    /// </summary>
+    private void VehicleCheck()
+    {
+        //If the e key was pressed
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            //If we are not in a vehicle
+            if (!inVehicle)
+            {
+                //Initial raycast setup
+                Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+                ray.origin = cam.transform.position;
+
+                //Detect if the ray hit an object
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    //Set the range that a player can get into a vehicle
+                    if(hit.distance <= 5)
+                    {
+                        //Check if the object is a child of a car and is a rider object
+                        if (hit.collider.gameObject.GetComponentInParent<Car>() && hit.collider.gameObject.GetComponent<Rider>())
+                        {
+                            //Check if the seat is occupied and only allow player to enter it if it is empty
+                            if (!hit.collider.gameObject.GetComponent<Rider>().occupied)
+                            {
+                                //Check if the seat is the driver seat
+                                if (hit.collider.gameObject.GetComponent<Rider>().driver)
+                                {
+                                    //Send new driver request
+                                    hit.collider.gameObject.GetComponentInParent<Car>().NewDriverRequest(boot.bootObject.localPV);
+                                }
+
+                                //enter seat
+                                EnterVehicle(hit.collider.gameObject.GetComponent<Rider>());
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ExitVehicle();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Method for player to call when they enter a seat in a vehicle
+    /// </summary>
+    /// <param name="seat">The seat in the vehicle that they are entering</param>
     private void EnterVehicle(Rider seat)
     {
+        //Record that we are in a vehicle
         inVehicle = true;
+
+        //Record the seat we are in
         currentSeat = seat;
+
+        //Stop walk animations
         Animation.SetFloat("InputX", moveAmount.x);
         Animation.SetFloat("InputZ", moveAmount.z);
+
+        //Set riding animation
         Animation.SetLayerWeight(2, 1);
+
+        //Check if we are driver
         if (currentSeat.name.Equals("Driver"))
         {
+            //Disable and use the vehicle camera
             cam.enabled = false;
             cam.transform.GetChild(0).gameObject.SetActive(false);
         }
+
+        //Reset look rotation
         cameraHolder.transform.localEulerAngles = new Vector3(0, 0, 0);
 
+        //Tell everyone which seat we are in and how to sync us to that seat
         currentSeat.parentCar.CarPV.RPC("NewPassenger", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
 
+        //Remove the player rigidbody as they will use the vehicle's rigidbody
         Destroy(rb);
     }
 
+    /// <summary>
+    /// Method for player to call when they exit a seat in a vehicle
+    /// </summary>
     private void ExitVehicle()
     {
+        //Call rpc to tell everyone how to sync our postion and that we are no longer in a vehicle
         currentSeat.parentCar.CarPV.RPC("ExitVehicle", RpcTarget.All, currentSeat.name, currentSeat.parentCar.CarPV.ViewID, this.PV.ViewID);
 
+        //Remove our stored vehicle settings
         currentSeat = null;
+        inVehicle = false;
+
+        //Create new rigidbody for the player
         rb = this.gameObject.AddComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        inVehicle = false;
+
+        //Disable the riding animations
         Animation.SetLayerWeight(2, 0);
+
+        //Enable the player's camera
         cam.enabled = true;
         cam.transform.GetChild(0).gameObject.SetActive(true);
     }

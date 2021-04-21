@@ -12232,14 +12232,14 @@ MonoBehaviour:
   myIndex: 0
   state: 0
   perpetual: 0
-  primaryWeaponPM: 0
-  secondaryWeaponPM: 0
   items:
   - {fileID: 5106604345573655992}
   - {fileID: 3011021734843465471}
   - {fileID: 6222647244819445518}
   - {fileID: 6674701657899796720}
   - {fileID: 6718079528873830228}
+  primaryWeaponPM: 0
+  secondaryWeaponPM: 0
   kills: {fileID: 4361213219259953331}
   deaths: {fileID: 7062833849577281598}
   map: {fileID: 2721667102345596190}
