@@ -14,7 +14,7 @@ These are the functional and non-functional requirements for the next few weeks 
     2. Users shall be able to control vehicles with 'WASD'.
     3. Maps shall offer a minimum of 2 vehicles, for multiple users able to operate.
     4. Users shall be able to shoot when driving the vehicle.
-    5. Control of vehicles shall  be managed by Photon Ownership.
+    5. Control of vehicles shall be managed by Photon Ownership.
     6. Master client shall create vehicles as Photon room objects.
 3. Levels
     1. Levels will use pre-placed spawn points to determine spawn locations.
@@ -28,7 +28,7 @@ These are the functional and non-functional requirements for the next few weeks 
     6. Users shall be able to change their names from the player settings menu.
     7. Users shall use the player settings menu to set the application in fullscreen mode.
 5. General
-    1. The applications shall attempt to read user config file upon start
+    1. The applications shall attempt to read user config file upon start.
     2. Each user’s game shall connect to Photon Fixed Region ID “US”.
     3. The game shall support up to 20 players online simultaneously.
     4. Users shall use normative inputs, “WASD” and arrow keys, to move character around.
@@ -42,7 +42,7 @@ These are the functional and non-functional requirements for the next few weeks 
 
 # Non-Functional Requirements
 1. Weapons
-    1. Weapons shall have sound effects for various actions
+    1. Weapons shall have sound effects for various actions.
     2. Users shall either have access to all weapons or only 2 weapons at a time.
     3. Each weapon shall be unique in look and operation.
     4. Non-projectile based weapons shall be hitscan where as soon as you fire the bullet hits.
