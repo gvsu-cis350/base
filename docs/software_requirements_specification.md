@@ -53,5 +53,4 @@ These are the functional and non-functional requirements for the next few weeks 
 	2. The final product shall have a multiplayer where users can interact together.
 	3. The software shall have minimal lag and jittering.
 	4. The game must include sound effects for each individual character and weapon.
-	5. The game shall have stolen Halo OST music.
 

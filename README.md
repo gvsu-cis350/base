@@ -10,5 +10,8 @@ This project aims to have a small arena based Halo clone with multiplayer functi
 * [Adam Prins](https://github.com/Symbra/CIS350_HW2_Prins.git "Named link title")
 
 ## Prerequisites
+In order to run this game you must have a sufficiently powerful computer and an internet connection. If you wish to modify the game in any way, then you must have a working copy of the Unity Editor with a 2020 version.
 
 ## Run Instructions
+Access this dropbox link to find a built exe file of the game: [DropBox Link](https://www.dropbox.com/sh/lvjn61vwxsrpxxj/AACIzHdZb1Hqay0w8Tlusgzsa?dl=0). 
+Should you wish to access the game through the editor, simply pull the git repo onto your local machine. Then open the Unity Hub applciation and click on the add button under projects. From there navigate to your local copy of the repo and select the "Unity Project" folder.
