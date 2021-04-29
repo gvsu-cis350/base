@@ -45,7 +45,7 @@ These are the functional and non-functional requirements for the next few weeks 
     1. Weapons shall have sound effects for various actions.
     2. Users shall either have access to all weapons or only 2 weapons at a time.
     3. Each weapon shall be unique in look and operation.
-    4. Non-projectile based weapons shall be hitscan where as soon as you fire the bullet hits.
+    4. Non-projectile based weapons shall be raycast where as soon as you fire the bullet hits.
     5. Weapon scripts shall inherit from abstract classes.
 2. Vehicles
     1. Vehicles shall have distinct animations for players in vehicles.
