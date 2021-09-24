@@ -4,7 +4,7 @@ Project description (~1 paragraph)
 
 ## Team Members and Roles
 
-* Member 1 (Role 1, Role 2)
+* [Amela Aganovic (Project Manager, Developer)](github.com/aganovia/CIS350-HW2-Aganovic)
 * Member 2 (Role 3, Role 4)
 * Member 3 (Role 5, Role 6)
 
