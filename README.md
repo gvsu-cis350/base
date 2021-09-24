@@ -6,7 +6,7 @@ Project description (~1 paragraph)
 
 * [Cymbre Spoehr](https://github.com/cymbre1/CIS350-HW2-Spoehr)(Github Administrator, Developer)
 * Member 2 (Role 3, Role 4)
-* Member 3 (Role 5, Role 6)
+* [Kit Bazner](https://github.com/krbazner/CIS350-HW2-Bazner)(UI designer, Developer)
 
 ## Prerequisites
 
