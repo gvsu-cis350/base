@@ -1,6 +1,7 @@
 # Team Name
+ACK!
 
-Project description (~1 paragraph)
+### Text Based Escape Room Simulator
 
 ## Team Members and Roles
 
