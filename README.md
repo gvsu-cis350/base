@@ -1,6 +1,15 @@
-# Team Name
+# Team Dating Sim
 
-Project description (~1 paragraph)
+A dating simulation game. The player has the option of dating one (or more) of several romanceable characters, with the game’s story progressing in different directions depending on which options are selected, resulting in multiple possible endings.
+
+Game features will include:
+* character customization
+* a diversely gendered cast
+* playable mini-games
+* simulated time mechanic
+* an interactive world map
+* a gallery with unlockable visuals
+* unlockable “secret” routes
 
 ## Team Members and Roles
 
