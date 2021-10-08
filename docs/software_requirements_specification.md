@@ -15,7 +15,8 @@ This document details the software requirements specification for our project. F
    1. The game shall display a new scene or line of dialogue when the player clicks the screen.
    2. The player shall earn favor points with a romanceable character upon choosing a specific dialogue option.
    3. The game shall provide response options to interact with romanceable characters.
-   4. The game shall update the player's stats after each dialogue selection.
+   4. The player shall choose one dialogue option from several dialogue options when prompted by the game.
+   5. The game shall update the player's stats after each dialogue selection.
 4. Story Branching
    1. The game shall branch into different storylines according to chosen dialogue options.
    2. The player shall unlock the good ending of a romanceable character when the player has enough favor points with the character.
@@ -32,12 +33,13 @@ This document details the software requirements specification for our project. F
     4. The game shall load within forty seconds of startup.
     5. The game shall save progress within twenty seconds of clicking "Save".
     6. The game shall load chat history within 5 seconds of the "History" button being clicked.
+    7. The custom animation that plays after a "favorable" dialogue option is chosen will last no longer than 2 seconds.
 2. Story Interaction
     1. The content of response dialogue shall be relevant to responses chosen by the player.
     2. Romanceable characters shall have unique responses to player chosen dialogue options.
 3. Character Customization
-    1. The player shall have the options of “she/her”, “he/him”, or “they/them” as personal pronouns to choose from.
-    2. The game shall change the player’s stats based on answers to the game’s personality questionnaire.
+    1. The player shall have the options of “she/her”, “he/him”, or “they/them” as personal pronouns to choose from when prompted.
+    2. The game shall update the player’s stats based on answers to the game’s personality questionnaire.
 4. User Interface
     1. A custom animation shall display when the player selects a "favorable" dialogue option.
     2. Characters shall have unique character sprites.
