@@ -25,19 +25,19 @@ This document details the software requirements specification for our project. F
 
 # Non-Functional Requirements
 
-6. Performance
+1. Performance
     1. The game shall load a visual within 1 second of it being prompted by the player.
     2. A new line of dialogue shall appear within 1 second of the player clicking or pressing the dialogue box, dialogue option, or space bar on the keyboard.
     3. The destination area that the player clicks on the interactive world map shall load the appropriate scene within 2 seconds.
     4. The game shall load within forty seconds of startup.
     5. The game shall save progress within twenty seconds of clicking "Save".
     6. The game shall load chat history within 5 seconds of the "History" button being clicked.
-7. Story Interaction
+2. Story Interaction
     1. The content of response dialogue shall be relevant to responses chosen by the player.
     2. Romanceable characters shall have unique responses to player chosen dialogue options.
-8. Character Customization
+3. Character Customization
     1. The player shall have the options of “she/her”, “he/him”, or “they/them” as personal pronouns to choose from.
     2. The player’s stats shall be changed based on answers to the game’s personality questionnaire.
-9. User Interface
+4. User Interface
     1. A custom animation shall display when the player selects a "favorable" dialogue option.
     2. Characters shall have unique character sprites.
