@@ -1,0 +1,1 @@
+The actors in this diagram are the player and the system. The player can choose dialogue options and advance dialogue by clicking an option on the screen (req. 3i). The system can update favor points (reqs. 3ii and 3iv) and display certain scenes based on the chosen dialogue(req. 5i). The system can display character sprites (reqs. 5i and 9i).
