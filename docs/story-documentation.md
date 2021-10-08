@@ -21,7 +21,7 @@ Cinnamon/Caramel Garnish
 Macademia Nut Milk
 No Ice
 ```
-* This clue unlocks Jessica's locker with the combination 5-3-6 which she chose because of her Starbucks order. 
+* This clue unlocks Jessica's locker with the combination 5-7-4 which she chose because of her Starbucks order. 
 
 ## Restroom
 Back in the restroom, you see that there are things strewn around the floor from the day, it doesn't look like anyone bothered to clean the bathroom today, which explains how you ended up in this mess. On the wall there is a cleaning schedule which looks like
@@ -54,7 +54,7 @@ Once you have unlocked Jessica's computer, you can see that she has little remin
 The counting room passcode will help you get into the super locked door
 
 ## Checkout Area
-You head down the the checkout office now that you have the passcode to the counting room. Except, you didn't realize the checkout office would be locked. In the checkout area, the lights on aisles 2,6, and 7 are on, which is odd considering the store is closed
+You head down the the checkout office now that you have the passcode to the counting room. Except, you didn't realize the checkout office would be locked. In the checkout area, the lights on aisles 2,6, and 13 are on, which is odd considering the store is closed
 
 * You have to punch in the numbers of the on office light into the number pad on the checkout office to get in. 
 
