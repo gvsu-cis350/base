@@ -6,8 +6,8 @@ This document details the software requirements specification for our project. F
 
 1. Character Customization
    1. The game shall assign the player with an appearance when the player clicks a portrait when customizing their character.
-   2. The player shall input a custom name for the character when prompted by the game.
-   3. The player shall choose their personal pronouns when prompted by the game.
+   2. The player shall input a custom name for their character when prompted by the game.
+   3. The player shall choose their character's personal pronouns when prompted by the game.
 2. Progress Tracking
    1. The game shall create a save file when the player clicks “save”.
    2. The game shall allow the player to view the dialogue history by clicking “History”.
@@ -15,7 +15,7 @@ This document details the software requirements specification for our project. F
    1. The game shall display a new scene or line of dialogue when the player clicks the screen.
    2. The player shall earn favor points with a romanceable character upon choosing a specific dialogue option.
    3. The game shall provide response options to interact with romanceable characters.
-   4. The game shall update the players stats after each dialogue selection.
+   4. The game shall update the player's stats after each dialogue selection.
 4. Story Branching
    1. The game shall branch into different storylines according to chosen dialogue options.
    2. The player shall unlock the good ending of a romanceable character when the player has enough favor points with the character.
@@ -37,7 +37,7 @@ This document details the software requirements specification for our project. F
     2. Romanceable characters shall have unique responses to player chosen dialogue options.
 3. Character Customization
     1. The player shall have the options of “she/her”, “he/him”, or “they/them” as personal pronouns to choose from.
-    2. The player’s stats shall be changed based on answers to the game’s personality questionnaire.
+    2. The game shall change the player’s stats based on answers to the game’s personality questionnaire.
 4. User Interface
     1. A custom animation shall display when the player selects a "favorable" dialogue option.
     2. Characters shall have unique character sprites.
