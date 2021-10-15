@@ -81,6 +81,10 @@ define gui.notify_text_size = 24
 ## The size of the game's title.
 define gui.title_text_size = 75
 
+## Grid for player portraits
+define gui.choice_button_width = 570
+define gui.choice_button_text_idle_color = "#000000"
+
 
 ## Main and Game Menus #########################################################
 
