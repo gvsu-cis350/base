@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 73: expected a keyword argument, colon, or end of line.
-    imagebutton "red_square.png" action Return(i)
-                ^
+File "game/script.rpy", line 72: expected statement.
+    print(portrait_number)
+                          ^
 
 Ren'Py Version: Ren'Py 7.4.8.1895
-Fri Oct 15 00:06:04 2021
+Fri Oct 15 00:47:49 2021
