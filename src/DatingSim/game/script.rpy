@@ -29,28 +29,10 @@ label start:
     e "Once you add a story, pictures, and music, you can release it to the world!"
 
     # AMELA: Character appearance selection
-    
-    # menu:
-    #     "{image=red_square.png}":
-    #         $ appearance = "red_square"
-    #         "You're red"
-    #     "{image=green_square.png}":
-    #         $ appearance = "green_square"
-    #         "You're green"
-    #     "No image":
-    #         $ appearance = "none"
-    #         "no image"
 
-    # e "Cool image"
-
-    # if appearance == "red_square":
-    #     e "You are so red"
-    # elif appearance == "green_square":
-    #     e "You are so green"
-    # else:
-    #     e "Well you're boring..."
-
-    screen grid_test():
+    screen portrait_selection():
+        # Screen that displays 4 image buttons in a 2x2 grid.
+        # The player clicks on an image to set their "appearance".
 
         vpgrid:
             cols 2
@@ -59,17 +41,25 @@ label start:
             xalign 0.5
             yalign 0.5
 
-            imagebutton auto "red_square_%s.png" action Return(1)
-            imagebutton auto "green_square_%s.png" action Return(2)
+            imagebutton auto "portrait1_%s.png" action Return(1)
+            imagebutton auto "portrait2_%s.png" action Return(2)
+            imagebutton auto "portrait3_%s.png" action Return(3)
+            imagebutton auto "portrait4_%s.png" action Return(4)
 
-    call screen grid_test
+    call screen portrait_selection
 
+    # player appearance set by portrait selected
     $ portrait_number = _return
 
+    # FIXME: delete this code later; for testing purposes now
     if portrait_number == 1:
         e "Your appearance is Red"
     elif portrait_number == 2:
         e "Your appearance is Green"
+    elif portrait_number == 3:
+        e "Your appearance is Blue"
+    elif portrait_number == 4:
+        e "Your appearance is Purple"
     else:
         e "Something went wrong"
 
