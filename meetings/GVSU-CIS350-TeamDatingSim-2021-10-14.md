@@ -8,7 +8,7 @@ Members present:
 
 Date: 10/14/21
 
-Time: 8 pm
+Time: 8 pm - 9:15 pm
 
 # Discussion points
 
