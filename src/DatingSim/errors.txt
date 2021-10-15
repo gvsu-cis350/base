@@ -2,17 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 46: reached end of line when expecting ':'.
-    if appearance == "red_square"
-                                 ^
-
-File "game/script.rpy", line 48: expected statement.
-    elif appearance == "green_square"
-                    ^
-
-File "game/script.rpy", line 50: expected statement.
-    else:
-        ^
+File "game/script.rpy", line 72: expected statement.
+    print(portrait_number)
+                          ^
 
 Ren'Py Version: Ren'Py 7.4.8.1895
-Thu Oct 14 23:11:36 2021
+Fri Oct 15 00:47:49 2021
