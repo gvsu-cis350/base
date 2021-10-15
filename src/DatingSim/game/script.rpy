@@ -5,6 +5,7 @@
 
 define e = Character("Eileen")
 
+$ appearance = "default"
 
 # The game starts here.
 
@@ -27,6 +28,27 @@ label start:
     e "You've created a new Ren'Py game."
 
     e "Once you add a story, pictures, and music, you can release it to the world!"
+
+    # AMELA: Character appearance selection
+    menu:
+        "{image=red_square.png}":
+            $ appearance = "red_square"
+            "You're red"
+        "{image=green_square.png}":
+            $ appearance = "green_square"
+            "You're green"
+        "No image":
+            $ appearance = "none"
+            "no image"
+
+    e "Cool image"
+
+    if appearance == "red_square":
+        e "You are so red"
+    elif appearance == "green_square":
+        e "You are so green"
+    else:
+        e "Well you're boring..."
 
     # This ends the game.
 
