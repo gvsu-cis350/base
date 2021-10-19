@@ -7,6 +7,13 @@ define e = Character("Eileen")
 
 # The game starts here.
 
+# Pronoun data setup
+default subject = ""
+default object = ""
+default possessiveAdj = ""
+default possesive = ""
+default reflexive = ""
+
 label start:
     $ portrait_number = 0 # default
 
@@ -21,6 +28,32 @@ label start:
     # directory.
 
     show eileen happy
+    
+    # Pronoun Selection
+    label pronoun_choice:
+	    "What are your pronouns?"
+    menu:
+	    "They/Them":
+	        $ subject = "they"
+	        $ object = "them"
+	        $ possessiveAdj = "their"
+	        $ possesive = "theirs"
+	        $ reflexive = "themselves"
+
+	    "She/Her":
+	    	$ subject = "she"
+	        $ object = "her"
+	        $ possessiveAdj = "her"
+	        $ possesive = "hers"
+	        $ reflexive = "herself"
+
+	    "He/Him":
+	        $ subject = "he"
+	        $ object = "him"
+	        $ possessiveAdj = "his"
+	        $ possesive = "his"
+	        $ reflexive = "himself"
+
 
     # These display lines of dialogue.
 
