@@ -1,4 +1,4 @@
-Mon Oct 18 20:24:15 2021
+Tue Oct 19 16:50:23 2021
 Windows-10-10.0.19041
 Ren'Py 7.4.9.2142
  
@@ -7,7 +7,7 @@ Bootstrap to the start of init.init took 0.10s
 Early init took 0.00s
 Loader init took 0.03s
 Loading error handling took 0.05s
-Loading script took 1.05s
+Loading script took 1.04s
 Loading save slot metadata. took 0.02s
 Loading persistent took 0.00s
 Importing _renpysteam: ImportError('No module named _renpysteam',)
@@ -15,7 +15,7 @@ Running init code took 0.12s
 Loading analysis data took 0.02s
 Analyze and compile ATL took 0.00s
 Index archives took 0.00s
-Dump and make backups. took 0.09s
+Dump and make backups. took 0.08s
 Cleaning cache took 0.00s
 Making clean stores took 0.00s
 Initial gc. took 0.03s
@@ -29,7 +29,7 @@ Build styles took 0.01s
 Load screen analysis took 0.00s
 Analyze screens took 0.02s
 Save screen analysis took 0.03s
-Prepare screens took 0.08s
+Prepare screens took 0.09s
 Save pyanalysis. took 0.04s
 Save bytecode. took 0.03s
 Running _start took 0.00s
