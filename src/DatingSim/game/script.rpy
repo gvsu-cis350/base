@@ -28,6 +28,13 @@ label start:
 
     e "Once you add a story, pictures, and music, you can release it to the world!"
 
+    # ALEXIS: Name input
+    python:
+        name = renpy.input("What's your name?")
+        name = name.strip() or "Default"
+    e "So your name is [name]... interesting."
+
+
     # AMELA: Character appearance selection
 
     screen portrait_selection():
