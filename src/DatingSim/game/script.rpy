@@ -16,6 +16,10 @@ default reflex_pron = ""
 
 label start:
     $ portrait_number = 0 # default
+    $ rebelPoints = 0  #defult starting amount of favor points for rebel
+    $ prepPoints = 0 #defult starting amount of favor points for prep
+    $ artistPoints = 0 #default starting amount of favor points for artist
+    $ TusnPoints = 0 #defult starting amount of favor points for Tunsundre
 
     # Show a background. This uses a placeholder by default, but you can
     # add a file (named either "bg room.png" or "bg room.jpg") to the
@@ -58,6 +62,13 @@ label start:
     e "You've created a new Ren'Py game."
 
     e "Once you add a story, pictures, and music, you can release it to the world!"
+
+    # ALEXIS: Name input
+    python:
+        name = renpy.input("What's your name?")
+        name = name.strip() or "Default"
+    e "So your name is [name]... interesting."
+
 
     # AMELA: Character appearance selection
 
