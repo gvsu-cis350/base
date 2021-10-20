@@ -32,26 +32,26 @@ label start:
     # Pronoun Selection
     e "What are your pronouns?"
     menu:
-		"They/Them":
-			$ subj_pron = "they"
-			$ obj_pron = "them"
-			$ posses_adj = "their"
-			$ posses_pron = "theirs"
-			$ reflex_pron = "themselves"
-		"She/Her":
-	    	$ subj_pron = "she"
-	        $ obj_pron = "her"
-	        $ posses_adj = "her"
-	        $ posses_pron = "hers"
-	        $ reflex_pron = "herself"
-	    "He/Him":
-	        $ subj_pron = "he"
-	        $ obj_pron = "him"
-	        $ posses_adj = "his"
-	        $ posses_pron= "his"
-	        $ reflex_pron = "himself"
+        "They/Them":
+            $ subj_pron = "they"
+            $ obj_pron = "them"
+            $ posses_adj = "their"
+            $ posses_pron = "theirs"
+            $ reflex_pron = "themselves"
+        "She/Her":
+            $ subj_pron = "she"
+            $ obj_pron = "her"
+            $ posses_adj = "her"
+            $ posses_pron = "hers"
+            $ reflex_pron = "herself"
+        "He/Him":
+            $ subj_pron = "he"
+            $ obj_pron = "him"
+            $ posses_adj = "his"
+            $ posses_pron= "his"
+            $ reflex_pron = "himself"
 
-	e "Ah! So you're a [subj_pron] / [obj_pron]"
+    e "Ah! So you're a [subj_pron] / [obj_pron]"
 
     # These display lines of dialogue.
 
