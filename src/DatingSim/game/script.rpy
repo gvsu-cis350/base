@@ -8,11 +8,11 @@ define e = Character("Eileen")
 # The game starts here.
 
 # Pronoun data setup
-default subject = ""
-default object = ""
-default possessiveAdj = ""
-default possesive = ""
-default reflexive = ""
+default subj_pron = ""
+default obj_pron = ""
+default posses_adj = ""
+default posses_pron = ""
+default reflex_pron = ""
 
 label start:
     $ portrait_number = 0 # default
@@ -30,30 +30,28 @@ label start:
     show eileen happy
     
     # Pronoun Selection
-    label pronoun_choice:
-	    "What are your pronouns?"
+    e "What are your pronouns?"
     menu:
-	    "They/Them":
-	        $ subject = "they"
-	        $ object = "them"
-	        $ possessiveAdj = "their"
-	        $ possesive = "theirs"
-	        $ reflexive = "themselves"
-
-	    "She/Her":
-	    	$ subject = "she"
-	        $ object = "her"
-	        $ possessiveAdj = "her"
-	        $ possesive = "hers"
-	        $ reflexive = "herself"
-
+		"They/Them":
+			$ subj_pron = "they"
+			$ obj_pron = "them"
+			$ posses_adj = "their"
+			$ posses_pron = "theirs"
+			$ reflex_pron = "themselves"
+		"She/Her":
+	    	$ subj_pron = "she"
+	        $ obj_pron = "her"
+	        $ posses_adj = "her"
+	        $ posses_pron = "hers"
+	        $ reflex_pron = "herself"
 	    "He/Him":
-	        $ subject = "he"
-	        $ object = "him"
-	        $ possessiveAdj = "his"
-	        $ possesive = "his"
-	        $ reflexive = "himself"
+	        $ subj_pron = "he"
+	        $ obj_pron = "him"
+	        $ posses_adj = "his"
+	        $ posses_pron= "his"
+	        $ reflex_pron = "himself"
 
+	e "Ah! So you're a [subj_pron] / [obj_pron]"
 
     # These display lines of dialogue.
 
