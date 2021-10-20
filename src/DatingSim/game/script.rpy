@@ -32,8 +32,18 @@ label start:
     # directory.
 
     show eileen happy
-    
-    # Pronoun Selection
+
+    # These display lines of dialogue.
+
+    e "DATING SIM DEMO"
+
+    # ALEXIS: Name input
+    python:
+        name = renpy.input("What's your name?")
+        name = name.strip() or "Default"
+    e "So your name is [name]... interesting."
+
+    # ANDREA: Pronoun Selection
     e "What are your pronouns?"
     menu:
         "They/Them":
@@ -57,20 +67,9 @@ label start:
 
     e "Ah! So you're a [subj_pron] / [obj_pron]"
 
-    # These display lines of dialogue.
-
-    e "You've created a new Ren'Py game."
-
-    e "Once you add a story, pictures, and music, you can release it to the world!"
-
-    # ALEXIS: Name input
-    python:
-        name = renpy.input("What's your name?")
-        name = name.strip() or "Default"
-    e "So your name is [name]... interesting."
-
-
     # AMELA: Character appearance selection
+
+    e "What do you look like?"
 
     screen portrait_selection():
         # Screen that displays 4 image buttons in a 2x2 grid.
