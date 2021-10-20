@@ -1,2 +1,14 @@
+*.rpyc
+*.rpyb
+*.rpymc
+*.pyc
+*.pyo
 
-src/DatingSim/log.txt
+saves
+tmp
+cache
+env
+
+log.txt
+errors.txt
+traceback.txt
