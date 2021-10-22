@@ -104,6 +104,34 @@ label start:
     else:
         e "Something went wrong"
 
+    #start of quiz
+    e "Would you rather"
+    menu:
+            "Read a book at home":
+                $ artistPoints += 1
+                $ prepPoints += 1
+            "Go out to a raging party":
+                $ rebelPoints += 1
+                $ TusnPoints += 1
+
+    e "Would you rather have"
+    menu:
+        "A close group of friends":
+            $ artistPoints += 1
+            $ TusnPoints += 1
+        "A large number of acquaintances":
+            $ rebelPoints += 1
+            $ prepPoints += 1
+
+    e "One a first date you would like to go to "
+    menu:
+        "To a movie theater":
+            $ artistPoints += 1
+            $ rebelPoints += 1
+        "On a picnic":
+            $ prepPoints += 1
+            $ TusnPoints += 1
+
     # This ends the game.
 
     return
