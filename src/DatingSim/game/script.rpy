@@ -19,7 +19,7 @@ label start:
     $ rebelPoints = 0  #defult starting amount of favor points for rebel
     $ prepPoints = 0 #defult starting amount of favor points for prep
     $ artistPoints = 0 #default starting amount of favor points for artist
-    $ TusnPoints = 0 #defult starting amount of favor points for Tunsundre
+    $ tsunPoints = 0 #defult starting amount of favor points for Tunsundre
 
     # Show a background. This uses a placeholder by default, but you can
     # add a file (named either "bg room.png" or "bg room.jpg") to the
@@ -112,13 +112,13 @@ label start:
                 $ prepPoints += 1
             "Go out to a raging party":
                 $ rebelPoints += 1
-                $ TusnPoints += 1
+                $ tsunPoints += 1
 
     e "Would you rather have"
     menu:
         "A close group of friends":
             $ artistPoints += 1
-            $ TusnPoints += 1
+            $ tsunPoints += 1
         "A large number of acquaintances":
             $ rebelPoints += 1
             $ prepPoints += 1
@@ -130,8 +130,190 @@ label start:
             $ rebelPoints += 1
         "On a picnic":
             $ prepPoints += 1
-            $ TusnPoints += 1
+            $ tsunPoints += 1
 
     # This ends the game.
 
+    jump choose_club
+
+label choose_club:
+    "Choose a club."
+
+    menu:
+        "Graphic Design Club":
+            jump meet_artist
+        "Debate Team":
+            jump meet_prep
+        "No club":
+            jump meet_tsun
+
+label meet_artist:
+    "MEET THE ARTIST"
+    
+    jump skip_class
+
+label meet_tsun:
+    "MEET TSUN"
+    
+    jump skip_class
+
+label meet_prep:
+    "MEET PREP"
+
+    jump skip_class
+
+label skip_class:
+    "I'm not really feeling it today. Do I skip class?"
+
+    # jump to meet_badboy, else go to class, then jump to free time
+    menu:
+        "Skip class":
+            jump meet_badboy
+        "Go to class":
+            pass
+    
+    "I'm going to class."
+    jump free_time_1
+
+label meet_badboy:
+    "MEET BAD BOY"
+
+    jump free_time_1
+
+label free_time_1:
+    "I have some free time... what should I do?"
+
+    menu:
+        "Library":
+            jump library_1
+        "School store":
+            jump schoolstore_1
+        "Tennis courts":
+            jump tenniscourts_1
+        "Dorms":
+            jump dorms_1
+
+label library_1:
+    "LIBRARY 1: PREP IS THERE"
+    
+    jump halloween_party
+
+label schoolstore_1:
+    "SCHOOL STORE 1: ARTIST IS THERE"
+    
+    jump halloween_party
+
+label tenniscourts_1:
+    "TENNIS COURTS 1: BADBOY IS THERE"
+    
+    jump halloween_party
+
+label dorms_1:
+    "DORMS 1: TSUN IS THERE"
+    
+    jump halloween_party
+
+label halloween_party:
+    "HALLOWEEN PARTY -- where should I go?"
+    
+    menu:
+        "Haunted house":
+            jump haunted_house
+        "Pumpkin patch":
+            jump pumpkin_patch
+
+label haunted_house:
+    "Haunted house event"
+
+    menu:
+        "Side with bad boy":
+            pass
+        "Side with tsundere":
+            pass
+
+    jump free_time_2
+
+label pumpkin_patch:
+    "Pumpkin patch event"
+
+    menu:
+        "Side with prep":
+            pass
+        "Side with artist":
+            pass
+    
+    jump free_time_2
+
+label free_time_2:
+    "I have some free time... what should I do?"
+
+    # TODO: probably nicer way to do this using "call" instead of "jump",
+    # having two separate free_time labels is fine for now
+
+    menu:
+        "Library":
+            jump library_2
+        "School store":
+            jump schoolstore_2
+        "Tennis courts":
+            jump tenniscourts_2
+        "Dorms":
+            jump dorms_2
+
     return
+
+label library_2:
+    "LIBRARY 2: TSUN IS THERE"
+    
+    jump route_determination
+
+label schoolstore_2:
+    "SCHOOL STORE: BADBOY IS THERE"
+
+    jump route_determination
+
+label tenniscourts_2:
+    "TENNIS COURTS: PREP IS THERE"
+
+    jump route_determination
+
+label dorms_2:
+    "DORMS: ARTIST IS THERE"
+
+    jump route_determination
+
+label route_determination:
+    # check which character has the most points here --
+    # whoever it is, trigger their route
+    # set flag to current route
+
+    "Route determined here"
+
+    return
+
+label BADBOY_START:
+    # badboy route
+    return
+
+label ARTIST_START:
+    # artist route
+    return
+
+label PREP_START:
+    # prep route
+    return
+
+label TSUNDERE_START:
+    # tsundere route
+    return
+
+label FINAL_PARTY:
+    # new year's party event
+    return
+
+label BAD_END:
+    # general bad ending
+    return
+
+# TODO: good endings for whichever route
+# check flag variable for route
