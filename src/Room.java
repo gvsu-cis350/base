@@ -1,3 +1,6 @@
+import java.util.regex.Pattern;
+import java.util.ArrayList;
+
 public class Room {
 
     private String name;
@@ -8,8 +11,26 @@ public class Room {
 
     public Room(String name, String script, boolean isLocked) {
         this.setName(name);
-        this.setScript(newScript);
-        this.setIsLocked(locked);
+        this.setScript(script);
+        this.setIsLocked(isLocked);
+        this.images = new ArrayList<String>();
+        this.listOfRooms = new ArrayList<Room>();
+    }
+
+    public Room(String name, String script, boolean isLocked, ArrayList<String> images, ArrayList<Room> rooms) {
+        this.setName(name);
+        this.setScript(script);
+        this.setIsLocked(isLocked);
+        this.images = new ArrayList<String>();
+        this.listOfRooms = new ArrayList<Room>();
+
+        for (int i = 0; i < images.size(); i++) {
+            addImage(images.get(i));
+        }
+
+        for (int i = 0; i < rooms.size(); i++) {
+            addRoom(rooms.get(i));
+        }
     }
 
     public String getName() {
@@ -18,9 +39,9 @@ public class Room {
 
     public void setName(String name) {
         if (name == null)
-            throw new IllegalArgumentExceptopn("setName in class Room: null input");
+            throw new IllegalArgumentException("setName in class Room: null input");
         if (name.equals(""))
-            throw new IllegalArgumentExceptopn("setName in class Room: empty string");
+            throw new IllegalArgumentException("setName in class Room: empty string");
 
         this.name = name;
     }
@@ -44,15 +65,29 @@ public class Room {
         this.isLocked = isLocked;
     }
 
+    public String getImage(int index) {
+        try {
+            images.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("getImage in class Room: index out of bounds");
+        }
+        return images.get(index);
+    }
+
     public void addImage(String image) {
         if (image == null)
-            throw new IllegalArgumentExceptopn("addImage in class Room: null input");
+            throw new IllegalArgumentException("addImage in class Room: null input");
         if (image.equals(""))
-            throw new IllegalArgumentExceptopn("addImage in class Room: empty string");
+            throw new IllegalArgumentException("addImage in class Room: empty string");
+
+        String regularExpression = "([a-zA-Z]:)?(/[a-zA-Z0-9_.-]+)+.pdf";
+
+        if (!Pattern.matches(regularExpression, image))
+            throw new IllegalArgumentException("addImage in class Room: invalid file path");
 
         images.add(image);
     }
-    
+
     public void delImage(int index) {
         try {
             images.remove(index);
@@ -61,19 +96,19 @@ public class Room {
         }
     }
 
-    public String getImage(int index) {
-        return images.get(index);
-    }
-
     public Room getRoom(int index) {
         try {
-            return listOfRooms.get(index);
+            listOfRooms.get(index);
         } catch (IndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException("getRoom in class Room: index out of bounds");
         }
+
+        return listOfRooms.get(index);
     }
 
     public void addRoom(Room room) {
+        if (room == null)
+            throw new IllegalArgumentException("addRoom in class Room: null input");
         listOfRooms.add(room);
     }
 
@@ -83,5 +118,16 @@ public class Room {
         } catch (IndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException("delRoom in class Room: index out of bounds");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "name='" + name + '\'' +
+                ", script='" + script + '\'' +
+                ", isLocked=" + isLocked +
+                ", images=" + images +
+                ", listOfRooms=" + listOfRooms +
+                '}';
     }
 }
