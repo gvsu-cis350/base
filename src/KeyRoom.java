@@ -3,11 +3,6 @@ import java.util.ArrayList;
 public class KeyRoom extends Room {
 
     private ArrayList<Key> keys;
-
-    public KeyRoom(String name, String script, boolean isLocked) {
-        super(name, script, isLocked);
-        this.keys = new ArrayList<Key>();
-    }
     
     public KeyRoom(String name, String script, boolean isLocked, ArrayList<String> images, ArrayList<Room> rooms, ArrayList<Key> keys) {
         super(name, script, isLocked, images, rooms);
@@ -18,14 +13,8 @@ public class KeyRoom extends Room {
         }
     }
 
-    public Key getKey(int index) {
-        try {
-            keys.get(index);
-        } catch (IndexOutOfBoundsException e) {
-            throw new IndexOutOfBoundsException("getKey in class KeyRoom: index out of bounds");
-        }
-
-        return keys.get(index);
+    public ArrayList<Key> getKey() {
+        return keys;
     }
 
     public void addKey(Key key) {
