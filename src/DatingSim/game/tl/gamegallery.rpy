@@ -1,5 +1,5 @@
 screen gameGallery():
-    if Lightbox_image != "";
+    if Lightbox_image != "":
         $ lb_image = im.Scale("gallery/ " + Lightbox_image + ".jpg", 1280, 720)
         imagebutton:
             idle lb_image
@@ -26,5 +26,5 @@ screen gameGallery():
                             $ lb_image = im.Scale(q, 320,180)
                             imagebutton:
                                 idle lb_image
-                                hover = lb_image
+                                hover lb_image
                                 action SetVariable("Lightbox_image", q)
