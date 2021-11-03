@@ -3,13 +3,17 @@
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-define e = Character("Eileen")
+define e = Character("Eileen") # default renpy character
 
-#Gallery code
+# define romanceable characters
+define dom = Character("Dominic")
+define vic = Character("Victoria")
+define a = Character("Artist")
+define t = Character("Tsun")
+
+# Gallery code
 default galleryList = ["anime_street_art", "red_anime_character"]
 default Lightbox_image = ""
-
-# The game starts here.
 
 # Pronoun data setup
 default subj_pron = ""
@@ -18,12 +22,13 @@ default posses_adj = ""
 default posses_pron = ""
 default reflex_pron = ""
 
+$ portrait_number = 0 # default
+$ rebelPoints = 0  #defult starting amount of favor points for rebel
+$ prepPoints = 0 #defult starting amount of favor points for prep
+$ artistPoints = 0 #default starting amount of favor points for artist
+$ tsunPoints = 0 #defult starting amount of favor points for Tunsundre
+
 label start:
-    $ portrait_number = 0 # default
-    $ rebelPoints = 0  #defult starting amount of favor points for rebel
-    $ prepPoints = 0 #defult starting amount of favor points for prep
-    $ artistPoints = 0 #default starting amount of favor points for artist
-    $ tsunPoints = 0 #defult starting amount of favor points for Tunsundre
 
     # Show a background. This uses a placeholder by default, but you can
     # add a file (named either "bg room.png" or "bg room.jpg") to the
