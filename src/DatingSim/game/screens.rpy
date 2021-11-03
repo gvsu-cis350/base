@@ -310,6 +310,8 @@ screen navigation():
 
         textbutton _("Load") action ShowMenu("load")
 
+        textbutton _("Gallery") action ShowMenu("pre_gallery")
+
         textbutton _("Preferences") action ShowMenu("preferences")
 
         if _in_replay:
@@ -534,6 +536,16 @@ style return_button:
     yalign 1.0
     yoffset -45
 
+#Gallery code
+screen pre_gallery():
+
+    tag menu
+
+    add "gallery_back"
+    use gameGallery
+    textbutton _("Return"):
+        style "return_button"
+        action Return()
 
 ## About screen ################################################################
 ##
