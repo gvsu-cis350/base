@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/script.rpy", line 72: expected statement.
+    print(portrait_number)
+                          ^
+
+Ren'Py Version: Ren'Py 7.4.8.1895
+Fri Oct 15 00:47:49 2021

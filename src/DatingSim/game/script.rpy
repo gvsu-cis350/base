@@ -153,12 +153,10 @@ label choose_club:
 
 label meet_artist:
     "MEET THE ARTIST"
-
     jump skip_class
 
 label meet_tsun:
     "MEET TSUN"
-
     jump skip_class
 
 label meet_prep:
@@ -175,7 +173,6 @@ label skip_class:
             jump meet_badboy
         "Go to class":
             pass
-
     "I'm going to class."
     jump free_time_1
 
@@ -199,27 +196,22 @@ label free_time_1:
 
 label library_1:
     "LIBRARY 1: PREP IS THERE"
-
     jump halloween_party
 
 label schoolstore_1:
     "SCHOOL STORE 1: ARTIST IS THERE"
-
     jump halloween_party
 
 label tenniscourts_1:
     "TENNIS COURTS 1: BADBOY IS THERE"
-
     jump halloween_party
 
 label dorms_1:
     "DORMS 1: TSUN IS THERE"
-
     jump halloween_party
 
 label halloween_party:
     "HALLOWEEN PARTY -- where should I go?"
-
     menu:
         "Haunted house":
             jump haunted_house
@@ -245,7 +237,6 @@ label pumpkin_patch:
             pass
         "Side with artist":
             pass
-
     jump free_time_2
 
 label free_time_2:
@@ -268,7 +259,6 @@ label free_time_2:
 
 label library_2:
     "LIBRARY 2: TSUN IS THERE"
-
     jump route_determination
 
 label schoolstore_2:
