@@ -547,6 +547,47 @@ screen pre_gallery():
         style "return_button"
         action Return()
 
+# Interactive map
+# screen mapUI:
+#     imagebutton:
+#         action ShowMenu("MapUI")
+
+screen MapUI():
+    tag MapUI
+    add "map/school-map.png"
+
+    # library
+    imagebutton:
+        xpos 185
+        ypos 214
+        idle "map/library_idle.png"
+        hover "map/library_hover.png"
+        action Jump("library_1")
+
+    # school store
+    imagebutton:
+        xpos 531
+        ypos 617
+        idle "map/store_idle.png"
+        hover "map/store_hover.png"
+        action Jump("schoolstore_1")
+
+    # tennis courts
+    imagebutton:
+        xpos 959
+        ypos 207
+        idle "map/tennis_idle.png"
+        hover "map/tennis_hover.png"
+        action Jump("tenniscourts_1")
+
+    # dorm
+    imagebutton:
+        xpos 1360
+        ypos 604
+        idle "map/dorms_idle.png"
+        hover "map/dorms_hover.png"
+        action Jump("dorms_1")
+
 ## About screen ################################################################
 ##
 ## This screen gives credit and copyright information about the game and Ren'Py.
