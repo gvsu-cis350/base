@@ -186,29 +186,27 @@ label meet_badboy:
 label free_time_1:
     "I have some free time... what should I do?"
 
-    menu:
-        "Library":
-            jump library_1
-        "School store":
-            jump schoolstore_1
-        "Tennis courts":
-            jump tenniscourts_1
-        "Dorms":
-            jump dorms_1
+    call screen MapUI
+    ""
+    return
 
 label library_1:
+    scene library
     "LIBRARY 1: PREP IS THERE"
     jump halloween_party
 
 label schoolstore_1:
+    scene school store
     "SCHOOL STORE 1: ARTIST IS THERE"
     jump halloween_party
 
 label tenniscourts_1:
+    scene tennis courts
     "TENNIS COURTS 1: BADBOY IS THERE"
     jump halloween_party
 
 label dorms_1:
+    scene dorm room
     "DORMS 1: TSUN IS THERE"
     jump halloween_party
 
