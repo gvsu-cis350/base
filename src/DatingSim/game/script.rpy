@@ -3,7 +3,7 @@
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-define e = Character("Eileen") # default renpy character
+define roomie = Character("Roommate") # default renpy character
 
 # define romanceable characters
 define dom = Character("Dominic")
@@ -22,38 +22,35 @@ default posses_adj = ""
 default posses_pron = ""
 default reflex_pron = ""
 
-$ portrait_number = 0 # default
-$ rebelPoints = 0  #defult starting amount of favor points for rebel
-$ prepPoints = 0 #defult starting amount of favor points for prep
-$ artistPoints = 0 #default starting amount of favor points for artist
-$ tsunPoints = 0 #defult starting amount of favor points for Tunsundre
-
 label start:
+    $ portrait_number = 0 # default
+    $ rebelPoints = 0  #default starting amount of favor points for rebel
+    $ prepPoints = 0 #default starting amount of favor points for prep
+    $ artistPoints = 0 #default starting amount of favor points for artist
+    $ tsunPoints = 0 #default starting amount of favor points for Tunsundre
 
     # Show a background. This uses a placeholder by default, but you can
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
 
-    scene bg room
+    #scene bg room
+    scene dorm room
 
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
-
-    show eileen happy
+    #show roommate happy
+    show roommate happy
 
     # These display lines of dialogue.
 
-    e "DATING SIM DEMO"
+    roomie "DATING SIM DEMO"
 
     # ALEXIS: Name input
     python:
         name = renpy.input("What's your name?")
         name = name.strip() or "Default"
-    e "So your name is [name]... interesting."
+    roomie "So your name is [name]... interesting."
 
     # ANDREA: Pronoun Selection
-    e "What are your pronouns?"
+    roomie "What are your pronouns?"
     menu:
         "They/Them":
             $ subj_pron = "they"
@@ -74,11 +71,11 @@ label start:
             $ posses_pron= "his"
             $ reflex_pron = "himself"
 
-    e "Ah! So you're a [subj_pron] / [obj_pron]"
+    roomie "Ah! So you're a [subj_pron] / [obj_pron]"
 
     # AMELA: Character appearance selection
 
-    e "What do you look like?"
+    roomie "What do you look like?"
 
     screen portrait_selection():
         # Screen that displays 4 image buttons in a 2x2 grid.
@@ -103,18 +100,18 @@ label start:
 
     # FIXME: delete this code later; for testing purposes now
     if portrait_number == 1:
-        e "Your appearance is Red"
+        roomie "Your appearance is Red"
     elif portrait_number == 2:
-        e "Your appearance is Green"
+        roomie "Your appearance is Green"
     elif portrait_number == 3:
-        e "Your appearance is Blue"
+        roomie "Your appearance is Blue"
     elif portrait_number == 4:
-        e "Your appearance is Purple"
+        roomie "Your appearance is Purple"
     else:
-        e "Something went wrong"
+        roomie "Something went wrong"
 
     #start of quiz
-    e "Would you rather"
+    roomie "Would you rather"
     menu:
             "Read a book at home":
                 $ artistPoints += 1
@@ -123,7 +120,7 @@ label start:
                 $ rebelPoints += 1
                 $ tsunPoints += 1
 
-    e "Would you rather have"
+    roomie "Would you rather have"
     menu:
         "A close group of friends":
             $ artistPoints += 1
@@ -132,7 +129,7 @@ label start:
             $ rebelPoints += 1
             $ prepPoints += 1
 
-    e "One a first date you would like to go to "
+    roomie "One a first date you would like to go to "
     menu:
         "To a movie theater":
             $ artistPoints += 1
