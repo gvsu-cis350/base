@@ -16,6 +16,10 @@ public class Key {
 
     }
 
+    public ArrayList<Room> getUnlocks() {
+        return keyUnlocks;
+    }
+
     public String getName(){
         return name;
     }

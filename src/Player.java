@@ -1,16 +1,16 @@
-
+import java.util.*;
 
 public class Player {
 
     private ArrayList<String> notes;
     private ArrayList<Key> inventory;
-    private Map currentPosition;
+    private Room currentPosition;
 
     public void addNote(String note) {
-        note.add(note);
+        notes.add(note);
     }
 
-    public void delNote(index) {
+    public void delNote(int index) {
 
     }
 
@@ -26,15 +26,19 @@ public class Player {
 
     }
 
+    public ArrayList<Key> getInventory() {
+        return inventory;
+    }
+
     public String printInventory() {
 
     }
 
     public Room getCurrentPosition() {
-
+        return currentPosition;
     }
 
-    public void setCurrentPosition() {
-
+    public void setCurrentPosition(Room room) {
+        currentPosition = room;
     }
 }

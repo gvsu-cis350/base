@@ -20,4 +20,23 @@ public class EscapeRoom {
     public void setName(String input){
         name = input;
     }
+
+    public String moveRoom(String roomName) {
+        for (Room r : player.getCurrentPosition().getRooms()) {
+            if (roomName.equals(r.getName())) {
+                if (r.getIsLocked()) {
+                    for (Key k : player.getInventory()) {
+                        if (k.getUnlocks().contains(r)) {
+                            player.setCurrentPosition(r);
+                            return "";
+                        }
+                        return roomName + " is locked!";
+                    }
+                }
+                player.setCurrentPosition(r);
+                return "";
+            }
+        }
+        return roomName + " is not a valid name!";
+    }
 }
