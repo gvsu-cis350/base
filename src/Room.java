@@ -9,14 +9,16 @@ public class Room {
     private boolean isEnd;
     private ArrayList<String> images;
     private ArrayList<Room> rooms;
+    private ArrayList<Key> keys;
 
-    public Room(String name, String script, boolean isLocked, boolean isEnd, ArrayList<String> images, ArrayList<Room> rooms) {
+    public Room(String name, String script, boolean isLocked, boolean isEnd, ArrayList<String> images, ArrayList<Room> rooms, ArrayList<Key> keys) {
         this.setName(name);
         this.setScript(script);
         this.setIsLocked(isLocked);
         this.setIsEnd(isEnd);
         this.images = new ArrayList<String>();
         this.rooms = new ArrayList<Room>();
+        this.keys = new ArrayList<Key>();
 
         if (images != null) {
             for (String image : images) {
@@ -27,6 +29,12 @@ public class Room {
         if (rooms != null) {
             for (Room room : rooms) {
                 addRoom(room);
+            }
+        }
+
+        if (keys != null) {
+            for (Key key : keys) {
+                addKey(key);
             }
         }
     }
@@ -112,6 +120,24 @@ public class Room {
             rooms.remove(index);
         } catch (IndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException("delRoom in class Room: index out of bounds");
+        }
+    }
+
+    public ArrayList<Key> getKey() {
+        return keys;
+    }
+
+    public void addKey(Key key) {
+        if (key == null)
+            throw new IllegalArgumentException("addKey in class KeyRoom: null input");
+        keys.add(key);
+    }
+
+    public void delKey(int index) {
+        try {
+            keys.remove(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("delKey in class KeyRoom: index out of bounds");
         }
     }
 
