@@ -81,7 +81,7 @@ public class Room {
         if (path.equals(""))
             throw new IllegalArgumentException("addImage in class Room: empty string");
 
-        String regex = "([a-zA-Z]:)?(/[a-zA-Z0-9_.-]+)+.pdf"; //add quotes
+        String regex = "([\\w]:)?((/[\\w\\s-.]+)|(/\"[\\w\\s-.]+\"))+.pdf";
 
         if (!Pattern.matches(regex, path))
             throw new IllegalArgumentException("addImage in class Room: invalid file path");
