@@ -6,13 +6,15 @@ public class Room {
     private String name;
     private String script;
     private boolean isLocked;
+    private boolean isEnd;
     private ArrayList<String> images;
     private ArrayList<Room> rooms;
 
-    public Room(String name, String script, boolean isLocked, ArrayList<String> images, ArrayList<Room> rooms) {
+    public Room(String name, String script, boolean isLocked, boolean isEnd, ArrayList<String> images, ArrayList<Room> rooms) {
         this.setName(name);
         this.setScript(script);
         this.setIsLocked(isLocked);
+        this.setIsEnd(isEnd);
         this.images = new ArrayList<String>();
         this.rooms = new ArrayList<Room>();
 
@@ -61,6 +63,14 @@ public class Room {
         this.isLocked = isLocked;
     }
 
+    public boolean getIsEnd() {
+        return isEnd;
+    }
+
+    public void setIsEnd(boolean isEnd) {
+        this.isEnd = isEnd;
+    }
+
     public ArrayList<String> getImages() {
         return images;
     }
@@ -71,7 +81,7 @@ public class Room {
         if (path.equals(""))
             throw new IllegalArgumentException("addImage in class Room: empty string");
 
-        String regex = "([a-zA-Z]:)?(/[a-zA-Z0-9_.-]+)+.pdf"; //add quotes
+        String regex = "([\\w]:)?((/[\\w\\s-.]+)|(/\"[\\w\\s-.]+\"))+.pdf";
 
         if (!Pattern.matches(regex, path))
             throw new IllegalArgumentException("addImage in class Room: invalid file path");

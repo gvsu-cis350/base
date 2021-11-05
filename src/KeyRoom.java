@@ -4,12 +4,12 @@ public class KeyRoom extends Room {
 
     private ArrayList<Key> keys;
     
-    public KeyRoom(String name, String script, boolean isLocked, ArrayList<String> images, ArrayList<Room> rooms, ArrayList<Key> keys) {
-        super(name, script, isLocked, images, rooms);
+    public KeyRoom(String name, String script, boolean isLocked, boolean isEnd, ArrayList<String> images, ArrayList<Room> rooms, ArrayList<Key> keys) {
+        super(name, script, isLocked, isEnd, images, rooms);
         this.keys = new ArrayList<Key>();
 
-        for (int i = 0; i < keys.size(); i++) {
-            addKey(keys.get(i));
+        for (Key key : keys) {
+            addKey(key);
         }
     }
 
