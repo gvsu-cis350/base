@@ -38,9 +38,12 @@ label start:
 
     scene dorm room
 
-    show roommate happy
+    "DATING SIM DEMO"
 
-    roomie "DATING SIM DEMO"
+    # Andrea: Start proper story?
+    roomie "Oh my goodness you're here! You're here!"
+    show roommate happy with dissolve
+    roomie "You're my new roommate, right?"
 
     # ALEXIS: Name input
     python:
@@ -48,11 +51,12 @@ label start:
         name = name.strip() or "Default"
     $ player_name = name
 
-    roomie "So your name is [player_name]... interesting."
-    player "Yup. That's me!"
+    roomie "Ah [player_name]! it's so nice to meet you!"
+    player "It's nice to meet you too!"
 
     # ANDREA: Pronoun Selection
-    roomie "What are your pronouns?"
+    roomie "Ah, also, what are your pronouns?"
+    player "Oh, thanks for asking! I use..."
     menu:
         "They/Them":
             $ subj_pron = "they"
@@ -73,11 +77,16 @@ label start:
             $ posses_pron= "his"
             $ reflex_pron = "himself"
 
-    roomie "Ah! So you're a [subj_pron] / [obj_pron]"
+    roomie "Well, it's wonderful to meet you [player_name]. I already know we're going to have a lot of fun together."
+    player "What do you mean?"
+    roomie "Well, first things first, lets get you settled in!"
+
+    hide roommate happy with dissolve
+    
+    "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
 
     # AMELA: Character appearance selection
-
-    roomie "What do you look like?"
+    player_thinking "What do I look like?"
 
     screen portrait_selection():
         # Screen that displays 4 image buttons in a 2x2 grid.
