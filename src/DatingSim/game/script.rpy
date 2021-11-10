@@ -40,6 +40,17 @@ label start:
 
     "DATING SIM DEMO"
 
+    #####################################################################
+    #
+    #  FIRST SCENE
+    #  > Roommate introduction
+    #  > Name input
+    #  > Pronoun choice
+    #  > Portrait choice
+    #  > Personality test
+    #
+    #####################################################################
+
     # Andrea: Start proper story?
     roomie "Oh my goodness you're here! You're here!"
     show roommate happy with dissolve
@@ -51,7 +62,7 @@ label start:
         name = name.strip() or "Default"
     $ player_name = name
 
-    roomie "Ah [player_name]! it's so nice to meet you!"
+    roomie "Ah [player_name]! It's so nice to meet you!"
     player "It's nice to meet you too!"
 
     # ANDREA: Pronoun Selection
@@ -85,8 +96,9 @@ label start:
     
     "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
 
-    # AMELA: Character appearance selection
     player_thinking "What do I look like?"
+
+    # AMELA: Character appearance selection
 
     screen portrait_selection():
         # Screen that displays 4 image buttons in a 2x2 grid.
@@ -111,15 +123,27 @@ label start:
 
     # FIXME: delete this code later; for testing purposes now
     if portrait_number == 1:
-        roomie "Your appearance is Red"
+    #    roomie "Your appearance is Red"
     elif portrait_number == 2:
-        roomie "Your appearance is Green"
+    #    roomie "Your appearance is Green"
     elif portrait_number == 3:
-        roomie "Your appearance is Blue"
+    #   roomie "Your appearance is Blue"
     elif portrait_number == 4:
-        roomie "Your appearance is Purple"
+    #    roomie "Your appearance is Purple"
     else:
-        roomie "Something went wrong"
+    #    roomie "Something went wrong"
+
+    roomie "Finished?"
+
+    player "Yeah, I'm almost done. Why, what's up?"
+
+    roomie "I found this personality quiz on a blog earlier, you should take it!"
+
+    show roommate happy with dissolve
+
+    player "A personalitiy quiz?"
+
+    "She hands you a piece of torn notebook paper with some questions written down on them"
 
     #start of quiz
     roomie "Would you rather"
@@ -149,7 +173,19 @@ label start:
             $ prepPoints += 1
             $ tsunPoints += 1
 
-    # This ends the game.
+    player "What kind of blog did you find this on, again?" 
+
+    roomie "No matter, thanks!"
+
+    hide roommate with dissolve
+
+    player_thinking "That was weird. Oh well, time to..."
+
+    #####################################################################
+    #
+    #  SECOND SCENE ????
+    #
+    #####################################################################
 
     jump choose_club
 
