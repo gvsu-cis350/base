@@ -8,8 +8,8 @@ public class RoomTests {
 
     @Test
     public void test_constructor() {
-        Room room1 = new Room("bedroom", "Anna's bedroom", true, null, null);
-        Room room2 = new Room("bathroom", "Anna's bathroom", false, null, null);
+        Room room1 = new Room("bedroom", "Anna's bedroom", true, false, null, null, null);
+        Room room2 = new Room("bathroom", "Anna's bathroom", false, false, null, null, null);
 
         String path1 = "D:/docs/files/pic.pdf";
         String path2 = "/users/docs/123.pdf";
@@ -22,7 +22,7 @@ public class RoomTests {
         paths.add(path1);
         paths.add(path2);
 
-        Room room3 = new Room("house", "Anna's house", true, paths, rooms);
+        Room room3 = new Room("house", "Anna's house", true, false, paths, rooms, null);
 
         assertEquals("house", room3.getName());
         assertEquals("Anna's house", room3.getScript());
@@ -35,14 +35,14 @@ public class RoomTests {
 
     @Test
     public void test_getName() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, null, null);
+        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
 
         assertEquals("doghouse", room.getName());
     }
 
     @Test
     public void test_setName() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, null, null);
+        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
         room.setName("doghouse2");
 
         assertEquals("doghouse2", room.getName());
@@ -50,14 +50,14 @@ public class RoomTests {
 
     @Test
     public void test_getScript() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, null, null);
+        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
 
         assertEquals("There's a dog in here!", room.getScript());
     }
 
     @Test
     public void test_setScript() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, null, null);
+        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
         room.setScript("Where is my dog?");
 
         assertEquals("Where is my dog?", room.getScript());
@@ -65,14 +65,14 @@ public class RoomTests {
 
     @Test
     public void getIsLocked() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, null, null);
+        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
 
         assertFalse(room.getIsLocked());
     }
 
     @Test
     public void test_setIsLocked() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, null, null);
+        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
         room.setIsLocked(true);
 
         assertTrue(room.getIsLocked());
@@ -84,7 +84,7 @@ public class RoomTests {
         paths.add("/Desktop/School/GVSU/pic.pdf");
         paths.add("Z:/users/annac/docs/123.pdf");
 
-        Room room = new Room("room", "this is a room", false, paths, null);
+        Room room = new Room("room", "this is a room", false, false, paths, null, null);
 
         assertEquals("/Desktop/School/GVSU/pic.pdf", room.getImages().get(0));
         assertEquals("Z:/users/annac/docs/123.pdf", room.getImages().get(1));
@@ -92,10 +92,11 @@ public class RoomTests {
 
     @Test
     public void test_addImage() {
-        ArrayList<String> paths = new ArrayList<String>();
-        paths.add("/Desktop/1234/GVSU/pic.pdf");
-        paths.add("Z:/users/annac/docs/123.pdf");
-        paths.add("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU-CIS350-ACK/image.pdf");
+        Room room = new Room("room", "this is a room", false, false, null, null, null);
+        room.addImage("/Desktop/1234/GVSU/pic.pdf");
+        room.addImage("Z:/users/annac/docs/123.pdf");
+        room.addImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.pdf");
+        room.addImage("Drive_Name123:/folder1/\"folder 2-_\"/___file---.pdf");
     }
 
     @Test
@@ -115,6 +116,21 @@ public class RoomTests {
 
     @Test
     public void test_delRoom() {
+
+    }
+
+    @Test
+    public void test_getKeys() {
+
+    }
+
+    @Test
+    public void test_addKey() {
+
+    }
+
+    @Test
+    public void test_delKey() {
 
     }
 }
