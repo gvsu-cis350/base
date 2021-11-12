@@ -58,7 +58,7 @@ public class Game {
                         break;
                 }
 
-                Room newRoom = new Room(name, description, isLocked, isEnd, null, null );
+                Room newRoom = new Room(name, description, isLocked, isEnd, image, null, null );
                 rooms.add(newRoom);
                 index++;
                 if(index > 8) {
