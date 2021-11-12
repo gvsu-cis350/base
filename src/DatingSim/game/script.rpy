@@ -263,8 +263,8 @@ label meet_badboy:
 label free_time_1:
     player_thinking "I have some free time... what should I do?"
 
-    call screen MapUI
-    ""
+    call screen MapUI(1)
+    
     return
 
 label library_1:
@@ -387,18 +387,7 @@ label pumpkin_patch:
 label free_time_2:
     player_thinking "I have some free time... what should I do?"
 
-    # TODO: probably nicer way to do this using "call" instead of "jump",
-    # having two separate free_time labels is fine for now
-
-    menu:
-        "Library":
-            jump library_2
-        "School store":
-            jump schoolstore_2
-        "Tennis courts":
-            jump tenniscourts_2
-        "Dorms":
-            jump dorms_2
+    call screen MapUI(2)
 
     return
 
@@ -407,17 +396,17 @@ label library_2:
     jump route_determination
 
 label schoolstore_2:
-    "SCHOOL STORE: BADBOY IS THERE"
+    "SCHOOL STORE 2: BADBOY IS THERE"
 
     jump route_determination
 
 label tenniscourts_2:
-    "TENNIS COURTS: PREP IS THERE"
+    "TENNIS COURTS 2: PREP IS THERE"
 
     jump route_determination
 
 label dorms_2:
-    "DORMS: ARTIST IS THERE"
+    "DORMS 2: ARTIST IS THERE"
 
     jump route_determination
 
