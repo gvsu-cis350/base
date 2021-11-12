@@ -547,12 +547,7 @@ screen pre_gallery():
         style "return_button"
         action Return()
 
-# Interactive map
-# screen mapUI:
-#     imagebutton:
-#         action ShowMenu("MapUI")
-
-screen MapUI():
+screen MapUI(num):
     tag MapUI
     add "map/school-map.png"
 
@@ -562,7 +557,11 @@ screen MapUI():
         ypos 214
         idle "map/library_idle.png"
         hover "map/library_hover.png"
-        action Jump("library_1")
+        
+        if num == 1:
+            action Jump("library_1")
+        else:
+            action Jump("library_2")
 
     # school store
     imagebutton:
@@ -570,7 +569,12 @@ screen MapUI():
         ypos 617
         idle "map/store_idle.png"
         hover "map/store_hover.png"
-        action Jump("schoolstore_1")
+
+        if num == 1:
+            action Jump("schoolstore_1")
+        else:
+            action Jump("schoolstore_2")
+
 
     # tennis courts
     imagebutton:
@@ -578,7 +582,11 @@ screen MapUI():
         ypos 207
         idle "map/tennis_idle.png"
         hover "map/tennis_hover.png"
-        action Jump("tenniscourts_1")
+
+        if num == 1:
+            action Jump("tenniscourts_1")
+        else:
+            action Jump("tenniscourts_2")
 
     # dorm
     imagebutton:
@@ -586,7 +594,12 @@ screen MapUI():
         ypos 604
         idle "map/dorms_idle.png"
         hover "map/dorms_hover.png"
-        action Jump("dorms_1")
+
+        if num == 1:
+            action Jump("dorms_1")
+        else:
+            action Jump("dorms_2")
+            
 
 ## About screen ################################################################
 ##
