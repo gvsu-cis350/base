@@ -10,9 +10,9 @@ define roomie = Character("Roommate")
 
 # define romanceable characters
 define dom = Character("Dominic")
-define vic = Character("Victoria")
-define a = Character("Artist")
-define t = Character("Tsun")
+define victoria = Character("Victoria")
+define august = Character("August")
+define finley = Character("Finley")
 
 # Gallery code
 default galleryList = ["anime_street_art", "red_anime_character"]
@@ -31,7 +31,7 @@ default skippedClass = "false"
 
 label start:
     $ portrait_number = 0
-    $ rebelPoints = 0  
+    $ badboyPoints = 0  
     $ prepPoints = 0 
     $ artistPoints = 0 
     $ tsunPoints = 0 
@@ -119,7 +119,7 @@ label start:
                 $ artistPoints += 1
                 $ prepPoints += 1
             "Go out to a raging party":
-                $ rebelPoints += 1
+                $ badboyPoints += 1
                 $ tsunPoints += 1
 
     roomie "Would you rather have"
@@ -128,14 +128,14 @@ label start:
             $ artistPoints += 1
             $ tsunPoints += 1
         "A large number of acquaintances":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             $ prepPoints += 1
 
     roomie "One a first date you would like to go to "
     menu:
         "To a movie theater":
             $ artistPoints += 1
-            $ rebelPoints += 1
+            $ badboyPoints += 1
         "On a picnic":
             $ prepPoints += 1
             $ tsunPoints += 1
@@ -218,7 +218,7 @@ label meet_badboy:
             dom "Whoa! Didn't expect that..."
             player_thinking "Eep. Was that too forward?"
         "W-what?":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             player "Er, sorry, I didn't mean to stare..."
             dom "Haha! I was just teasing."
 
@@ -321,7 +321,7 @@ label tenniscourts_1:
             player_thinking "Dominic looks surprised. Guess he didn't expect me to go so hard."
             player_thinking "But I play to win!"
         "Not sweat it":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             player_thinking "I don't try too hard. I can see that Dominic clearly doesn't, either."
             player_thinking "We both goof off as we swing our rackets around with the mindset of 'If I don't hit the ball, I don't hit the ball. Big whoop.'"
             player_thinking "By the end of it, we're both laughing at each other."
