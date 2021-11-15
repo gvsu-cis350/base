@@ -10,9 +10,9 @@ define roomie = Character("Roommate")
 
 # define romanceable characters
 define dom = Character("Dominic")
-define vic = Character("Victoria")
-define a = Character("Artist")
-define t = Character("Tsun")
+define victoria = Character("Victoria")
+define august = Character("August")
+define finley = Character("Finley")
 
 # Gallery code
 default galleryList = ["anime_street_art", "red_anime_character"]
