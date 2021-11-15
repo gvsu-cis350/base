@@ -31,7 +31,7 @@ default skippedClass = "false"
 
 label start:
     $ portrait_number = 0
-    $ rebelPoints = 0  
+    $ badboyPoints = 0  
     $ prepPoints = 0 
     $ artistPoints = 0 
     $ tsunPoints = 0 
@@ -119,7 +119,7 @@ label start:
                 $ artistPoints += 1
                 $ prepPoints += 1
             "Go out to a raging party":
-                $ rebelPoints += 1
+                $ badboyPoints += 1
                 $ tsunPoints += 1
 
     roomie "Would you rather have"
@@ -128,14 +128,14 @@ label start:
             $ artistPoints += 1
             $ tsunPoints += 1
         "A large number of acquaintances":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             $ prepPoints += 1
 
     roomie "One a first date you would like to go to "
     menu:
         "To a movie theater":
             $ artistPoints += 1
-            $ rebelPoints += 1
+            $ badboyPoints += 1
         "On a picnic":
             $ prepPoints += 1
             $ tsunPoints += 1
@@ -218,7 +218,7 @@ label meet_badboy:
             dom "Whoa! Didn't expect that..."
             player_thinking "Eep. Was that too forward?"
         "W-what?":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             player "Er, sorry, I didn't mean to stare..."
             dom "Haha! I was just teasing."
 
@@ -321,7 +321,7 @@ label tenniscourts_1:
             player_thinking "Dominic looks surprised. Guess he didn't expect me to go so hard."
             player_thinking "But I play to win!"
         "Not sweat it":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             player_thinking "I don't try too hard. I can see that Dominic clearly doesn't, either."
             player_thinking "We both goof off as we swing our rackets around with the mindset of 'If I don't hit the ball, I don't hit the ball. Big whoop.'"
             player_thinking "By the end of it, we're both laughing at each other."
@@ -396,8 +396,84 @@ label library_2:
     jump route_determination
 
 label schoolstore_2:
-    "SCHOOL STORE 2: BADBOY IS THERE"
+    player_thinking "I might as well head to the school store and shop with my eyes."
 
+    scene school store
+
+    player_thinking "As I peruse the various university-branded whats-its and thingy-mabobs, I spot a familiar figure in the corner of my eye..."
+
+    show badboy
+
+    player_thinking "...now, directly in front of my eyes."
+
+    player "Dominic!"
+
+    if skippedClass == "true":
+        dom "Hey, class-skipper!"
+    elif club == "debate team":
+        dom "Hey, debate team!"
+        player_thinking "Eh? He knows I'm on the debate team?"
+    elif club == "graphic design":
+        dom "Hey, graphic designer!"
+        player_thinking "Eh? He knows I'm in the graphic design club?"
+    else:
+        dom "Hey, Jane's roomie!"
+
+    player "What're you doing here? Doesn't seem like a place I'd find you at."
+
+    dom "Why not? Where else would I shoplift, if not at a shop?"
+
+    player "You shoplift?!"
+
+    dom "Pfft! Duh! I've got an image to maintain!"
+
+    player_thinking "I can't tell if he's joking..."
+
+    dom "Whaddaya say? Wanna help me pocket a keychain without getting caught?"
+
+    menu:
+        "Yeah! Let's do it!":
+            dom "Whoa, really? Well, alright! Stand in front of me but don't look suspicious."
+            player_thinking "I can't believe I'm doing this... those keychains are overpriced, anyway, I suppose."
+            player_thinking "I stood with my back to Dominic, doing my best to not look shady, but no doubt failing."
+            dom "Got it. Good work, comrade."
+            player "Do you even want the thing? It's not even a cool keychain..."
+            player_thinking "His face got really serious, but I can't tell if it was an act or not."
+            dom "It's not about the keychain. It's about the message."
+            player_thinking "Almost magically, his face returns to its comfortable smug state."
+            dom "Well, time for me to dip."
+            dom "You should probably pay for that keychain in your pocket, though."
+            player_thinking "I stick my hands in my pockets and sure enough, there's a keychain in one of them."
+            player "What? How did you--"
+            dom "Toodle-loo!"
+            hide badboy
+            player_thinking "Aaaaand he's gone..."
+            player_thinking "Guess I better put this keychain back before I leave."
+        "What? Of course not!":
+            $ badboyPoints += 1
+            dom "Haha! Don't want to make yourself an accomplice... no matter. I am a professional, anyhow."
+            dom "Aaaand done."
+            player "What?! You didn't even move!"
+            dom "Sure I did. But to your untrained eyes, I remained completely still."
+            player_thinking "Again, I have no idea if he's being serious."
+            player_thinking "If he did snag it, his sleight of hand skills are really impressive..."
+            player_thinking "...he must be great at card tricks..."
+            dom "Well, my work here is nearly done."
+            dom "There's one last thing I have to do. Come with me to the register?"
+            player "Uh... sure."
+            hide badboy
+            player_thinking "I awkwardly follow him to the cash register, a little confused."
+            player_thinking "My confusion grew when he produced a keychain from one pocket and his wallet from the other."
+            show badboy
+            dom "Smell you later, nerd. Also -- check your pocket."
+            player "Check my pocket?"
+            hide badboy
+            player_thinking "Aaaand he's gone."
+            player_thinking "I stick my hands in both of my pant pockets and felt something small and metallic."
+            player_thinking "Confused beyond belief, with a shiny new keychain in my hand, I stood there, dumbfounded."
+
+    player_thinking "I'll never understand that guy."
+    
     jump route_determination
 
 label tenniscourts_2:
