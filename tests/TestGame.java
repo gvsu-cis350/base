@@ -4,9 +4,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.NoSuchElementException;
 
-public class EscapeRoomTests {
+import org.junit.Test;
+
+public class TestGame {
     @Test
     public void sample_Test(){
 
-    }    
+    }
 }

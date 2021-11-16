@@ -4,7 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.NoSuchElementException;
 
-public class PlayerTests {
+import org.junit.Test;
+
+public class TestPlayer {
     
     @Test
     public void sample_Test() {

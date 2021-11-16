@@ -6,9 +6,9 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
-public class GameTests {
+public class TestEscapeRoom {
     @Test
     public void sample_Test(){
 
-    }
+    }    
 }
