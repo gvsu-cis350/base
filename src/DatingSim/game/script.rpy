@@ -11,7 +11,7 @@ define roomie = Character("Roommate")
 # define romanceable characters
 define dom = Character("Dominic")
 define vic = Character("Victoria")
-define a = Character("Artist")
+define aug = Character("August")
 define t = Character("Tsun")
 
 # Gallery code
@@ -121,18 +121,6 @@ label start:
     # player appearance set by portrait selected
     $ portrait_number = _return
 
-    # FIXME: delete this code later; for testing purposes now
-    if portrait_number == 1:
-    #    roomie "Your appearance is Red"
-    elif portrait_number == 2:
-    #    roomie "Your appearance is Green"
-    elif portrait_number == 3:
-    #   roomie "Your appearance is Blue"
-    elif portrait_number == 4:
-    #    roomie "Your appearance is Purple"
-    else:
-    #    roomie "Something went wrong"
-
     roomie "Finished?"
 
     player "Yeah, I'm almost done. Why, what's up?"
@@ -174,12 +162,26 @@ label start:
             $ tsunPoints += 1
 
     player "What kind of blog did you find this on, again?" 
-
     roomie "No matter, thanks!"
+    "She looks down at your answers and seems to be counting."
+    player_thinking "What was that about?"
+    roomie "Ah! I don't know."
+    player "Don't know what?"
+    roomie "Who you'd be cuter with!"
+    player "What do you mean?"
+    roomie "My friends! I'd love for you to meet them soon. Some of them have been looking for someone,"
+    roomie "some haven't but really should.They're really nice! I'm sure you'd like them."
+    roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on"
+    roomie "AND he is a serious hottie"
+    roomie "Victoria is..." #FIXME
+    roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
+    roomie "They have the softest heart."
+    roomie "And then there's..." #FIXME
+    roomie "But! You'll meet them all eventually, I'm sure"
+    roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
 
-    hide roommate with dissolve
+    hide roommate happy with dissolve
 
-    player_thinking "That was weird. Oh well, time to..."
 
     #####################################################################
     #
@@ -187,6 +189,10 @@ label start:
     #
     #####################################################################
 
+    #FIXME Change visual to the school
+    "After classes"
+    player_thinking "First day of school tends to be exciting, but generally uneventful."
+    player_thinking "It's been a long day, but there's one last thing I should do before I leave..." 
     jump choose_club
 
 label choose_club:
