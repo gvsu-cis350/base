@@ -78,15 +78,16 @@ public class Room {
     }
 
     public void setImage(String path) {
+        //should it throw an exception for these? 
         if (path == null)
-            throw new IllegalArgumentException("addImage in class Room: null input");
+            throw new IllegalArgumentException("setImage in class Room: null input");
         if (path.equals(""))
-            throw new IllegalArgumentException("addImage in class Room: empty string");
+            throw new IllegalArgumentException("setImage in class Room: empty string");
 
-        String regex = "([\\w]:)?((/[\\w\\s-.]+)|(/\"[\\w\\s-.]+\"))+.png";
+        String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
 
         if (!Pattern.matches(regex, path))
-            throw new IllegalArgumentException("addImage in class Room: invalid file path");
+            throw new IllegalArgumentException("setImage in class Room: invalid file path");
 
         this.image = path;
     }
