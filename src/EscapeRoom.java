@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class EscapeRoom {
     private String name;
-    private ArrayList<Room> map;
     private Player player;
+    private ArrayList<Room> map;
 
     public EscapeRoom(String name, ArrayList<Room> map, Player player) {
         this.name = name;

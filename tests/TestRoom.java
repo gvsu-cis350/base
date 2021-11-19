@@ -89,8 +89,8 @@ public class TestRoom {
 
         // Room room = new Room("room", "this is a room", false, false, paths, null, null);
 
-        assertEquals("/Desktop/School/GVSU/pic.pdf", room.getImages().get(0));
-        assertEquals("Z:/users/annac/docs/123.pdf", room.getImages().get(1));
+        // assertEquals("/Desktop/School/GVSU/pic.pdf", room.getImages().get(0));
+        // assertEquals("Z:/users/annac/docs/123.pdf", room.getImages().get(1));
     }
 
     @Test

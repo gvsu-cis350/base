@@ -78,17 +78,17 @@ public class Room {
     }
 
     public void setImage(String path) {
-        if (path == null)
-            throw new IllegalArgumentException("addImage in class Room: null input");
-        if (path.equals(""))
-            throw new IllegalArgumentException("addImage in class Room: empty string");
+        // if (path == null)
+        //     throw new IllegalArgumentException("addImage in class Room: null input");
+        // if (path.equals(""))
+        //     throw new IllegalArgumentException("addImage in class Room: empty string");
 
-        String regex = "([\\w]:)?((/[\\w\\s-.]+)|(/\"[\\w\\s-.]+\"))+.png";
+        // String regex = "([\\w]:)?((/[\\w\\s-.]+)|(/\"[\\w\\s-.]+\"))+.png";
 
-        if (!Pattern.matches(regex, path))
-            throw new IllegalArgumentException("addImage in class Room: invalid file path");
+        // if (!Pattern.matches(regex, path))
+        //     throw new IllegalArgumentException("addImage in class Room: invalid file path");
 
-        this.image = path;
+        // this.image = path;
     }
 
     public ArrayList<Room> getRooms() {

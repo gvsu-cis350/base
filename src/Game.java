@@ -3,15 +3,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
-    private ArrayList<EscapeRoom> escapeRooms;
+    private ArrayList<Room> rooms = new ArrayList<Room>();
     
     public void buildEscapeRoom(String filename){
         try {
             Scanner sc = new Scanner(new File(filename));
             sc.useDelimiter(",");
             int index = 1;
-
-            ArrayList<Room> rooms = new ArrayList<Room>();
 
             String name = "";
             String description = "";
@@ -27,6 +25,7 @@ public class Game {
                 {
                     case 1:
                         name = sc.next();
+                        name = name.replace("\n", "");
                         break;
                     case 2:
                         description = sc.next();
@@ -39,29 +38,28 @@ public class Game {
                         }
                         break;
                     case 4:
-                        key = sc.next();
-                        break;
-                    case 5:
-                        if( sc.next().toLowerCase().equals( "true" ) ) {
+                        String input = sc.next().toLowerCase();
+                        System.out.println(input);
+                        if( input.equals( "true" ) ) {
                             isEnd = true;
                         } else {
                             isEnd = false;
                         }
                         break;
-                    case 6:
+                    case 5:
                         image = sc.next();
                         break;
-                    case 7: 
+                    case 6: 
+                        sc.next();
                         break;
                     case 8: 
                         keyNames = sc.next();
                         break;
                 }
-
-                Room newRoom = new Room(name, description, isLocked, isEnd, image, null, null );
-                rooms.add(newRoom);
                 index++;
                 if(index > 8) {
+                    Room newRoom = new Room(name, description, isLocked, isEnd, image, null, null );
+                    rooms.add(newRoom);
                     index = 1;
                 }
             }
@@ -94,8 +92,13 @@ public class Game {
 
             sc.close();
         } catch(Exception e) {
-            //really bad things happen
+            System.out.println(System.getProperty("user.dir"));
+            System.out.println("CYMBRE THIS IS BAD");
         }
+    }
+
+    public ArrayList<Room> getEscapeRooms() {
+        return rooms;
     }
 
     public void saveEscapeRoom(){
