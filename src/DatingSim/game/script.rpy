@@ -499,6 +499,42 @@ label BADBOY_START:
     # badboy route
     return
 
+label dominic_event_1:
+
+    # TODO graphic
+
+    pass
+
+label dominic_event_2:
+
+    # TODO graphic
+
+    show badboy
+
+    dom "... you know, I wasn't always like this."
+    player_thinking "What do you mean?"
+    dom "I wasn't always this edgy 'hooligan' type I make myself out to be."
+    player_thinking "His voice's usual brightness is gone, along with the default smug on his face."
+    player_thinking "For the first time, I'm certain he's serious."
+    player "Well, what were you like before?"
+    player_thinking "He ponders that question for a moment, takes a short breath."
+    dom "I was... a 'good kid'. I think. As good as I could be compared to my brother, at least."
+    dom ""
+
+    pass
+
+label dominic_event_3:
+
+    # TODO graphic
+
+    player_thinking "... so this is where Dominic lives."
+    player_thinking "It's a tiny, dingy apartment. There are holes in the walls and rips in the carpet."
+    player_thinking "He told me his family was well-off. Does he choose to live like this?"
+
+    dom "Hey! What're you doing here?"
+
+    pass
+
 label ARTIST_START:
     # artist route
     return
