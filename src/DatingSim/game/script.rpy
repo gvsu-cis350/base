@@ -462,28 +462,44 @@ label dorms_2:
     jump route_determination
 
 label route_determination:
-    # check which character has the most points here --
-    # whoever it is, trigger their route
-    # set flag to current route
+    # "Badboy points: [badboyPoints], prepPoints: [prepPoints], artistPoints: [artistPoints], tsunPoints: [tsunPoints]"
+    python:
+        points = [badboyPoints, prepPoints, artistPoints, tsunPoints]
+        # print("Max points is " + str(max(points)))
+        # print("Index of max points is " + str(points.index(max(points))))
+        index_num = points.index(max(points))
 
-    "Route determined here"
+    $ route_number = index_num
+
+    if route_number == 0:
+        jump BADBOY_START
+    elif route_number == 1:
+        jump PREP_START
+    elif route_number == 2:
+        jump ARTIST_START
+    else:
+        jump TSUNDERE_START
 
     return
 
 label BADBOY_START:
     # badboy route
-    return
-
-label ARTIST_START:
-    # artist route
+    "BADBOY ROUTE START"
     return
 
 label PREP_START:
     # prep route
+    "PREP ROUTE START"
+    return
+
+label ARTIST_START:
+    # artist route
+    "ARTIST ROUTE START"
     return
 
 label TSUNDERE_START:
     # tsundere route
+    "TSUNDERE ROUTE START"
     return
 
 label FINAL_PARTY:
