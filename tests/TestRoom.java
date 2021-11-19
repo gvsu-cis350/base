@@ -1,9 +1,7 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
+import static org.junit.Assert.assertThrows;
 
 import org.junit.Test;
 
@@ -11,129 +9,254 @@ public class TestRoom {
 
     @Test
     public void test_constructor() {
-        Room room1 = new Room("bedroom", "Anna's bedroom", true, false, null, null, null);
-        Room room2 = new Room("bathroom", "Anna's bathroom", false, false, null, null, null);
+        Room room = new Room("room", "room", true, false, "/image.png", null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null);
+        Key key1 = new Key("key1", null);
+        Key key2 = new Key("key2", null);
 
-        Key key1 = new Key("D:/docs/files/pic.pdf", null);
-        Key key2 = new Key("/users/docs/123.pdf", null);
+        room.addRoom(room1);
+        room.addRoom(room2);
+        room.addKey(key1);
+        room.addKey(key2);
 
-        ArrayList<Room> rooms = new ArrayList<Room>();
-        rooms.add(room1);
-        rooms.add(room2);
-
-        ArrayList<Key> keys = new ArrayList<Key>();
-        keys.add(key1);
-        keys.add(key2);
-
-        Room room3 = new Room("house", "Anna's house", true, false,"file", rooms, keys);
-
-        assertEquals("house", room3.getName());
-        assertEquals("Anna's house", room3.getScript());
-        assertTrue(room3.getIsLocked());
-        // assertEquals("D:/docs/files/pic.pdf", room3.getImages().get(0));
-        // assertEquals("/users/docs/123.pdf", room3.getImages().get(1));
-        assertEquals(room1, room3.getRooms().get(0));
-        assertEquals(room2, room3.getRooms().get(1));
+        assertEquals("room", room.getName());
+        assertEquals("room", room.getScript());
+        assertTrue(room.getIsLocked());
+        assertFalse(room.getIsEnd());
+        assertEquals("/image.png", room.getImage());
+        assertEquals(room1, room.getRooms().get(0));
+        assertEquals(room2, room.getRooms().get(1));
+        assertEquals(key1, room.getKeys().get(0));
+        assertEquals(key2, room.getKeys().get(1));
     }
 
     @Test
     public void test_getName() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
+        Room room = new Room("This is a room", "room", false, false, null, null, null);
 
-        assertEquals("doghouse", room.getName());
+        assertEquals("This is a room", room.getName());
     }
 
     @Test
     public void test_setName() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
-        room.setName("doghouse2");
+        Room room = new Room("This is a room", "room", false, false, null, null, null);
+        
+        assertEquals("This is a room", room.getName());
 
-        assertEquals("doghouse2", room.getName());
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setName(null);
+        });
+        assertEquals("setName in class Room: null input", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setName("");
+        });
+        assertEquals("setName in class Room: empty string", exception.getMessage());
+
     }
 
     @Test
     public void test_getScript() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
+        Room room = new Room("room", "This is a room!", false, false, null, null, null);
 
-        assertEquals("There's a dog in here!", room.getScript());
+        assertEquals("This is a room!", room.getScript());
     }
 
     @Test
     public void test_setScript() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
-        room.setScript("Where is my dog?");
+        Room room = new Room("room", "This is a room!", false, false, null, null, null);
 
-        assertEquals("Where is my dog?", room.getScript());
+        assertEquals("This is a room!", room.getScript());
+
+        room.setScript("");
+
+        assertEquals("", room.getScript());
+
+        room.setScript(null);
+        
+        assertEquals(null, room.getScript());
     }
 
     @Test
-    public void getIsLocked() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
+    public void test_getIsLocked() {
+        Room room = new Room("room", "room", false, false, null, null, null);
 
         assertFalse(room.getIsLocked());
     }
 
     @Test
     public void test_setIsLocked() {
-        Room room = new Room("doghouse", "There's a dog in here!", false, false, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null);
         room.setIsLocked(true);
 
         assertTrue(room.getIsLocked());
     }
 
     @Test
+    public void test_getIsEnd() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+
+        assertFalse(room.getIsEnd());
+    }
+
+    @Test
+    public void test_setIsEnd() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+        room.setIsEnd(true);
+
+        assertTrue(room.getIsEnd());
+    }
+
+    @Test
     public void test_getImages() {
-        ArrayList<String> paths = new ArrayList<String>();
-        paths.add("/Desktop/School/GVSU/pic.pdf");
-        paths.add("Z:/users/annac/docs/123.pdf");
+        String path1 = "/Desktop/School/GVSU/pic.png";
+        String path2 = "Z:/users/annac/docs/123.png";
 
-        // Room room = new Room("room", "this is a room", false, false, paths, null, null);
+        Room room = new Room("room", "room", false, false, path1, null, null);
 
-        assertEquals("/Desktop/School/GVSU/pic.pdf", room.getImages().get(0));
-        assertEquals("Z:/users/annac/docs/123.pdf", room.getImages().get(1));
+        assertEquals("/Desktop/School/GVSU/pic.png", room.getImage());
+
+        room.setImage(path2);
+        assertEquals("Z:/users/annac/docs/123.png", room.getImage());
     }
 
     @Test
-    public void test_addImage() {
+    public void test_setImage() {
         Room room = new Room("room", "this is a room", false, false, null, null, null);
-        // room.addImage("/Desktop/1234/GVSU/pic.pdf");
-        // room.addImage("Z:/users/annac/docs/123.pdf");
-        // room.addImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.pdf");
-        // room.addImage("Drive_Name123:/folder1/\"folder 2-_\"/___file---.pdf");
-    }
+        room.setImage("/Desktop/1234/GVSU/pic.png");
+        room.setImage("Z:/users/annac/docs/123.png");
+        room.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
+        room.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
 
-    @Test
-    public void test_delImage() {
+        assertEquals("image not found", room.setImage(""));
+        assertEquals("image not found", room.setImage(null));
 
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setImage("Mult:/image.png");
+        });
+        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setImage("/image.pdf");
+        });
+        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setImage("/image/!/image.png");
+        });
+        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setImage("/image/a folder/image.png");
+        });
+        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
     }
 
     @Test
     public void test_getRooms() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null);
 
+        room.addRoom(room1);
+        room.addRoom(room2);
+
+        assertEquals(room1, room.getRooms().get(0));
+        assertEquals(room2, room.getRooms().get(1));
     }
 
     @Test
     public void test_addRoom() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null);
 
+        room.addRoom(room1);
+        room.addRoom(room2);
+
+        assertEquals(room1, room.getRooms().get(0));
+        assertEquals(room2, room.getRooms().get(1));
+
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.addRoom(null);
+        });
+        assertEquals("addRoom in class Room: null input", exception.getMessage());
     }
 
     @Test
     public void test_delRoom() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null);
 
+        room.addRoom(room1);
+        room.addRoom(room2);
+
+        assertEquals(room1, room.getRooms().get(0));
+        assertEquals(room2, room.getRooms().get(1));
+
+        room.delRoom(1);
+        
+        assertEquals(1, room.getRooms().size());
+
+        Throwable exception = assertThrows(IndexOutOfBoundsException.class, () -> {
+            room.delRoom(1);
+        });
+        assertEquals("delRoom in class Room: index out of bounds", exception.getMessage());
+        
     }
 
     @Test
     public void test_getKeys() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+        Key key1 = new Key("key1", null);
+        Key key2 = new Key("key2", null);
 
+        room.addKey(key1);
+        room.addKey(key2);
+
+        assertEquals(key1, room.getKeys().get(0));
+        assertEquals(key2, room.getKeys().get(1));
     }
 
     @Test
     public void test_addKey() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+        Key key1 = new Key("key1", null);
+        Key key2 = new Key("key2", null);
 
+        room.addKey(key1);
+        room.addKey(key2);
+
+        assertEquals(key1, room.getKeys().get(0));
+        assertEquals(key2, room.getKeys().get(1));
+
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.addKey(null);
+        });
+        assertEquals("addKey in class Room: null input", exception.getMessage());
     }
 
     @Test
     public void test_delKey() {
+        Room room = new Room("room", "room", false, false, null, null, null);
+        Key key1 = new Key("key1", null);
+        Key key2 = new Key("key2", null);
 
+        room.addKey(key1);
+        room.addKey(key2);
+
+        assertEquals(key1, room.getKeys().get(0));
+        assertEquals(key2, room.getKeys().get(1));
+
+        room.delKey(1);
+        
+        assertEquals(1, room.getKeys().size());
+
+        Throwable exception = assertThrows(IndexOutOfBoundsException.class, () -> {
+            room.delKey(1);
+        });
+        assertEquals("delKey in class Room: index out of bounds", exception.getMessage());
     }
 }
