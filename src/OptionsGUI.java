@@ -11,7 +11,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private JPanel examplePanel;
     private JPanel navigationPanel;
 
-    private JList escapeRooms;
+    //private JList escapeRooms;
     private JList exampleList;
 
     private JComboBox fontSize;
@@ -22,7 +22,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
     private JTextArea exampleText;
 
-    private JButton choose;
+    //private JButton choose;
     private JButton load;
     private JButton make;
     private JButton exampleButton;
@@ -37,7 +37,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private String[] sizeList = {"one", "two", "three", "four", "five"};
     private String[] styleList = {"Style1", "Style2", "Style3", "Style4", "Style5"};
     private String[] colorList = {"color1", "color2", "color3", "color4", "color5"};
-    private String[] escapeRoomList = {"Room1", "Room2", "Room3"};
+    //private String[] escapeRoomList = {"Room1", "Room2", "Room3"};
 
     final JFileChooser fileLoader;
 
@@ -53,7 +53,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
         visualPanel = new JPanel();
         navigationPanel = new JPanel();
 
-        escapeRooms = new JList(escapeRoomList);
+        //escapeRooms = new JList(escapeRoomList);
         exampleList = new JList(exampleString);
 
         fontSize = new JComboBox(sizeList);
@@ -64,18 +64,18 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
         exampleText = new JTextArea("This is an area with text in it", 5, 30);
 
-        choose = new JButton("Choose Escape Room");
+        //choose = new JButton("Choose Escape Room");
         load = new JButton("Load Escape Room");
         make = new JButton("Make your own!");
         exampleButton = new JButton("Button");
         defaultButton = new JButton("Restore default settings");
         apply = new JButton("Apply Changes");
         ok = new JButton("Ok");
-        mainMenu = new JButton("Back");
+        mainMenu = new JButton("Main Menu");
 
         fileLoader = new JFileChooser();
 
-        choose.addActionListener(this);
+        //choose.addActionListener(this);
         load.addActionListener(this);
         make.addActionListener(this);
         fontSize.addActionListener(this);
@@ -86,8 +86,8 @@ public class OptionsGUI extends JFrame implements ActionListener{
         ok.addActionListener(this);
         mainMenu.addActionListener(this);
 
-        escapeRoomPanel.add(escapeRooms);
-        escapeRoomPanel.add(choose);
+        //escapeRoomPanel.add(escapeRooms);
+        //escapeRoomPanel.add(choose);
         escapeRoomPanel.add(load);
         escapeRoomPanel.add(make);
         mainPanel.add(escapeRoomPanel);
@@ -145,9 +145,9 @@ public class OptionsGUI extends JFrame implements ActionListener{
             }
             this.dispose();
         }
-        if (comp == choose){
+        //if (comp == choose){
             //get file path string
-        }
+        //}
         if (comp == load){
             int returnVal = fileLoader.showOpenDialog(OptionsGUI.this);
 
@@ -155,6 +155,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
                 File file = fileLoader.getSelectedFile();
                 escapeFile = file.getAbsolutePath();
             }
+            exampleLabel.setText(escapeFile);
         }
         if (comp == make){
             //Show dialog box with example of csv (web link to google drive artifact???)

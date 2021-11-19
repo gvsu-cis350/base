@@ -31,6 +31,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private JButton saveProgress;
     private JButton loadProgress;
+    private JButton options;
     private JButton mainMenu;
 
     private BufferedImage mapPicture;
@@ -47,9 +48,32 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private Game escapeGame = new Game();
 
+    public GameGUI(){
+        mainPanel = new JPanel();
+        helpInfo = new JTextArea("It looks like an escape room isn't properly loaded.  Please go to options to load one", 1, 50);
+        options = new JButton("Options");
+        mainMenu = new JButton("Main Menu");
+
+        mainMenu.addActionListener(this);
+        options.addActionListener(this);
+
+        mainPanel.add(helpInfo);
+        mainPanel.add(options);
+        mainPanel.add(mainMenu);
+
+        add(mainPanel);
+
+        setVisible(true);
+        setSize(750,750);
+    }
 
     public GameGUI(String filename) {
+        try{
         escapeGame.buildEscapeRoom(filename);
+        }catch(Exception e){
+            new GameGUI();
+            this.dispose();
+        }
 
         mainPanel = new JPanel();
         terminal = new JPanel();
@@ -121,22 +145,6 @@ public class GameGUI extends JFrame implements ActionListener {
         setSize(750, 750);
     }
 
-    public GameGUI(){
-        mainPanel = new JPanel();
-        helpInfo = new JTextArea("It looks like an escape room isn't loaded.  Please go to options to load one", 1, 50);
-        mainMenu = new JButton("Main Menu");
-
-        mainMenu.addActionListener(this);
-
-        mainPanel.add(helpInfo);
-        mainPanel.add(mainMenu);
-
-        add(mainPanel);
-
-        setVisible(true);
-        setSize(750,750);
-    }
-
     public void actionPerformed(ActionEvent e) {
         Object comp = e.getSource();
         if (comp == mainMenu) {
@@ -151,6 +159,10 @@ public class GameGUI extends JFrame implements ActionListener {
         }
         if (comp == command){
             JOptionPane.showMessageDialog(null, "You entered a command");
+        }
+        if (comp == options){
+            new OptionsGUI();
+            this.dispose();
         }
     }
 }
