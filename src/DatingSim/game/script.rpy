@@ -10,9 +10,9 @@ define roomie = Character("Roommate")
 
 # define romanceable characters
 define dom = Character("Dominic")
-define vic = Character("Victoria")
-define aug = Character("August")
-define t = Character("Tsun")
+define victoria = Character("Victoria")
+define august = Character("August")
+define finley = Character("Finley")
 
 # Gallery code
 default galleryList = ["anime_street_art", "red_anime_character"]
@@ -31,7 +31,7 @@ default skippedClass = "false"
 
 label start:
     $ portrait_number = 0
-    $ rebelPoints = 0  
+    $ badboyPoints = 0  
     $ prepPoints = 0 
     $ artistPoints = 0 
     $ tsunPoints = 0 
@@ -140,7 +140,7 @@ label start:
                 $ artistPoints += 1
                 $ prepPoints += 1
             "Go out to a raging party":
-                $ rebelPoints += 1
+                $ badboyPoints += 1
                 $ tsunPoints += 1
 
     roomie "Would you rather have"
@@ -149,14 +149,14 @@ label start:
             $ artistPoints += 1
             $ tsunPoints += 1
         "A large number of acquaintances":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             $ prepPoints += 1
 
     roomie "One a first date you would like to go to "
     menu:
         "To a movie theater":
             $ artistPoints += 1
-            $ rebelPoints += 1
+            $ badboyPoints += 1
         "On a picnic":
             $ prepPoints += 1
             $ tsunPoints += 1
@@ -269,7 +269,7 @@ label meet_badboy:
             dom "Whoa! Didn't expect that..."
             player_thinking "Eep. Was that too forward?"
         "W-what?":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             player "Er, sorry, I didn't mean to stare..."
             dom "Haha! I was just teasing."
 
@@ -314,8 +314,8 @@ label meet_badboy:
 label free_time_1:
     player_thinking "I have some free time... what should I do?"
 
-    call screen MapUI
-    ""
+    call screen MapUI(1)
+    
     return
 
 label library_1:
@@ -372,7 +372,7 @@ label tenniscourts_1:
             player_thinking "Dominic looks surprised. Guess he didn't expect me to go so hard."
             player_thinking "But I play to win!"
         "Not sweat it":
-            $ rebelPoints += 1
+            $ badboyPoints += 1
             player_thinking "I don't try too hard. I can see that Dominic clearly doesn't, either."
             player_thinking "We both goof off as we swing our rackets around with the mindset of 'If I don't hit the ball, I don't hit the ball. Big whoop.'"
             player_thinking "By the end of it, we're both laughing at each other."
@@ -438,18 +438,7 @@ label pumpkin_patch:
 label free_time_2:
     player_thinking "I have some free time... what should I do?"
 
-    # TODO: probably nicer way to do this using "call" instead of "jump",
-    # having two separate free_time labels is fine for now
-
-    menu:
-        "Library":
-            jump library_2
-        "School store":
-            jump schoolstore_2
-        "Tennis courts":
-            jump tenniscourts_2
-        "Dorms":
-            jump dorms_2
+    call screen MapUI(2)
 
     return
 
@@ -458,17 +447,17 @@ label library_2:
     jump route_determination
 
 label schoolstore_2:
-    "SCHOOL STORE: BADBOY IS THERE"
+    "SCHOOL STORE 2: BADBOY IS THERE"
 
     jump route_determination
 
 label tenniscourts_2:
-    "TENNIS COURTS: PREP IS THERE"
+    "TENNIS COURTS 2: PREP IS THERE"
 
     jump route_determination
 
 label dorms_2:
-    "DORMS: ARTIST IS THERE"
+    "DORMS 2: ARTIST IS THERE"
 
     jump route_determination
 
