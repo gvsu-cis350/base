@@ -129,9 +129,9 @@ label start:
 
     show roommate happy with dissolve
 
-    player "A personalitiy quiz?"
+    player "A personality quiz?"
 
-    "She hands you a piece of torn notebook paper with some questions written down on them"
+    "She hands you a piece of torn notebook paper with some questions written down on them."
 
     #start of quiz
     roomie "Would you rather"
@@ -152,7 +152,7 @@ label start:
             $ badboyPoints += 1
             $ prepPoints += 1
 
-    roomie "One a first date you would like to go to "
+    roomie "On a first date, you would prefer to go to... "
     menu:
         "To a movie theater":
             $ artistPoints += 1
