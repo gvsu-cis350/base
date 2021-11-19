@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Game {
     private ArrayList<Room> rooms = new ArrayList<Room>();
     
-    public void buildEscapeRoom(String filename){
+    public ArrayList<Room> buildEscapeRoom(String filename){
         try {
             Scanner sc = new Scanner(new File(filename));
             sc.useDelimiter(",");
@@ -39,7 +39,6 @@ public class Game {
                         break;
                     case 4:
                         String input = sc.next().toLowerCase();
-                        System.out.println(input);
                         if( input.equals( "true" ) ) {
                             isEnd = true;
                         } else {
@@ -71,8 +70,7 @@ public class Game {
                     roomIndex++;
                 }
 
-                if(index == 7)
-                {
+                if(index == 7) {
                     String[] availableRooms = sc.next().split(" ");
                     
                     for(Room r : rooms) {
@@ -84,6 +82,10 @@ public class Game {
                     }
                 }
 
+                if(index == 8) {
+                    //addkeys
+                }
+
                 index++;
                 if(index > 8) {
                     index = 1;
@@ -91,9 +93,10 @@ public class Game {
             }
 
             sc.close();
+            return rooms;
         } catch(Exception e) {
-            System.out.println(System.getProperty("user.dir"));
             System.out.println("CYMBRE THIS IS BAD");
+            return null;
         }
     }
 

@@ -95,7 +95,7 @@ public class Room {
         return rooms;
     }
 
-    public void addRoom(Room room) {
+     public void addRoom(Room room) {
         if (room == null)
             throw new IllegalArgumentException("addRoom in class Room: null input");
         rooms.add(room);
