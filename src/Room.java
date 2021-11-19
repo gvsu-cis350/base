@@ -22,13 +22,13 @@ public class Room {
 
         if (rooms != null) {
             for (Room room : rooms) {
-                addRoom(room);
+                this.addRoom(room);
             }
         }
 
         if (keys != null) {
             for (Key key : keys) {
-                addKey(key);
+                this.addKey(key);
             }
         }
     }
@@ -51,9 +51,6 @@ public class Room {
     }
 
     public void setScript(String script) {
-        if (script == null)
-            throw new IllegalArgumentException("setScript in class Room: null input");
-
         this.script = script;
     }
 
@@ -77,12 +74,9 @@ public class Room {
         return image;
     }
 
-    public void setImage(String path) {
-        //should it throw an exception for these? 
-        if (path == null)
-            throw new IllegalArgumentException("setImage in class Room: null input");
-        if (path.equals(""))
-            throw new IllegalArgumentException("setImage in class Room: empty string");
+    public String setImage(String path) {
+        if (path == null || path.equals(""))
+            return "image not found";
 
         String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
 
@@ -90,6 +84,7 @@ public class Room {
             throw new IllegalArgumentException("setImage in class Room: invalid file path");
 
         this.image = path;
+        return "";
     }
 
     public ArrayList<Room> getRooms() {
@@ -97,8 +92,9 @@ public class Room {
     }
 
     public void addRoom(Room room) {
-        if (room == null)
-            throw new IllegalArgumentException("addRoom in class Room: null input");
+         if (room == null)
+             throw new IllegalArgumentException("addRoom in class Room: null input");
+
         rooms.add(room);
     }
 
@@ -117,6 +113,7 @@ public class Room {
     public void addKey(Key key) {
         if (key == null)
             throw new IllegalArgumentException("addKey in class Room: null input");
+
         keys.add(key);
     }
 
@@ -126,16 +123,5 @@ public class Room {
         } catch (IndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException("delKey in class Room: index out of bounds");
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "name='" + name + '\'' +
-                ", script='" + script + '\'' +
-                ", isLocked=" + isLocked +
-                ", image=" + image +
-                ", listOfRooms=" + rooms +
-                '}';
     }
 }
