@@ -14,9 +14,6 @@ define victoria = Character("Victoria")
 define august = Character("August")
 define finley = Character("Finley")
 
-# Gallery code
-default galleryList = ["anime_street_art", "red_anime_character"]
-default Lightbox_image = ""
 
 # Pronoun data setup
 default subj_pron = ""
@@ -31,10 +28,10 @@ default skippedClass = "false"
 
 label start:
     $ portrait_number = 0
-    $ badboyPoints = 0  
-    $ prepPoints = 0 
-    $ artistPoints = 0 
-    $ tsunPoints = 0 
+    $ badboyPoints = 0
+    $ prepPoints = 0
+    $ artistPoints = 0
+    $ tsunPoints = 0
 
     scene dorm room
 
@@ -93,7 +90,7 @@ label start:
     roomie "Well, first things first, lets get you settled in!"
 
     hide roommate happy with dissolve
-    
+
     "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
 
     player_thinking "What do I look like?"
@@ -161,7 +158,7 @@ label start:
             $ prepPoints += 1
             $ tsunPoints += 1
 
-    player "What kind of blog did you find this on, again?" 
+    player "What kind of blog did you find this on, again?"
     roomie "No matter, thanks!"
     "She looks down at your answers and seems to be counting."
     player_thinking "What was that about?"
@@ -192,7 +189,7 @@ label start:
     #FIXME Change visual to the school
     "After classes"
     player_thinking "First day of school tends to be exciting, but generally uneventful."
-    player_thinking "It's been a long day, but there's one last thing I should do before I leave..." 
+    player_thinking "It's been a long day, but there's one last thing I should do before I leave..."
     jump choose_club
 
 label choose_club:
@@ -298,7 +295,7 @@ label meet_badboy:
     dom "Because I'm too cool for school, y'know."
 
     dom "Anyways, I gotta bounce. Got hooligan activities to attend to. Because I'm a hooligan."
-    
+
     player_thinking "He sounds like he's kidding, but somehow I can't tell."
 
     dom "I'm sure we'll bump into each other again. Later!"
@@ -308,14 +305,14 @@ label meet_badboy:
     player_thinking "Before I can even say goodbye, he starts sprinting past me like a madman."
 
     player_thinking "Those hooligan activities must be urgent..."
-    
+
     jump free_time_1
 
 label free_time_1:
     player_thinking "I have some free time... what should I do?"
 
     call screen MapUI(1)
-    
+
     return
 
 label library_1:
@@ -378,7 +375,7 @@ label tenniscourts_1:
             player_thinking "By the end of it, we're both laughing at each other."
 
     dom "Are the tennis courts everything you hoped for?"
-    
+
     player "Oh, yes. And so much more."
 
     dom "Heh. That was actually the first time I'd done anything besides loitering at this place. Was pretty fun."
