@@ -98,6 +98,10 @@ public class Room {
         rooms.add(room);
     }
 
+    public void setRooms( ArrayList<Room> rooms ) {
+        this.rooms = rooms;
+    }
+
     public void delRoom(int index) {
         try {
             rooms.remove(index);
