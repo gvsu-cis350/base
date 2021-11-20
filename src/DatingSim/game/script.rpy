@@ -214,7 +214,42 @@ label meet_artist:
     jump skip_class
 
 label meet_tsun:
-    "MEET TSUN"
+    #meet TSUN
+    scene school store   #is this the right scene for the store
+
+    player_thinking "None of the clubs sound right for me. I guess I should just go get some food."
+
+    player_thinking "Hey that person over there looks familiar I should go say hi."
+
+    show finley
+
+    finley "Hey what are you staring at?"
+
+    menu:
+        "I like your shirt.":
+            $ tsunPoints += 1
+            finley "Thanks for the compliment, not that I needed one. Oh you must be Jane’s roommate. Name’s Finley."
+            player_thinking "Are they blushing, and is that a soft smile on their face."
+
+        "I think you're friends with my roommate.":
+            finley "Oh you must be Jane’s roommate. Name’s Finley."
+
+    finley "So what are you doing here?"
+    player "I was hungry so I decide to go get some food."
+    finley "You should try the grilled cheese its very good."
+
+    menu:
+        "I love grilled cheese!":
+            finley "I know right it is just good, or whatever."
+            player_thinking "Their smile so bright."
+
+        "I was actually thinking some pizza.":
+            finley "Well pizza is good to."
+
+    finley "Well I should get going see you later not that I excited to run into you again."
+
+    hide finley
+
     jump skip_class
 
 label meet_prep:
@@ -403,7 +438,28 @@ label tenniscourts_1:
 
 label dorms_1:
     scene dorm room
-    "DORMS 1: TSUN IS THERE"
+    #"DORMS 1: TSUN IS THERE"
+    show finley
+    player_thinking "I want to go hangout in my dorm."
+
+    player_thinking "Is that Finley hanging out with roomie?"
+
+    finley "Hey [player_name], me and Jane were just trying  to plan a prank on Dominic want to join us not that we need you or anything."
+
+    menu:
+        "Sure sounds like fun!":
+            $ tsunPoints += 1
+            finley "Awesome I was think about something with spiders since Dominic is afraid of them."
+            player "What about a plastic spider that drops down when he opens the door."
+            finley "That is perfect! I need to go buy a plastic spider now see you later [player_name]!"
+            player_thinking "They are really blushing with such a bright smile. They must really like pranks."
+
+        "No thanks I am going to head to my room to relax.":
+            finley "That's fine have fun relaxing."
+            player_thinking "Is that a frown on their face?"
+
+    hide finley
+
     jump halloween_party
 
 label halloween_party:
@@ -443,7 +499,31 @@ label free_time_2:
     return
 
 label library_2:
-    "LIBRARY 2: TSUN IS THERE"
+    #"LIBRARY 2: TSUN IS THERE"
+
+    show finley
+
+    scene library  #is this the scene call for the library
+
+    player_thinking "Is that Finley at that table over there? I should go see what they are doing."
+
+    player "What are you doing here Finley?"
+
+    finley "Hey [player_name] I have this big test coming up so I need to really study."
+
+    menu:
+        "Do you want some help?":
+            $ tsunPoints += 1
+            finley "Really thanks for the help not that I couldn’t mange on my own."
+            player_thinking "Finley is blushing so much."
+            player_thinking "Finley and I spent the next 3 hours studying for their test."
+
+        "Well I will leave you alone to study.":
+            finley "Sure see you some other time."
+            player_thinking "Well I should get back to looking for some books."
+
+    hide finley
+
     jump route_determination
 
 label schoolstore_2:
@@ -499,7 +579,137 @@ label ARTIST_START:
 
 label TSUNDERE_START:
     # tsundere route
-    "TSUNDERE ROUTE START"
+    #"TSUNDERE ROUTE START"
+
+    #first event
+    scene outside campus 2  #is this the scene for campus
+
+    show finley
+
+    player_thinking "I think that's Finley over there."
+
+    finley "Hey [player_name] do you want to go thrift shopping with me, not that I want to hangout with. I just need someone to help me carry bags."
+
+    menu:
+        "Sure I would love to go thrift shopping!":
+            $ tsunPoints += 1
+            finley "Cool let's head over there now."
+
+            scene school store #this should be another store
+
+            show finley
+
+            player "So Finley why do you love thrift shopping?"
+
+            finley "Well I am the youngest of 8 kids so I always got my sibling hand me downs. After a while I grew to love to mismatch mess so now I go thrift shopping to what weird and wonderful things I might find."
+
+            player_thinking "Finley is reaching over to a shirt on the rack."
+
+            finley "This would look really good on you. You should go try it on."
+
+            player_thinking "I take the shirt from Finley and go put it on I come out to see Finley try to cover their blush."
+
+            finley "That really does look good on you."
+
+            player_thinking "We spent the rest of the afternoon shopping together."
+
+            finley "I had fun maybe your not so bad to hangout with."
+
+            player_thinking "I can see the smirk and blush on Finley’s face. They had more fun than they are saying."
+
+        "No thanks. I have other things I need to get done.":
+            finley "That's fine or whatever."
+
+            player_thinking "I can see the sad look on their face as they walk away."
+
+    hide finley
+
+
+    #second event
+
+    scene outside campus 2  #should be the campus
+
+    show finley
+
+    player_thinking "Finley is over there."
+
+    finley "Hey [player_name] do you want to come over to my dorm to watch some movies?"
+
+    player_thinking "If Finley had a tail it would be wagging right now."
+
+    player "Sure movies sounds like fun!"
+
+    finley "Awesome see you tonight not that I really wanted you to say yes."
+
+    scene dorm room
+
+    player_thinking "I should knock on Finley’s door."
+
+    show finley
+
+    finley "Hey [player_name] I am just finishing up with the popcorn if you want to go pick a movie."
+
+    menu:
+        "Choose the bad movie":
+            $ tsunPoints += 1
+            finley "That movie is bad it's amazing good choice!"
+            player_thinking "Finley face lit up like a christmas tree when I chose this movie and is that a blush on their cheeks. Finley picks up the movie to put it in the DVD player."
+
+        "Choose the good movie":
+           finley "That's a cool choice."
+           player_thinking "Is Finley sad that I didn't choose the bad moive?"
+
+    player_thinking "We spent the night watching movies together."
+
+    hide finley
+
+    scene outside campus 2 #should be the college campus
+
+    finley "Is that Finley walking over to me?"
+
+    show finley
+
+    finley "Hey [player_name], I was wondering if you want to come over and cook with me tonight?"
+
+    menu:
+        "No thanks, I want to chill in my dorm.":
+            finley "Well whatever so you later."
+
+            player_thinking "Finley seems really sad that I said no."
+
+        "Sure cooking with you sounds like a lot of fun!":
+            finley "Well see you tonight!"
+
+            player_thinking "Did Finley ask me to hangout without hiding their feelings, or their blush?"
+
+            player_thinking "No must of been my imagination."
+
+            scene dorm room
+
+            player_thinking "I am here at Finley’s dorm I am going to knock."
+
+            show finley
+
+            finley "Hey come on in I was just setting everything up. We are making grilled cheese."
+
+            player "Finley do you like to cook?"
+
+            finley "When I was young my mom taught me how to cook. She would make me grilled cheese every time I was sick. So now when I am homesick I use her grilled cheese recipe."
+
+            player_thinking "Finley helped me cook some delicious looking grilled cheese we sat down to dig into them."
+
+            finley "[player_name] thanks for hanging out me I really like your company."
+
+            player_thinking "Finley just told me they like to hangout with me and no mean comment. They are even blushing with the softest smile. I can’t believe what is happening!"
+
+            player "Thank you for inviting me Finley. I like hanging out with you too."
+
+    hide finley
+
+    scene dorm room
+
+    player_thinking "Its time for the New Year's Dance."
+
     return
 
 label FINAL_PARTY:
