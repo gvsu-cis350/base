@@ -2,21 +2,22 @@ import java.util.regex.Pattern;
 import java.util.*;
 
 public class Room {
-
     private String name;
     private String script;
     private boolean isLocked;
     private boolean isEnd;
     private String image;
+    private String code;
     private ArrayList<Room> rooms;
     private ArrayList<Key> keys;
 
-    public Room(String name, String script, boolean isLocked, boolean isEnd, String image, ArrayList<Room> rooms, ArrayList<Key> keys) {
+    public Room(String name, String script, boolean isLocked, boolean isEnd, String image, String code, ArrayList<Room> rooms, ArrayList<Key> keys) {
         this.setName(name);
         this.setScript(script);
         this.setIsLocked(isLocked);
         this.setIsEnd(isEnd);
         this.setImage(image);
+        this.setCode(code);
         this.rooms = new ArrayList<Room>();
         this.keys = new ArrayList<Key>();
 
@@ -84,7 +85,18 @@ public class Room {
             throw new IllegalArgumentException("setImage in class Room: invalid file path");
 
         this.image = path;
-        return "";
+        return null;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        if (code != null && code.equals(""))
+            this.code = null;
+        else
+            this.code = code;
     }
 
     public ArrayList<Room> getRooms() {
