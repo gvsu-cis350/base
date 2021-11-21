@@ -1,5 +1,6 @@
 ﻿# The script of the game goes in this file.
 
+
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
@@ -170,7 +171,7 @@ label start:
     roomie "some haven't but really should.They're really nice! I'm sure you'd like them."
     roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on"
     roomie "AND he is a serious hottie"
-    roomie "Victoria is..." #FIXME
+    roomie "Victoria is an honest person. She can be blunt, but she's also the most sincere person I've met."
     roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
     roomie "They have the softest heart."
     roomie "And then there's..." #FIXME
@@ -215,7 +216,93 @@ label meet_tsun:
     jump skip_class
 
 label meet_prep:
-    "MEET PREP"
+
+    player_thinking "I guess there’s a debate team recruiting event going on today. I could probably improve my argumentation skills…"
+
+    player_thinking "I guess I'll give it a try."
+
+    scene debate room
+
+    player_thinking "The room I enter is filled to the brim with other students."
+
+    player_thinking "I walk up to a table filled with debate team keychains, pens, and pamphlets."
+
+    player_thinking "A student is standing next to the table, scribbling something on a clipboard. "
+
+    player_thinking "Her hair is a deep brown, and her eyes are grey. "
+
+    player_thinking "She’s wearing a beige sweater with black slacks, a pretty bland outfit overall."
+
+    player_thinking "But despite that, something about her is sort of intimidating..."
+
+    player_thinking "She notices me after a few seconds and steps towards me."
+
+    show prep
+
+    victoria "So you think you might be good enough to join the debate team, huh?"
+
+    victoria "It’s not going to be up to me, but I can tell you right now that it’s not easy."
+
+    victoria "I’m Victoria, by the way. I’ve seen you around before. "
+
+    victoria "You’re Jane’s roommate, [player_name]."
+
+    player "Yep, that's me."
+
+    player_thinking "She smirks and looks down at her clipboard again."
+
+    victoria "So, you still want to sign up?"
+
+    menu:
+        "Heck yeah!":
+            $ prepPoints += 1
+
+            player "Yeah, I could hold my own in a debate!"
+
+            victoria "Wow, you seem really confident. I hope that means you're actually good."
+
+            victoria "Good luck! I'll see you around."
+
+            player "Thanks!"
+
+            player_thinking "She turns around and walks towards another student."
+
+            player_thinking "She seems hard to please, and a bit bland (at least fashion-wise), but maybe there's more to her."
+
+            player_thinking "And now I have to try out... let's see how this goes."
+
+            scene dorm room
+
+            player_thinking "I crushed it! I get to be on the debate team!"
+
+            player_thinking "I wonder what Victoria has to do with the team... she must be pretty high-up in the ranks."
+
+        "I'm not sure...":
+            player "I don't know... I guess I'll give it a shot..."
+
+            victoria "You won't make it with that attitude. Maybe a less competitive club would suit you better?"
+
+            player "Um... I'm sorry?"
+
+            victoria "*groan*"
+
+            victoria "Whatever. Later."
+
+            hide prep
+
+            player_thinking "She turns around and walks towards another student."
+
+            player_thinking "Since I'm here, I'll try out anyways."
+
+            player_thinking "I doubt I'll make it, though."
+
+            scene dorm room
+
+            player_thinking "Somehow, I got in. I think I did well enough."
+
+            player_thinking "Victoria doesn't seem to like me, though."
+
+            player_thinking "Maybe I'll have another chance to prove myself."
 
     jump skip_class
 
