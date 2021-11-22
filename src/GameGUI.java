@@ -39,6 +39,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private String mapFile = "D:\\CodingTests\\GUITests\\src\\pics\\map.png";
     private String imageFile = "D:\\CodingTests\\GUITests\\src\\pics\\image.png";
+    private String saveLoadFile;
     private String escapeFile = null;
 
     private String[] keys = {"key1", "key2", "key3", "key4"};
@@ -46,7 +47,10 @@ public class GameGUI extends JFrame implements ActionListener {
     private Color backgroundColor = new Color(0xCB4335);
     private Color textColor = new Color(0xFFFFFF);
 
+    final JFileChooser fileLoader = new JFileChooser();
+
     private Game escapeGame = new Game();
+    private EscapeRoom escapeRoom;
 
     public GameGUI(){
         mainPanel = new JPanel();
@@ -69,7 +73,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     public GameGUI(String filename) {
         try{
-        escapeGame.buildEscapeRoom(filename);
+        escapeRoom = escapeGame.buildEscapeRoom(filename);
         }catch(Exception e){
             new GameGUI();
             this.dispose();
@@ -152,10 +156,22 @@ public class GameGUI extends JFrame implements ActionListener {
             this.dispose();
         }
         if (comp == saveProgress) {
-            //call the save function in escapeRoom
+            int returnVal = fileLoader.showOpenDialog(GameGUI.this);
+
+            if(returnVal == JFileChooser.APPROVE_OPTION){
+                File file = fileLoader.getSelectedFile();
+                saveLoadFile = file.getAbsolutePath();
+                escapeRoom.saveProgress(saveLoadFile);
+            }
         }
         if (comp == loadProgress) {
-            //call the load function in escapeRoom
+            int returnVal = fileLoader.showOpenDialog(GameGUI.this);
+
+            if(returnVal == JFileChooser.APPROVE_OPTION){
+                File file = fileLoader.getSelectedFile();
+                saveLoadFile = file.getAbsolutePath();
+                escapeRoom.loadProgress(saveLoadFile);
+            }
         }
         if (comp == command){
             JOptionPane.showMessageDialog(null, "You entered a command");
