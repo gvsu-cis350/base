@@ -1,0 +1,4 @@
+Bathroom,This is a description of the bathroom,false,false,image.png,Library Bedroom Kitchen,null,
+Library,This is where they keep all of the books,true,false,library.png,Bathroom,null,
+Kitchen,This is where they do all of the cooking,false,false,kitchen.png,Bathroom Bedroom,null,
+Bedroom,This is where the person sleeps,true,true,bedroom.png,Bathroom,null,

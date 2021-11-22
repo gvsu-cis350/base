@@ -20,7 +20,16 @@ public class Key {
     }
 
     public void setName(String name){
+        if (name == null)
+            throw new IllegalArgumentException("setName in class Key: null input");
+        if (name.equals(""))
+            throw new IllegalArgumentException("setName in class Key: empty string");
+
         this.name = name;
+    }
+
+    public ArrayList<Room> getUnlocks() {
+        return keyUnlocks;
     }
 
     public void addRoomToUnlock(Room room){
@@ -36,9 +45,4 @@ public class Key {
             throw new IndexOutOfBoundsException("delRoomToUnlock in class Key: index out of bounds");
         }
     }
-
-    public ArrayList<Room> getUnlocks() {
-        return keyUnlocks;
-    }
-
 }

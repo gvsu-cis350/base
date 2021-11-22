@@ -2,33 +2,34 @@ import java.util.regex.Pattern;
 import java.util.*;
 
 public class Room {
-
     private String name;
     private String script;
     private boolean isLocked;
     private boolean isEnd;
     private String image;
+    private String code;
     private ArrayList<Room> rooms;
     private ArrayList<Key> keys;
 
-    public Room(String name, String script, boolean isLocked, boolean isEnd, String image, ArrayList<Room> rooms, ArrayList<Key> keys) {
+    public Room(String name, String script, boolean isLocked, boolean isEnd, String image, String code, ArrayList<Room> rooms, ArrayList<Key> keys) {
         this.setName(name);
         this.setScript(script);
         this.setIsLocked(isLocked);
         this.setIsEnd(isEnd);
         this.setImage(image);
+        this.setCode(code);
         this.rooms = new ArrayList<Room>();
         this.keys = new ArrayList<Key>();
 
         if (rooms != null) {
             for (Room room : rooms) {
-                addRoom(room);
+                this.addRoom(room);
             }
         }
 
         if (keys != null) {
             for (Key key : keys) {
-                addKey(key);
+                this.addKey(key);
             }
         }
     }
@@ -51,9 +52,6 @@ public class Room {
     }
 
     public void setScript(String script) {
-        if (script == null)
-            throw new IllegalArgumentException("setScript in class Room: null input");
-
         this.script = script;
     }
 
@@ -77,18 +75,28 @@ public class Room {
         return image;
     }
 
-    public void setImage(String path) {
-        if (path == null)
-            throw new IllegalArgumentException("addImage in class Room: null input");
-        if (path.equals(""))
-            throw new IllegalArgumentException("addImage in class Room: empty string");
+    public String setImage(String path) {
+        if (path == null || path.equals(""))
+            return "image not found";
 
-        String regex = "([\\w]:)?((/[\\w\\s-.]+)|(/\"[\\w\\s-.]+\"))+.png";
+        String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
 
         if (!Pattern.matches(regex, path))
-            throw new IllegalArgumentException("addImage in class Room: invalid file path");
+            throw new IllegalArgumentException("setImage in class Room: invalid file path");
 
         this.image = path;
+        return null;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        if (code != null && code.equals(""))
+            this.code = null;
+        else
+            this.code = code;
     }
 
     public ArrayList<Room> getRooms() {
@@ -96,9 +104,14 @@ public class Room {
     }
 
     public void addRoom(Room room) {
-        if (room == null)
-            throw new IllegalArgumentException("addRoom in class Room: null input");
+         if (room == null)
+             throw new IllegalArgumentException("addRoom in class Room: null input");
+
         rooms.add(room);
+    }
+
+    public void setRooms( ArrayList<Room> rooms ) {
+        this.rooms = rooms;
     }
 
     public void delRoom(int index) {
@@ -116,6 +129,7 @@ public class Room {
     public void addKey(Key key) {
         if (key == null)
             throw new IllegalArgumentException("addKey in class Room: null input");
+
         keys.add(key);
     }
 
@@ -125,16 +139,5 @@ public class Room {
         } catch (IndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException("delKey in class Room: index out of bounds");
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "name='" + name + '\'' +
-                ", script='" + script + '\'' +
-                ", isLocked=" + isLocked +
-                ", image=" + image +
-                ", listOfRooms=" + rooms +
-                '}';
     }
 }

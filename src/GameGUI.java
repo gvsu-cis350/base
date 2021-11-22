@@ -31,6 +31,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private JButton saveProgress;
     private JButton loadProgress;
+    private JButton options;
     private JButton mainMenu;
 
     private BufferedImage mapPicture;
@@ -38,6 +39,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private String mapFile = "D:\\CodingTests\\GUITests\\src\\pics\\map.png";
     private String imageFile = "D:\\CodingTests\\GUITests\\src\\pics\\image.png";
+    private String saveLoadFile;
     private String escapeFile = null;
 
     private String[] keys = {"key1", "key2", "key3", "key4"};
@@ -45,11 +47,37 @@ public class GameGUI extends JFrame implements ActionListener {
     private Color backgroundColor = new Color(0xCB4335);
     private Color textColor = new Color(0xFFFFFF);
 
-    private Game escapeGame = new Game();
+    final JFileChooser fileLoader = new JFileChooser();
 
+    private Game escapeGame = new Game();
+    private EscapeRoom escapeRoom;
+
+    public GameGUI(){
+        mainPanel = new JPanel();
+        helpInfo = new JTextArea("It looks like an escape room isn't properly loaded.  Please go to options to load one", 1, 50);
+        options = new JButton("Options");
+        mainMenu = new JButton("Main Menu");
+
+        mainMenu.addActionListener(this);
+        options.addActionListener(this);
+
+        mainPanel.add(helpInfo);
+        mainPanel.add(options);
+        mainPanel.add(mainMenu);
+
+        add(mainPanel);
+
+        setVisible(true);
+        setSize(750,750);
+    }
 
     public GameGUI(String filename) {
-        escapeGame.buildEscapeRoom(filename);
+        try{
+        escapeRoom = escapeGame.buildEscapeRoom(filename);
+        }catch(Exception e){
+            new GameGUI();
+            this.dispose();
+        }
 
         mainPanel = new JPanel();
         terminal = new JPanel();
@@ -121,22 +149,6 @@ public class GameGUI extends JFrame implements ActionListener {
         setSize(750, 750);
     }
 
-    public GameGUI(){
-        mainPanel = new JPanel();
-        helpInfo = new JTextArea("It looks like an escape room isn't loaded.  Please go to options to load one", 1, 50);
-        mainMenu = new JButton("Main Menu");
-
-        mainMenu.addActionListener(this);
-
-        mainPanel.add(helpInfo);
-        mainPanel.add(mainMenu);
-
-        add(mainPanel);
-
-        setVisible(true);
-        setSize(750,750);
-    }
-
     public void actionPerformed(ActionEvent e) {
         Object comp = e.getSource();
         if (comp == mainMenu) {
@@ -144,13 +156,29 @@ public class GameGUI extends JFrame implements ActionListener {
             this.dispose();
         }
         if (comp == saveProgress) {
-            //call the save function in escapeRoom
+            int returnVal = fileLoader.showOpenDialog(GameGUI.this);
+
+            if(returnVal == JFileChooser.APPROVE_OPTION){
+                File file = fileLoader.getSelectedFile();
+                saveLoadFile = file.getAbsolutePath();
+                escapeRoom.saveProgress(saveLoadFile);
+            }
         }
         if (comp == loadProgress) {
-            //call the load function in escapeRoom
+            int returnVal = fileLoader.showOpenDialog(GameGUI.this);
+
+            if(returnVal == JFileChooser.APPROVE_OPTION){
+                File file = fileLoader.getSelectedFile();
+                saveLoadFile = file.getAbsolutePath();
+                escapeRoom.loadProgress(saveLoadFile);
+            }
         }
         if (comp == command){
             JOptionPane.showMessageDialog(null, "You entered a command");
+        }
+        if (comp == options){
+            new OptionsGUI();
+            this.dispose();
         }
     }
 }
