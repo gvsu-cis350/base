@@ -11,7 +11,17 @@ public class Room {
     private ArrayList<Room> rooms;
     private ArrayList<Key> keys;
 
-    public Room(String name, String script, boolean reqKey, boolean isEnd, String image, String code, ArrayList<Room> rooms, ArrayList<Key> keys) {
+    public Room() {
+        name = "";
+        script = "";
+        isEnd = false;
+        image = "";
+        code = "";
+        name = null;
+        name = null;
+    }
+    
+    public Room(String name, String script, boolean isEnd, String image, String code, ArrayList<Room> rooms, ArrayList<Key> keys) {
         this.setName(name);
         this.setScript(script);
         this.setReqKey(reqKey);
