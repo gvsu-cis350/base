@@ -22,7 +22,7 @@ public class TestRoom {
 
         assertEquals("room", room.getName());
         assertEquals("room", room.getScript());
-        assertTrue(room.getIsLocked());
+        assertTrue(room.getReqKey());
         assertFalse(room.getIsEnd());
         assertEquals("/image.png", room.getImage());
         assertEquals("12345", room1.getCode());
@@ -84,15 +84,15 @@ public class TestRoom {
     public void test_getIsLocked() {
         Room room = new Room("room", "room", false, false, null, null, null, null);
 
-        assertFalse(room.getIsLocked());
+        assertFalse(room.getReqKey());
     }
 
     @Test
     public void test_setIsLocked() {
         Room room = new Room("room", "room", false, false, null, null, null, null);
-        room.setIsLocked(true);
+        room.setReqKey(true);
 
-        assertTrue(room.getIsLocked());
+        assertTrue(room.getReqKey());
     }
 
     @Test

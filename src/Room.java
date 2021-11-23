@@ -4,17 +4,17 @@ import java.util.*;
 public class Room {
     private String name;
     private String script;
-    private boolean isLocked;
+    private boolean reqKey;
     private boolean isEnd;
     private String image;
     private String code;
     private ArrayList<Room> rooms;
     private ArrayList<Key> keys;
 
-    public Room(String name, String script, boolean isLocked, boolean isEnd, String image, String code, ArrayList<Room> rooms, ArrayList<Key> keys) {
+    public Room(String name, String script, boolean reqKey, boolean isEnd, String image, String code, ArrayList<Room> rooms, ArrayList<Key> keys) {
         this.setName(name);
         this.setScript(script);
-        this.setIsLocked(isLocked);
+        this.setReqKey(reqKey);
         this.setIsEnd(isEnd);
         this.setImage(image);
         this.setCode(code);
@@ -55,12 +55,12 @@ public class Room {
         this.script = script;
     }
 
-    public boolean getIsLocked() {
-        return isLocked;
+    public boolean getReqKey() {
+        return reqKey;
     }
 
-    public void setIsLocked(boolean isLocked) {
-        this.isLocked = isLocked;
+    public void setReqKey(boolean isLocked) {
+        this.reqKey = isLocked;
     }
 
     public boolean getIsEnd() {
@@ -104,8 +104,8 @@ public class Room {
     }
 
     public void addRoom(Room room) {
-         if (room == null)
-             throw new IllegalArgumentException("addRoom in class Room: null input");
+        if (room == null)
+            throw new IllegalArgumentException("addRoom in class Room: null input");
 
         rooms.add(room);
     }

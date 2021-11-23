@@ -13,7 +13,7 @@ public class EscapeRoom {
         this.setPlayer(player);
         this.map = new ArrayList<Room>();
         this.map = map;
-        
+
         if (map != null && player != null)
             this.player.setCurrentPosition(map.get(0));
     }
@@ -48,7 +48,7 @@ public class EscapeRoom {
     }
 
     public boolean saveProgress(String filename){
-        if (filename == null) 
+        if (filename == null)
             throw new IllegalArgumentException("saveProgress in class EscapeRoom: null filename");
         if (filename.equals(""))
             throw new IllegalArgumentException("saveProgress in class EscapeRoom: empty string");
@@ -63,7 +63,7 @@ public class EscapeRoom {
                 out.println(note);
             }
 
-            out.println("inventory:\n");
+            out.println("\ninventory:");
             for (Key key : player.getInventory()) {
                 out.print(key.getName() + ": ");
                 for (Room room : key.getUnlocks()) {
@@ -74,7 +74,7 @@ public class EscapeRoom {
                 }
             }
 
-            out.print("currentPosition: " + player.getCurrentPosition().getName());
+            out.print("\ncurrentPosition: " + player.getCurrentPosition().getName());
 
             out.close();
             return true;
@@ -86,14 +86,14 @@ public class EscapeRoom {
     public void loadProgress(String filename){
         try {
             Scanner scanner = new Scanner(new File(filename));
-            
+
             while (!scanner.nextLine().equals("inventory:")) {
                 this.player.addNote(scanner.nextLine());
             }
             // while (!scanner.nextLine().equals("currentPosition:")) {
             //     this.player.addToInventory();
             // }
-             
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException("loadProgress in class EscapeRoom: file not found");
         }
@@ -101,7 +101,7 @@ public class EscapeRoom {
 
     private Room searchMap(String roomName) {
         for (Room room : map) {
-            if (room.getName().toUpperCase().equals(roomName.toUpperCase())) {
+            if (room.getName().equalsIgnoreCase(roomName)) {
                 return room;
             }
         }
@@ -109,22 +109,50 @@ public class EscapeRoom {
     }
 
     public String moveRoom(String roomName) {
-        for (Room r : player.getCurrentPosition().getRooms()) {
-            if (roomName.toUpperCase().equals(r.getName().toUpperCase())) {
-                if (r.getIsLocked()) {
-                    for (Key k : player.getInventory()) {
-                        if (k.getUnlocks().contains(r)) {
-                            player.setCurrentPosition(r);
+        Room room = this.searchMap(roomName);
+
+        if (room != null) {
+            if (room.getCode() == null && room.getReqKey()) {
+                for (Key key : player.getInventory()) {
+                    if (key.getUnlocks().contains(room)) {
+                        player.setCurrentPosition(room);
+                        return null;
+                    }
+                }
+                return room.getName() + " requires a key to enter.";
+            }
+            if (room.getCode() != null && !room.getReqKey()) {
+                return room.getName() + " requires a code to enter.";
+            }
+            if (room.getCode() != null && room.getReqKey()) {
+                return room.getName() + " requires a key and a code to enter.";
+            }
+            player.setCurrentPosition(room);
+            return null;
+        }
+        return roomName + " is not a valid name!";
+    }
+
+    public String unlock(String roomName, String code) {
+        Room room = this.searchMap(roomName);
+
+        if (room != null) {
+            if (code.equals(room.getCode())) {
+                if (room.getReqKey()) {
+                    for (Key key : player.getInventory()) {
+                        if (key.getUnlocks().contains(room)) {
+                            player.setCurrentPosition(room);
                             return null;
                         }
                     }
-                    return r.getName() + " is locked!";
+                    return room.getName() + " also requires a key!";
                 }
-                player.setCurrentPosition(r);
+                player.setCurrentPosition(room);
                 return null;
             }
+            return code + " is incorrect!";
         }
-        return roomName + " is not a valid name!";
+        return null;
     }
 
     public String inspectRoom() {
