@@ -217,6 +217,8 @@ label meet_tsun:
 
 label meet_prep:
 
+    $ meetprep = "true"
+
     player_thinking "I guess there’s a debate team recruiting event going on today. I could probably improve my argumentation skills…"
 
     player_thinking "I guess I'll give it a try."
@@ -403,8 +405,93 @@ label free_time_1:
     return
 
 label library_1:
+    player_thinking "I'll go to the library. Maybe I can get some homework done."
+
     scene library
-    "LIBRARY 1: PREP IS THERE"
+
+    player_thinking "I walk into the library, and look around for a good spot to study."
+
+    player_thinking "However, I notice Victoria sitting in a dark corner of the library at a desk."
+
+    player_thinking "She has earphones in and looks really focused, with multiple textbooks, papers, and a laptop scattered about her desk."
+
+    player_thinking "I probably shouldn't bother her... but seeing the look on her face if I startle her might be worth it."
+
+    menu:
+        "No scaring today. Go in front of her and wave.":
+            $ prepPoints += 1
+            player_thinking "Nah, I don't fee like messing with her. It's probably not a good idea anyways."
+
+            player_thinking "I walk closer to her desk and give a little wave. She surprisingly looks up at me, smiles, and takes out her earphones."
+
+            show prep
+
+            victoria "Hey, [player_name]! Long time no see!"
+
+            player "Hi, Victoria! You look like you're hard at work. I don't mean to bother you. I'm here to study, myself."
+
+            player_thinking "Her face lights up at this. I haven't seen her this happy to see me before."
+
+            victoria "Oh, it's no problem! I'm studying for my public policy test. Have I ever told you that I'm majoring in political science?"
+
+            player_thinking "She pats the chair next to her. I have a seat and set my backpack down."
+
+            player "I don't think you have. I have some homework to do, do you mind if I do it here?"
+
+            victoria "Not at all!"
+
+            player_thinking "For a couple hours, we sit together and study our respective materials, occasionally exchanging small-talk and glancing over at one another. A few of her glances linger."
+
+            victoria "Sigh."
+
+            victoria "Alright, I think I'm done for the day. I'm going back to my dorm, I have plans with my roommate tonight."
+
+            victoria "It was fun studying with you, let's do it again sometime!"
+
+            player "Yeah, let's!"
+
+            hide prep
+
+            player_thinking "I watch her walk away. I'm starting to think that we could becom friends! Or possibly more..."
+        "Go behind her and scare her!":
+            player_thinking "Yeah, why not? This will be hilarious!"
+
+            player_thinking "She hasn't noticed me yet, so I sneak around the edge of the room until I'm behind her, and slowly approach."
+
+            player "BOO!"
+
+            player_thinking "I grab her shoulders."
+
+            show prep
+
+            victoria "Aaaah!"
+
+            player_thinking "She screams and shoots out of her seat, nearly knocking over her desk."
+
+            player_thinking "She immediately turns around."
+
+            victoria "What the heck, [player_name]? What was that for!?!"
+
+            player "I just thought it would be funny..."
+
+            victoria "Well, you were dead wrong, buddy. No one's laughing at your stupid prank."
+
+            victoria "Just go away."
+
+            player_thinking "I notice she's rubbing her knee. She must've slammed it into the desk when she stood up."
+
+            player_thinking "Oops."
+
+            player_thinking "She huffs, turns away, and sits back down, not giving me any time to respond."
+
+            hide prep
+
+            player_thinking "I should probably go. I shouldn't have done that... that was mean."
+
+            player_thinking "As I walk out of the library, I notice everyone is staring at me. I really messed up."
+
+            player_thinking "I'll do my homework in my dorm room."
+
     jump halloween_party
 
 label schoolstore_1:
