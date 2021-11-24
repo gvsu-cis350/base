@@ -249,11 +249,18 @@ public class TestEscapeRoom {
         EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), map);
 
         assertEquals("This is the upstairs", escapeRoom.inspectRoom());
+
         escapeRoom.moveRoom("bedroom");
         assertEquals("You found the following keys:\nunlocks bathroom\nThis is the bedroom", escapeRoom.inspectRoom());
         assertEquals("unlocks bathroom", escapeRoom.getPlayer().getInventory().get(0).getName());
+
         escapeRoom.moveRoom("bathroom");
         assertEquals("This is the bathroom", escapeRoom.inspectRoom());
+
+        escapeRoom.moveRoom("bedroom");
+        escapeRoom.inspectRoom();
+        assertEquals(1, escapeRoom.getPlayer().getInventory().size());
+
         escapeRoom.getPlayer().setCurrentPosition(null);
         assertEquals(null, escapeRoom.inspectRoom());
     }

@@ -164,8 +164,10 @@ public class EscapeRoom {
         if (player.getCurrentPosition().getKeys().size() > 0) {
             output += "You found the following keys:\n";
             for (Key k : player.getCurrentPosition().getKeys()) {
-                player.addToInventory(k);
-                output += k.getName() + "\n";
+                if (!player.getInventory().contains(k)) {
+                    player.addToInventory(k);
+                    output += k.getName() + "\n";
+                }
             }
         }
 
