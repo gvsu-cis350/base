@@ -320,9 +320,11 @@ public class TestEscapeRoom {
 
         assertEquals("This is the upstairs", escapeRoom.inspectRoom());
 
+        assertEquals(1, bedroom.getKeys().size());
         escapeRoom.moveRoom("bedroom");
         assertEquals("You found the following keys:\nunlocks bathroom\nThis is the bedroom", escapeRoom.inspectRoom());
         assertEquals("unlocks bathroom", escapeRoom.getPlayer().getInventory().get(0).getName());
+        assertEquals(0, bedroom.getKeys().size());
 
         escapeRoom.moveRoom("bathroom");
         assertEquals("This is the bathroom", escapeRoom.inspectRoom());

@@ -217,16 +217,22 @@ public class EscapeRoom {
             return null;
 
         String output = "";
+        ArrayList<Key> keysToDelete = new ArrayList<>();
 
         if (player.getCurrentPosition().getKeys().size() > 0) {
             output += "You found the following keys:\n";
             for (Key k : player.getCurrentPosition().getKeys()) {
                 if (this.searchKeys(k.getName()) == null) {
                     player.addToInventory(k);
+                    keysToDelete.add(k);
                     output += k.getName() + "\n";
-                }
+                } else 
+                    keysToDelete.add(k);
             }
         }
+
+        for (Key k : keysToDelete)
+            player.getCurrentPosition().delKey(k);
 
         return output += player.getCurrentPosition().getScript();
     }
