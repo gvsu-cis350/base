@@ -20,10 +20,12 @@ public class TestEscapeRoom {
         rooms.add(room3);
         rooms.add(room4);
         Player player = new Player(null, null, null);
-        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", player, null, rooms);
+        String image = "c:/this-is-an-image.png";
+        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", player, image, rooms);
 
         assertEquals("escapeRoom", escapeRoom.getName());
         assertEquals(player, escapeRoom.getPlayer());
+        assertEquals("c:/this-is-an-image.png", escapeRoom.getImage());
         assertEquals(room1, escapeRoom.getMap().get(0));
         assertEquals(room2, escapeRoom.getMap().get(1));
         assertEquals(room3, escapeRoom.getMap().get(2));
@@ -163,25 +165,42 @@ public class TestEscapeRoom {
     }
 
     @Test
-    public void test_saveProgress() {
+    public void test_saveLoadProgress() {
+
+        ArrayList<Room> map = new ArrayList<>();
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
+        Room room4 = new Room("room4", "room4", false, false, null, null, null, null);
+        Room room5 = new Room("room5", "room5", false, false, null, null, null, null);
+        Room room6 = new Room("room6", "room6", false, false, null, null, null, null);
+        Room room7 = new Room("room7", "room7", false, false, null, null, null, null);
+        map.add(room1);
+        map.add(room2);
+        map.add(room3);
+        map.add(room4);
+        map.add(room5);
+        map.add(room6);
+        map.add(room7);
+
         ArrayList<String> notes = new ArrayList<>();
         notes.add("first note");
         notes.add("second note");
         notes.add("third note");
 
         ArrayList<Room> key1Unlocks = new ArrayList<>();
-        key1Unlocks.add(new Room("room1", "room1", false, false, null, null, null, null));
-        key1Unlocks.add(new Room("room2", "room2", false, false, null, null, null, null));
+        key1Unlocks.add(room1);
+        key1Unlocks.add(room2);
         Key key1 = new Key("key1", key1Unlocks);
 
         ArrayList<Room> key2Unlocks = new ArrayList<>();
-        key2Unlocks.add(new Room("room3", "room3", false, false, null, null, null, null));
-        key2Unlocks.add(new Room("room4", "room4", false, false, null, null, null, null));
+        key2Unlocks.add(room3);
+        key2Unlocks.add(room4);
         Key key2 = new Key("key2", key2Unlocks);
 
         ArrayList<Room> key3Unlocks = new ArrayList<>();
-        key3Unlocks.add(new Room("room5", "room5", false, false, null, null, null, null));
-        key3Unlocks.add(new Room("room6", "room6", false, false, null, null, null, null));
+        key3Unlocks.add(room5);
+        key3Unlocks.add(room6);
         Key key3 = new Key("key3", key3Unlocks);
 
         ArrayList<Key> inventory = new ArrayList<>();
@@ -189,28 +208,32 @@ public class TestEscapeRoom {
         inventory.add(key2);
         inventory.add(key3);
 
-        Room room7 = new Room("room7", "room7", false, false, null, null, null, null);
-
         Player player = new Player(notes, inventory, room7);
 
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, null);
-
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-            escapeRoom.saveProgress(null);
-        });
-        assertEquals("saveProgress in class EscapeRoom: null filename", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            escapeRoom.saveProgress("");
-        });
-        assertEquals("saveProgress in class EscapeRoom: empty string", exception.getMessage());
+        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, map);
 
         escapeRoom.saveProgress("progress");
-    }
 
-    @Test
-    public void test_loadProgress() {
-        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", null, null, null);
+        escapeRoom.setPlayer(new Player(null, null, null));
+
+        escapeRoom.loadProgress("progress");
+
+        assertEquals("first note", escapeRoom.getPlayer().getNotes().get(0));
+        assertEquals("second note", escapeRoom.getPlayer().getNotes().get(1));
+        assertEquals("third note", escapeRoom.getPlayer().getNotes().get(2));
+
+        assertEquals("key1", escapeRoom.getPlayer().getInventory().get(0).getName());
+        assertEquals(room1, escapeRoom.getPlayer().getInventory().get(0).getUnlocks().get(0));
+        assertEquals(room2, escapeRoom.getPlayer().getInventory().get(0).getUnlocks().get(1));
+
+        assertEquals("key2", escapeRoom.getPlayer().getInventory().get(1).getName());
+        assertEquals(room4, escapeRoom.getPlayer().getInventory().get(1).getUnlocks().get(1));
+
+        assertEquals("key3", escapeRoom.getPlayer().getInventory().get(2).getName());
+        assertEquals(room5, escapeRoom.getPlayer().getInventory().get(2).getUnlocks().get(0));
+        assertEquals(room6, escapeRoom.getPlayer().getInventory().get(2).getUnlocks().get(1));
+
+        assertEquals(room7, escapeRoom.getPlayer().getCurrentPosition());
     }
 
     @Test
