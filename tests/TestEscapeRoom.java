@@ -20,7 +20,7 @@ public class TestEscapeRoom {
         rooms.add(room3);
         rooms.add(room4);
         Player player = new Player(null, null, null);
-        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", player, rooms);
+        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", player, null, rooms);
 
         assertEquals("escapeRoom", escapeRoom.getName());
         assertEquals(player, escapeRoom.getPlayer());
@@ -33,14 +33,14 @@ public class TestEscapeRoom {
 
     @Test
     public void test_getName() {
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom yay!!", null, null);
+        EscapeRoom escapeRoom = new EscapeRoom("escaperoom yay!!", null, null, null);
 
         assertEquals("escaperoom yay!!", escapeRoom.getName());
     }
 
    @Test
    public void test_setName() {
-       EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null);
+       EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null, null);
 
        assertEquals("escaperoom", escapeRoom.getName());
 
@@ -62,7 +62,7 @@ public class TestEscapeRoom {
     @Test
     public void test_getPlayer() {
         Player player = new Player(null, null, null);
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null);
+        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, null);
 
         assertEquals(player, escapeRoom.getPlayer());
     }
@@ -70,7 +70,7 @@ public class TestEscapeRoom {
     @Test
     public void test_setPlayer() {
         Player player = new Player(null, null, null);
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null);
+        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, null);
 
         assertEquals(player, escapeRoom.getPlayer());
 
@@ -78,6 +78,53 @@ public class TestEscapeRoom {
         escapeRoom.setPlayer(player2);
 
         assertEquals(player2, escapeRoom.getPlayer());
+    }
+
+    @Test
+    public void test_getImages() {
+        String path1 = "/Desktop/School/GVSU/pic.png";
+        String path2 = "Z:/users/annac/docs/123.png";
+
+        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", null, path1, null);
+
+        assertEquals("/Desktop/School/GVSU/pic.png", escapeRoom.getImage());
+
+        escapeRoom.setImage(path2);
+        assertEquals("Z:/users/annac/docs/123.png", escapeRoom.getImage());
+    }
+
+    @Test
+    public void test_setImage() {
+        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", null, null, null);
+        escapeRoom.setImage("/Desktop/1234/GVSU/pic.png");
+        escapeRoom.setImage("Z:/users/annac/docs/123.png");
+        escapeRoom.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
+        escapeRoom.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
+
+        assertEquals("c:/folder1/\"folder 2-_\"/___file---.png", escapeRoom.getImage());
+
+        assertEquals("image not found", escapeRoom.setImage(""));
+        assertEquals("image not found", escapeRoom.setImage(null));
+
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            escapeRoom.setImage("Mult:/image.png");
+        });
+        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            escapeRoom.setImage("/image.pdf");
+        });
+        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            escapeRoom.setImage("/image/!/image.png");
+        });
+        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            escapeRoom.setImage("/image/a folder/image.png");
+        });
+        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
     }
 
     @Test
@@ -90,7 +137,7 @@ public class TestEscapeRoom {
         map.add(room2);
         map.add(room3);
 
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, map);
+        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null, map);
 
         assertEquals(room1, escapeRoom.getMap().get(0));
         assertEquals(room2, escapeRoom.getMap().get(1));
@@ -107,7 +154,7 @@ public class TestEscapeRoom {
         map.add(room2);
         map.add(room3);
 
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null);
+        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null, null);
         escapeRoom.setMap(map);
 
         assertEquals(room1, escapeRoom.getMap().get(0));
@@ -146,7 +193,7 @@ public class TestEscapeRoom {
 
         Player player = new Player(notes, inventory, room7);
 
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null);
+        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, null);
 
         Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
             escapeRoom.saveProgress(null);
@@ -163,7 +210,7 @@ public class TestEscapeRoom {
 
     @Test
     public void test_loadProgress() {
-        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", null, null);
+        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", null, null, null);
     }
 
     @Test
@@ -179,7 +226,7 @@ public class TestEscapeRoom {
         bedroom.addRoom(upstairs);
         bedroom.addRoom(bathroom);
         bathroom.addRoom(bedroom);
-        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), map);
+        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), null, map);
 
         assertEquals("Bedroom requires a code to enter.", escapeRoom.moveRoom("bEdroom"));
 
@@ -212,7 +259,7 @@ public class TestEscapeRoom {
         map.add(bedroom);
         upstairs.addRoom(bedroom);
         bedroom.addRoom(upstairs);
-        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), map);
+        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), null, map);
 
         assertEquals("Bedroom requires a key and a code to enter.", escapeRoom.moveRoom("bedroom"));
         assertEquals("abc is incorrect!", escapeRoom.unlock("bedroom", "abc"));
@@ -246,7 +293,7 @@ public class TestEscapeRoom {
         bedroom.addRoom(upstairs);
         bedroom.addRoom(bathroom);
         bathroom.addRoom(bedroom);
-        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), map);
+        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), null, map);
 
         assertEquals("This is the upstairs", escapeRoom.inspectRoom());
 

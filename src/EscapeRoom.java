@@ -1,16 +1,19 @@
 import java.io.*;
 import java.util.*;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 
 public class EscapeRoom {
     private String name;
     private Player player;
+    private String image;
     private ArrayList<Room> map;
 
-    public EscapeRoom(String name, Player player, ArrayList<Room> map) {
+    public EscapeRoom(String name, Player player, String image, ArrayList<Room> map) {
         this.setName(name);
         this.setPlayer(player);
+        this.setImage(image);
         this.map = new ArrayList<Room>();
         this.map = map;
 
@@ -37,6 +40,23 @@ public class EscapeRoom {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String setImage(String path) {
+        if (path == null || path.equals(""))
+            return "image not found";
+
+        String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
+
+        if (!Pattern.matches(regex, path))
+            throw new IllegalArgumentException("setImage in class EscapeRoom: invalid file path");
+
+        this.image = path;
+        return null;
     }
 
     public ArrayList<Room> getMap() {
