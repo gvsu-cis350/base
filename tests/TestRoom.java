@@ -271,13 +271,12 @@ public class TestRoom {
         assertEquals(key1, room.getKeys().get(0));
         assertEquals(key2, room.getKeys().get(1));
 
-        room.delKey(1);
+        room.delKey(key1);
         
         assertEquals(1, room.getKeys().size());
 
-        Throwable exception = assertThrows(IndexOutOfBoundsException.class, () -> {
-            room.delKey(1);
-        });
-        assertEquals("delKey in class Room: index out of bounds", exception.getMessage());
+        room.delKey(key2);
+
+        assertEquals(0, room.getKeys().size());
     }
 }
