@@ -88,7 +88,11 @@ public class StartGUI extends JFrame implements ActionListener{
             this.dispose();
         }
         if(options == comp){
-            new OptionsGUI();
+            if (escapeFile == null)
+                new OptionsGUI();
+            else{
+                new OptionsGUI(escapeFile);
+            }
             this.dispose();
         }
     }

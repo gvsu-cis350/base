@@ -42,10 +42,10 @@ public class GameGUI extends JFrame implements ActionListener {
     private BufferedImage mapPicture;
     private BufferedImage imagePicture;
 
-    private String mapFile = "D:\\CodingTests\\GUITests\\src\\pics\\map.png";
-    private String imageFile = "D:\\CodingTests\\GUITests\\src\\pics\\image.png";
-    private String saveLoadFile;
-    private String commandInput;
+    private String mapFile = null;
+    private String imageFile = null;
+    private String saveLoadFile = null;
+    private String commandInput = null;
     private String escapeFile = null;
 
     private Color backgroundColor = new Color(0xCB4335);
@@ -55,6 +55,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private Game escapeGame = new Game();
     private EscapeRoom escapeRoom;
+    private Player player;
 
     public GameGUI(){
         mainPanel = new JPanel();
@@ -78,12 +79,14 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     public GameGUI(String filename) {
-        // try{
-        // escapeRoom = escapeGame.buildEscapeRoom(filename);
-        // }catch(Exception e){
-        //     new GameGUI();
-        //     this.dispose();
-        // }
+        try{
+            escapeRoom = escapeGame.buildEscapeRoom(filename);
+        }catch(Exception e){
+            new GameGUI();
+            this.dispose();
+        }
+
+        player = escapeRoom.getPlayer();
 
         mainPanel = new JPanel();
         terminal = new JPanel();
@@ -109,6 +112,8 @@ public class GameGUI extends JFrame implements ActionListener {
         outScreen = new JList(outList);
         notes = new JList(noteList);
         inventory = new JList(keyList);
+        //mapFile = escapeRoom.getMapImage();
+        imageFile = player.getCurrentPosition().getImage();
 
         try {
             mapPicture = ImageIO.read(new File(mapFile));
@@ -195,6 +200,11 @@ public class GameGUI extends JFrame implements ActionListener {
                 word.toLowerCase();
                 switch(word){
                     case "list":
+                        commandOutput = "";
+                        for (Room room : escapeRoom.getMap()){
+                            commandOutput = commandOutput + ", " + room.getName();
+                        }
+                        outList.addElement(commandOutput);
                         JOptionPane.showMessageDialog(null, "You entered \"list\"");
                         break;
                     case "create":
@@ -211,7 +221,11 @@ public class GameGUI extends JFrame implements ActionListener {
                         command.setText(null);
                         break;
                     case "input":
-                        JOptionPane.showMessageDialog(null, "You entered \"input\"");
+                        String code = sc.next();
+                        String roomName = commandInput.substring(7 + code.length());
+                        commandOutput = escapeRoom.unlock(roomName, code);
+                        outList.addElement(commandOutput);
+                        command.setText(null);
                         break;
                     case "move":
                         commandOutput = escapeRoom.moveRoom(commandInput.substring(5));
@@ -232,6 +246,8 @@ public class GameGUI extends JFrame implements ActionListener {
                 }
                 sc.close();                
             }
+            if (outList.getSize() > 10)
+                outList.removeElementAt(0);
         }
         if (comp == options){
             new OptionsGUI();

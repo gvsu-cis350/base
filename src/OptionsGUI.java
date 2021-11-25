@@ -11,7 +11,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private JPanel examplePanel;
     private JPanel navigationPanel;
 
-    //private JList escapeRooms;
     private JList exampleList;
 
     private JComboBox fontSize;
@@ -122,6 +121,79 @@ public class OptionsGUI extends JFrame implements ActionListener{
         setVisible(true);
         setSize(1000,500);
     }
+    public OptionsGUI(String filename){
+        mainPanel = new JPanel();
+        escapeRoomPanel = new JPanel();
+        examplePanel = new JPanel();
+        visualPanel = new JPanel();
+        navigationPanel = new JPanel();
+
+        exampleList = new JList(exampleString);
+
+        fontSize = new JComboBox(sizeList);
+        fontStyle = new JComboBox(styleList);
+        colors = new JComboBox(colorList);
+
+        escapeFile = filename;
+
+        exampleLabel = new JLabel("This is a label");
+        if (escapeFile == null){
+            pathLabel = new JLabel("No escape room chosen");
+        }
+        else{
+            pathLabel = new JLabel(escapeFile);
+        }
+
+        exampleText = new JTextArea("This is an area with text in it", 5, 30);
+
+        load = new JButton("Load Escape Room");
+        make = new JButton("Make your own!");
+        exampleButton = new JButton("Button");
+        defaultButton = new JButton("Restore default settings");
+        apply = new JButton("Apply Changes");
+        ok = new JButton("Ok");
+        mainMenu = new JButton("Main Menu");
+
+        fileLoader = new JFileChooser();
+
+        load.addActionListener(this);
+        make.addActionListener(this);
+        fontSize.addActionListener(this);
+        fontStyle.addActionListener(this);
+        colors.addActionListener(this);
+        defaultButton.addActionListener(this);
+        apply.addActionListener(this);
+        ok.addActionListener(this);
+        mainMenu.addActionListener(this);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        escapeRoomPanel.add(pathLabel);
+        escapeRoomPanel.add(load);
+        escapeRoomPanel.add(make);
+        mainPanel.add(escapeRoomPanel);
+
+        examplePanel.add(exampleLabel);
+        examplePanel.add(exampleText);
+        examplePanel.add(exampleList);
+        examplePanel.add(exampleButton);
+
+        visualPanel.add(fontStyle);
+        visualPanel.add(colors);
+        visualPanel.add(examplePanel);
+
+        mainPanel.add(visualPanel);
+        navigationPanel.add(mainMenu);
+        navigationPanel.add(defaultButton);
+        navigationPanel.add(apply);
+        navigationPanel.add(ok);
+        mainPanel.add(navigationPanel);
+
+        add(mainPanel);
+
+        setVisible(true);
+        setSize(1000,500);
+    }
 
     public void actionPerformed(ActionEvent e){
         Object comp = e.getSource();
@@ -160,7 +232,8 @@ public class OptionsGUI extends JFrame implements ActionListener{
             //Show dialog box with example of csv (web link to google drive artifact???)
         }
         if (comp == defaultButton){
-            //change everything back to the default values
+            //change everything back to the default values including colors
+            escapeFile = null;
         }
     }
 }
