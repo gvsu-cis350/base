@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.*;
 
 public class GameGUI extends JFrame implements ActionListener {
     private JPanel mainPanel;
@@ -20,10 +21,14 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private JTextField command;
 
-    private JTextArea outScreen;
     private JTextArea helpInfo;
-    private JTextArea notes;
 
+    private DefaultListModel<String> noteList;
+    private DefaultListModel<String> outList;
+    private DefaultListModel<Key> keyList;
+
+    private JList outScreen;
+    private JList notes;
     private JList inventory;
 
     private JLabel mapVisual;
@@ -40,9 +45,8 @@ public class GameGUI extends JFrame implements ActionListener {
     private String mapFile = "D:\\CodingTests\\GUITests\\src\\pics\\map.png";
     private String imageFile = "D:\\CodingTests\\GUITests\\src\\pics\\image.png";
     private String saveLoadFile;
+    private String commandInput;
     private String escapeFile = null;
-
-    private String[] keys = {"key1", "key2", "key3", "key4"};
 
     private Color backgroundColor = new Color(0xCB4335);
     private Color textColor = new Color(0xFFFFFF);
@@ -54,12 +58,14 @@ public class GameGUI extends JFrame implements ActionListener {
 
     public GameGUI(){
         mainPanel = new JPanel();
-        helpInfo = new JTextArea("It looks like an escape room isn't properly loaded.  Please go to options to load one", 1, 50);
+        helpInfo = new JTextArea("It looks like an escape room isn't properly loaded.  Please go to options to load one\n", 1, 50);
         options = new JButton("Options");
         mainMenu = new JButton("Main Menu");
 
         mainMenu.addActionListener(this);
         options.addActionListener(this);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mainPanel.add(helpInfo);
         mainPanel.add(options);
@@ -72,12 +78,12 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     public GameGUI(String filename) {
-        try{
-        escapeRoom = escapeGame.buildEscapeRoom(filename);
-        }catch(Exception e){
-            new GameGUI();
-            this.dispose();
-        }
+        // try{
+        // escapeRoom = escapeGame.buildEscapeRoom(filename);
+        // }catch(Exception e){
+        //     new GameGUI();
+        //     this.dispose();
+        // }
 
         mainPanel = new JPanel();
         terminal = new JPanel();
@@ -92,11 +98,17 @@ public class GameGUI extends JFrame implements ActionListener {
 
         command = new JTextField(10);
 
-        outScreen = new JTextArea("Welcome!", 6, 10);
         helpInfo = new JTextArea("Blurb about helpful things", 2, 30);
-        notes = new JTextArea("Put some notes here if you need to", 5, 30);
 
-        inventory = new JList(keys);
+        outList = new DefaultListModel();
+        noteList = new DefaultListModel();
+        keyList = new DefaultListModel();
+
+        outList.addElement("Welcome!");
+
+        outScreen = new JList(outList);
+        notes = new JList(noteList);
+        inventory = new JList(keyList);
 
         try {
             mapPicture = ImageIO.read(new File(mapFile));
@@ -117,8 +129,9 @@ public class GameGUI extends JFrame implements ActionListener {
         mainMenu.addActionListener(this);
         command.addActionListener(this);
 
-        outScreen.setEditable(false);
         helpInfo.setEditable(false);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         terminal.add(outScreen);
         terminal.add(command);
@@ -174,7 +187,51 @@ public class GameGUI extends JFrame implements ActionListener {
             }
         }
         if (comp == command){
-            JOptionPane.showMessageDialog(null, "You entered a command");
+            commandInput = command.getText();
+            String commandOutput = null;
+            if(commandInput != null && !commandInput.equals("")){
+                Scanner sc = new Scanner(commandInput);
+                String word = sc.next();
+                word.toLowerCase();
+                switch(word){
+                    case "list":
+                        JOptionPane.showMessageDialog(null, "You entered \"list\"");
+                        break;
+                    case "create":
+                        commandOutput = commandInput.substring(7);
+                        noteList.addElement(commandOutput);
+                        command.setText(null);
+                        break;
+                    case "delete":
+                        noteList.remove(notes.getSelectedIndex());
+                        command.setText(null);
+                        break;
+                    case "help":
+                        outList.addElement("This is a string where it specifies commands!");
+                        command.setText(null);
+                        break;
+                    case "input":
+                        JOptionPane.showMessageDialog(null, "You entered \"input\"");
+                        break;
+                    case "move":
+                        commandOutput = escapeRoom.moveRoom(commandInput.substring(5));
+                        if(commandOutput == null)
+                            commandOutput = "You've moved to " + commandInput.substring(5);
+                        outList.addElement(commandOutput);
+                        command.setText(null);
+                        break;
+                    case "inspect":
+                        commandOutput = escapeRoom.inspectRoom();
+                        outList.addElement(commandOutput);
+                        command.setText(null);
+                        break;
+                    default: 
+                        outList.addElement("Looks like that command doesn't exist.  Try the \"help\" command!");
+                        command.setText(null);
+                        break;
+                }
+                sc.close();                
+            }
         }
         if (comp == options){
             new OptionsGUI();

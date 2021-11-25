@@ -88,6 +88,8 @@ public class OptionsGUI extends JFrame implements ActionListener{
         ok.addActionListener(this);
         mainMenu.addActionListener(this);
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         escapeRoomPanel.add(pathLabel);
         escapeRoomPanel.add(load);
         escapeRoomPanel.add(make);
