@@ -1,20 +1,23 @@
 import java.io.*;
 import java.util.*;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 
 public class EscapeRoom {
     private String name;
     private Player player;
+    private String image;
     private ArrayList<Room> map;
 
-    public EscapeRoom(String name, Player player, ArrayList<Room> map) {
+    public EscapeRoom(String name, Player player, String image, ArrayList<Room> map) {
         this.setName(name);
         this.setPlayer(player);
+        this.setImage(image);
         this.map = new ArrayList<Room>();
         this.map = map;
 
-        if (map != null && player != null)
+        if (map != null && map.size() > 0 && player != null && player.getCurrentPosition() == null)
             this.player.setCurrentPosition(map.get(0));
     }
 
@@ -39,6 +42,23 @@ public class EscapeRoom {
         this.player = player;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public String setImage(String path) {
+        if (path == null || path.equals(""))
+            return "image not found";
+
+        String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
+
+        if (!Pattern.matches(regex, path))
+            throw new IllegalArgumentException("setImage in class EscapeRoom: invalid file path");
+
+        this.image = path;
+        return null;
+    }
+
     public ArrayList<Room> getMap() {
         return map;
     }
@@ -58,23 +78,20 @@ public class EscapeRoom {
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
 
-            out.print("notes:\n");
+            out.println("notes:");
             for (String note : player.getNotes()) {
-                out.println(note);
+                out.println("\"" + note + "\"");
             }
 
             out.println("\ninventory:");
             for (Key key : player.getInventory()) {
-                out.print(key.getName() + ": ");
+                out.println(key.getName() + ":");
                 for (Room room : key.getUnlocks()) {
-                    if (!room.equals(key.getUnlocks().get(key.getUnlocks().size() - 1)))
-                        out.print(room.getName() + ", ");
-                    else
-                        out.print(room.getName() + "\n");
+                    out.println("\"" + room.getName() + "\"");
                 }
             }
 
-            out.print("\ncurrentPosition: " + player.getCurrentPosition().getName());
+            out.println("\ncurrentPosition: " + player.getCurrentPosition().getName());
 
             out.close();
             return true;
@@ -84,16 +101,49 @@ public class EscapeRoom {
     }
 
     public void loadProgress(String filename){
+        ArrayList<String> notes = new ArrayList<>();
+        ArrayList<Key> keys = new ArrayList<>();
+        Room currentPos;
+
         try {
             Scanner scanner = new Scanner(new File(filename));
+            String regex = "\"[\\w\\s-.]+\"";
+            String temp;
 
-            while (!scanner.nextLine().equals("inventory:")) {
-                this.player.addNote(scanner.nextLine());
+            scanner.nextLine();
+            while (scanner.hasNext()) {
+                temp = scanner.nextLine();
+                if (temp.equals(""))
+                    break;
+                notes.add(temp.substring(1, temp.length() - 1));
             }
-            // while (!scanner.nextLine().equals("currentPosition:")) {
-            //     this.player.addToInventory();
-            // }
 
+            int i = 0;
+            scanner.nextLine();
+            temp = scanner.nextLine();
+            while (scanner.hasNext()) {
+                ArrayList<String> roomNames = new ArrayList<>();
+                if (temp.equals(""))
+                    break;
+
+                if (temp.charAt(temp.length() - 1) == ':') {
+                    keys.add(new Key(temp.substring(0, temp.length() - 1), null));
+                    temp = scanner.nextLine();
+                    while (Pattern.matches(regex, temp)) {
+                        roomNames.add(temp.substring(1, temp.length() - 1));
+                        temp = scanner.nextLine();
+                    }
+                    for (String room : roomNames) {
+                        keys.get(i).addRoomToUnlock(searchMap(room));
+                    }
+                }
+                i++;
+            }
+
+            temp = scanner.nextLine();
+            currentPos = searchMap(temp.substring(17, temp.length()));
+
+            this.setPlayer(new Player(notes, keys, currentPos));
         } catch (FileNotFoundException e) {
             throw new RuntimeException("loadProgress in class EscapeRoom: file not found");
         }
@@ -101,9 +151,16 @@ public class EscapeRoom {
 
     private Room searchMap(String roomName) {
         for (Room room : map) {
-            if (room.getName().equalsIgnoreCase(roomName)) {
+            if (room.getName().equalsIgnoreCase(roomName))
                 return room;
-            }
+        }
+        return null;
+    }
+
+    private Key searchKeys(String keyName) {
+        for (Key key : player.getInventory()) {
+            if (key.getName().equalsIgnoreCase(keyName))
+                return key;
         }
         return null;
     }
@@ -160,14 +217,22 @@ public class EscapeRoom {
             return null;
 
         String output = "";
+        ArrayList<Key> keysToDelete = new ArrayList<>();
 
         if (player.getCurrentPosition().getKeys().size() > 0) {
             output += "You found the following keys:\n";
             for (Key k : player.getCurrentPosition().getKeys()) {
-                player.addToInventory(k);
-                output += k.getName() + "\n";
+                if (this.searchKeys(k.getName()) == null) {
+                    player.addToInventory(k);
+                    keysToDelete.add(k);
+                    output += k.getName() + "\n";
+                } else 
+                    keysToDelete.add(k);
             }
         }
+
+        for (Key k : keysToDelete)
+            player.getCurrentPosition().delKey(k);
 
         return output += player.getCurrentPosition().getScript();
     }

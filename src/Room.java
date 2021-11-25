@@ -133,11 +133,8 @@ public class Room {
         keys.add(key);
     }
 
-    public void delKey(int index) {
-        try {
-            keys.remove(index);
-        } catch (IndexOutOfBoundsException e) {
-            throw new IndexOutOfBoundsException("delKey in class Room: index out of bounds");
-        }
+    public void delKey(Key key) {
+        if (keys.contains(key))
+            keys.remove(key);
     }
 }
