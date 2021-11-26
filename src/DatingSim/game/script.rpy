@@ -26,6 +26,7 @@ default reflex_pron = ""
 # Flags
 default club = "no club"
 default skippedClass = "false"
+default meetPrep = "false"
 
 label start:
     $ portrait_number = 0
@@ -171,7 +172,7 @@ label start:
     roomie "some haven't but really should.They're really nice! I'm sure you'd like them."
     roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on"
     roomie "AND he is a serious hottie"
-    roomie "Victoria is an honest person. She can be blunt, but she's also the most sincere person I've met."
+    roomie "Victoria is honest. She can be blunt, but she's also the most sincere person I've met."
     roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
     roomie "They have the softest heart."
     roomie "And then there's..." #FIXME
@@ -217,7 +218,7 @@ label meet_tsun:
 
 label meet_prep:
 
-    $ meetprep = "true"
+    $ meetPrep = "true"
 
     player_thinking "I guess there’s a debate team recruiting event going on today. I could probably improve my argumentation skills…"
 
@@ -411,7 +412,12 @@ label library_1:
 
     player_thinking "I walk into the library, and look around for a good spot to study."
 
-    player_thinking "However, I notice Victoria sitting in a dark corner of the library at a desk."
+    if meetPrep == "true":
+        player_thinking "However, I notice Victoria sitting in a dark corner of the library at a desk."
+    else:
+        player_thinking "I notice a girl I recognize sitting in a dark corner of the library at a desk."
+        player_thinking "I realize it's Victoria, one of Jane's friends. She showed me a picture of her last night."
+
 
     player_thinking "She has earphones in and looks really focused, with multiple textbooks, papers, and a laptop scattered about her desk."
 
