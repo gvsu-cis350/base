@@ -176,7 +176,7 @@ label start:
     roomie "Victoria is..." #FIXME
     roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
     roomie "They have the softest heart."
-    roomie "And then there's..." #FIXME
+    roomie "And then there's is Finley they have a tough exterior but they are really sweet once you get to know them." #FIXME
     roomie "But! You'll meet them all eventually, I'm sure"
     roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
 
@@ -442,7 +442,7 @@ label dorms_1:
     show finley
     player_thinking "I want to go hangout in my dorm."
 
-    player_thinking "Is that Finley hanging out with roomie?"
+    player_thinking "Is that Finley hanging out with Jane?"
 
     finley "Hey [player_name], me and Jane were just trying  to plan a prank on Dominic want to join us not that we need you or anything."
 
@@ -501,9 +501,10 @@ label free_time_2:
 label library_2:
     #"LIBRARY 2: TSUN IS THERE"
 
-    show finley
 
-    scene library  #is this the scene call for the library
+    scene campus library  #is this the scene call for the library
+
+    show finley
 
     player_thinking "Is that Finley at that table over there? I should go see what they are doing."
 
@@ -595,7 +596,7 @@ label TSUNDERE_START:
             $ tsunPoints += 1
             finley "Cool let's head over there now."
 
-            scene school store #this should be another store
+            scene thrift shop #this should be another store
 
             show finley
 
