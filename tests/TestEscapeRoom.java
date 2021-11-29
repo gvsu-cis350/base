@@ -11,10 +11,10 @@ public class TestEscapeRoom {
     @Test
     public void test_constructor() {
         ArrayList<Room> rooms = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
-        Room room4 = new Room("room4", "room4", false, false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, null, null, null, null);
+        Room room4 = new Room("room4", "room4", false, null, null, null, null);
         rooms.add(room1);
         rooms.add(room2);
         rooms.add(room3);
@@ -132,9 +132,9 @@ public class TestEscapeRoom {
     @Test
     public void test_getMap() {
         ArrayList<Room> map = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, null, null, null, null);
         map.add(room1);
         map.add(room2);
         map.add(room3);
@@ -149,9 +149,9 @@ public class TestEscapeRoom {
     @Test
     public void test_setMap() {
         ArrayList<Room> map = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, null, null, null, null);
         map.add(room1);
         map.add(room2);
         map.add(room3);
@@ -168,13 +168,13 @@ public class TestEscapeRoom {
     public void test_saveLoadProgress() {
 
         ArrayList<Room> map = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
-        Room room4 = new Room("room4", "room4", false, false, null, null, null, null);
-        Room room5 = new Room("room5", "room5", false, false, null, null, null, null);
-        Room room6 = new Room("room6", "room6", false, false, null, null, null, null);
-        Room room7 = new Room("room7", "room7", false, false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, null, null, null, null);
+        Room room4 = new Room("room4", "room4", false, null, null, null, null);
+        Room room5 = new Room("room5", "room5", false, null, null, null, null);
+        Room room6 = new Room("room6", "room6", false, null, null, null, null);
+        Room room7 = new Room("room7", "room7", false, null, null, null, null);
         map.add(room1);
         map.add(room2);
         map.add(room3);
@@ -239,9 +239,9 @@ public class TestEscapeRoom {
     @Test
     public void test_moveRoom() {
         ArrayList<Room> map = new ArrayList<>();
-        Room upstairs = new Room("Upstairs", "This is the upstairs", false, false, null, null, null, null);
-        Room bedroom = new Room("Bedroom", "This is the bedroom", false, false, null, "123", null, null);
-        Room bathroom = new Room("Bathroom", "This is the bathroom", true, false, null, "123", null, null);
+        Room upstairs = new Room("Upstairs", "This is the upstairs", false, null, null, null, null);
+        Room bedroom = new Room("Bedroom", "This is the bedroom", false, null, "123", null, null);
+        Room bathroom = new Room("Bathroom", "This is the bathroom", true, null, "123", null, null);
         map.add(upstairs);
         map.add(bedroom);
         map.add(bathroom);
@@ -276,8 +276,8 @@ public class TestEscapeRoom {
     @Test
     public void test_unlock() {
         ArrayList<Room> map = new ArrayList<>();
-        Room upstairs = new Room("Upstairs", "This is the upstairs", false, false, null, null, null, null);
-        Room bedroom = new Room("Bedroom", "This is the bedroom", true, false, null, "123", null, null);
+        Room upstairs = new Room("Upstairs", "This is the upstairs", false, null, null, null, null);
+        Room bedroom = new Room("Bedroom", "This is the bedroom", true, null, "123", null, null);
         map.add(upstairs);
         map.add(bedroom);
         upstairs.addRoom(bedroom);
@@ -303,9 +303,9 @@ public class TestEscapeRoom {
     @Test
     public void test_inspectRoom() {
         ArrayList<Room> map = new ArrayList<>();
-        Room upstairs = new Room("Upstairs", "This is the upstairs", false, false, null, null, null, null);
-        Room bedroom = new Room("Bedroom", "This is the bedroom", false, false, null, null, null, null);
-        Room bathroom = new Room("Bathroom", "This is the bathroom", true, false, null, null, null, null);
+        Room upstairs = new Room("Upstairs", "This is the upstairs", false, null, null, null, null);
+        Room bedroom = new Room("Bedroom", "This is the bedroom", false, null, null, null, null);
+        Room bathroom = new Room("Bathroom", "This is the bathroom", true, null, null, null, null);
         ArrayList<Room> unlocks = new ArrayList<>();
         unlocks.add(bathroom);
         bedroom.addKey(new Key("unlocks bathroom", unlocks));
