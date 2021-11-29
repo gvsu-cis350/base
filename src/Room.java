@@ -15,7 +15,7 @@ public class Room {
         name = "";
         script = "";
         isEnd = false;
-        image = "";
+        image = null;
         code = "";
         name = null;
         name = null;

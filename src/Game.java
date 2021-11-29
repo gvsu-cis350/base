@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Game {
@@ -31,36 +33,42 @@ public class Game {
             sc.close();
 
             for( int i = 0; i < lines.size(); i++ ) {
-                if( lines.get( i ).toLowerCase().substring( 0, 10 ).equals( "beginning: " ) ) {
-                    //set the beginning script to be this
-                } else if( lines.get( i ).toLowerCase().substring( 0, 4 ).equals("end: ") ) {
-                    //set the end script to be this
-                } else if( lines.get( i ).toLowerCase().substring( 0, 5 ).equals( "room: " ) ) {
-                    Room newRoom = parseRoom( lines.get( i ) );
-                    rooms.add( newRoom );
-                } else if( lines.get( i ).toLowerCase().substring( 0, 4 ).equals("key: ") ) {
-                    keyStrings.add( lines.get(i) );
-                } else if( lines.get(i).equals("\n") ) {
-                    lines.remove( i );
+                switch(lines.get(i).toLowerCase().substring( 0, 1 ) ) {
+                    case("b"):
+                        // Beginning script
+                        break;
+                    case("e"):
+                        // Ending script
+                        break;
+                    case("r"): 
+                    {
+                        Room r = new Room();
+                        r = parseRoom(lines.get(i));
+                        rooms.add(r);
+                        break;
+                    }
+                    case("k"):
+                        keyStrings.add(lines.get( i ) );
+                        break;
                 }
             }
-
-
-
             addKeys( keyStrings );
         } catch(Exception e) {
-            System.out.println("CYMBRE THIS IS BAD");
-            //Going to need to send some of information to the user interface
+            throw new NoSuchElementException("The file which has been entered cannot be utilized.");
         }
     }
 
-    public Room parseRoom( String line ) {
+    protected Room parseRoom( String line ) {
         line = line.substring( 6 );
         line = line.replace( "\n", "" );
         line = line.replace( ", ", "," );
         Room newRoom = new Room();
         
         String[] room = line.split(",");
+
+        // Map<String, ArrayList<String>> m = new Map<String, ArrayList<String>>();
+
+        ArrayList<String> connectedRooms = new ArrayList<String>();
 
         for( int i = 0; i < room.length; i++ ) {
             switch( i )
@@ -85,11 +93,20 @@ public class Game {
                     newRoom.setCode( room[i] );
                     break;
                 case 5: 
+                {
+                    String[] s = room[i].split(" ");
+                    for(int j = 0; j < s.length; i++ ) {
+                        connectedRooms.add( s[i] );
+                    }
                     break;
+                }
                 case 6:
                     break;
             }
         }
+
+        // newRoom.setRooms(connectedRooms);;
+
         return newRoom;
     }
 
@@ -108,20 +125,20 @@ public class Game {
 
             String[] keyRooms = line.split(",");
             for( int j = 0; j < keyRooms.length; j++ ) {
-                roomsKeyUnlocks.add(getRoomByName( keyRooms[j] ) );
+                keyRooms[j] = keyRooms[j].replace(" ", "");
+                roomsKeyUnlocks.add( getRoomByName( keyRooms[j] ) );
             }
             Key newKey = new Key( name, roomsKeyUnlocks );
             keys.add( newKey );
         }   
     }
 
-    private Room getRoomByName( String name ) {
+    protected Room getRoomByName( String name ) {
         for( int i = 0; i < rooms.size(); i++ ) {
             if( rooms.get( i ).getName().toLowerCase().equals( name.toLowerCase() ) ) {
                 return rooms.get( i );
             }
         }
-        System.out.println("So they tried to add a room that didn't exist to the key");
         return null;
     }
 
