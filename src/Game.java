@@ -1,107 +1,153 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Game {
-    private ArrayList<Room> rooms = new ArrayList<Room>();
+    private ArrayList<Room> rooms;
+    private ArrayList<Key> keys;
     
-    public ArrayList<Room> buildEscapeRoom(String filename){
+    public Game() {
+        rooms = new ArrayList<Room>();
+        keys = new ArrayList<Key>();
+    }
+    
+    /**
+     * This method takes the name of a file in the form of a 
+     * String and parses it and populates the arraylist of 
+     * rooms and the arraylist of keys in order to generate
+     * a functional escape room
+     * @param filename
+     */
+    public void buildEscapeRoom(String filename){
         try {
             Scanner sc = new Scanner(new File(filename));
-            sc.useDelimiter(",");
-            int index = 1;
+            ArrayList<String> lines = new ArrayList<String>();
+            ArrayList<String> keyStrings = new ArrayList<String>();
 
-            String name = "";
-            String description = "";
-            boolean isLocked = false;
-            String key = "";
-            boolean isEnd = false;
-            String image = "";
-            String connectingRooms = "";
-            String keyNames = "";
-
-            while(sc.hasNext()){
-                switch(index)
-                {
-                    case 1:
-                        name = sc.next();
-                        name = name.replace("\n", "");
-                        break;
-                    case 2:
-                        description = sc.next();
-                        break;
-                    case 3:
-                        if( sc.next().toLowerCase().equals( "true" ) ) {
-                            isLocked = true;
-                        } else {
-                            isLocked = false;
-                        }
-                        break;
-                    case 4:
-                        String input = sc.next().toLowerCase();
-                        if( input.equals( "true" ) ) {
-                            isEnd = true;
-                        } else {
-                            isEnd = false;
-                        }
-                        break;
-                    case 5:
-                        image = sc.next();
-                        break;
-                    case 6: 
-                        sc.next();
-                        break;
-                    case 8: 
-                        keyNames = sc.next();
-                        break;
-                }
-                index++;
-                if(index > 8) {
-                    Room newRoom = new Room(name, description, isLocked, isEnd, image, null, null );
-                    rooms.add(newRoom);
-                    index = 1;
-                }
+            while(sc.hasNextLine()) {
+                lines.add( sc.nextLine() );
             }
-
-            index = 1;
-            int roomIndex = 0;
-            while(sc.hasNext()) {
-                if(index == 1) {
-                    roomIndex++;
-                }
-
-                if(index == 7) {
-                    String[] availableRooms = sc.next().split(" ");
-                    
-                    for(Room r : rooms) {
-                        for( String s : availableRooms ) {
-                            if( s.equals(r.getName() ) ) {
-                                rooms.get(roomIndex).addRoom(r);
-                            }
-                        }
-                    }
-                }
-
-                if(index == 8) {
-                    //addkeys
-                }
-
-                index++;
-                if(index > 8) {
-                    index = 1;
-                }
-            }
-
+            
             sc.close();
-            return rooms;
+
+            for( int i = 0; i < lines.size(); i++ ) {
+                switch(lines.get(i).toLowerCase().substring( 0, 1 ) ) {
+                    case("b"):
+                        // Beginning script
+                        break;
+                    case("e"):
+                        // Ending script
+                        break;
+                    case("r"): 
+                    {
+                        Room r = new Room();
+                        r = parseRoom(lines.get(i));
+                        rooms.add(r);
+                        break;
+                    }
+                    case("k"):
+                        keyStrings.add(lines.get( i ) );
+                        break;
+                }
+            }
+            addKeys( keyStrings );
         } catch(Exception e) {
-            System.out.println("CYMBRE THIS IS BAD");
-            return null;
+            throw new NoSuchElementException("The file which has been entered cannot be utilized.");
         }
     }
 
-    public ArrayList<Room> getEscapeRooms() {
+    protected Room parseRoom( String line ) {
+        line = line.substring( 6 );
+        line = line.replace( "\n", "" );
+        line = line.replace( ", ", "," );
+        Room newRoom = new Room();
+        
+        String[] room = line.split(",");
+
+        // Map<String, ArrayList<String>> m = new Map<String, ArrayList<String>>();
+
+        ArrayList<String> connectedRooms = new ArrayList<String>();
+
+        for( int i = 0; i < room.length; i++ ) {
+            switch( i )
+            {
+                case 0:
+                    newRoom.setName( room[ i ] );
+                    break;
+                case 1:
+                    newRoom.setScript( room[i] );
+                    break;
+                case 2:
+                    if( room[i].toLowerCase().equals("true") ) {
+                        newRoom.setIsEnd(true);
+                    } else {
+                        newRoom.setIsEnd(false);
+                    }
+                    break;
+                case 3:
+                    // newRoom.setImage( room[i] );
+                    break;
+                case 4: 
+                    newRoom.setCode( room[i] );
+                    break;
+                case 5: 
+                {
+                    String[] s = room[i].split(" ");
+                    for(int j = 0; j < s.length; i++ ) {
+                        connectedRooms.add( s[i] );
+                    }
+                    break;
+                }
+                case 6:
+                    break;
+            }
+        }
+
+        // newRoom.setRooms(connectedRooms);;
+
+        return newRoom;
+    }
+
+    public void addKeys( ArrayList<String> keyStrings ) {
+        String name;
+        ArrayList<Room> roomsKeyUnlocks = new ArrayList<Room>();
+        
+        for( int i = 0; i < keyStrings.size(); i++ ) {
+            String line = keyStrings.get( i );
+
+            line = line.substring( 5 );
+            line.replace( " ", "" );
+            
+            name = line.split(":")[0];
+            line = line.substring(name.length() + 1);
+
+            String[] keyRooms = line.split(",");
+            for( int j = 0; j < keyRooms.length; j++ ) {
+                keyRooms[j] = keyRooms[j].replace(" ", "");
+                roomsKeyUnlocks.add( getRoomByName( keyRooms[j] ) );
+            }
+            Key newKey = new Key( name, roomsKeyUnlocks );
+            keys.add( newKey );
+        }   
+    }
+
+    protected Room getRoomByName( String name ) {
+        for( int i = 0; i < rooms.size(); i++ ) {
+            if( rooms.get( i ).getName().toLowerCase().equals( name.toLowerCase() ) ) {
+                return rooms.get( i );
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Room> getRooms() {
         return rooms;
+    }
+
+    public ArrayList<Key> getKeys() {
+        return keys;
     }
 
     public void saveEscapeRoom(){
