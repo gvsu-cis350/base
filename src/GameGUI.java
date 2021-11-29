@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.lang.model.util.ElementScanner14;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,11 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private JTabbedPane mapImage;
     private JTabbedPane notesInventory;
+
+
+    private JScrollPane notesScroll;
+    private JScrollPane outScroll;
+    private JScrollPane inventoryScroll;
 
     private JTextField command;
 
@@ -79,14 +85,15 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     public GameGUI(String filename) {
-        try{
-            escapeRoom = escapeGame.buildEscapeRoom(filename);
-        }catch(Exception e){
-            new GameGUI();
-            this.dispose();
-        }
+        // try{
+        //     escapeRoom = escapeGame.buildEscapeRoom(filename);
+        // }catch(Exception e){
+        //     new GameGUI();
+        //     this.dispose();
+        // }
 
-        player = escapeRoom.getPlayer();
+        // player = escapeRoom.getPlayer();
+        this.escapeFile = filename;
 
         mainPanel = new JPanel();
         terminal = new JPanel();
@@ -112,8 +119,13 @@ public class GameGUI extends JFrame implements ActionListener {
         outScreen = new JList(outList);
         notes = new JList(noteList);
         inventory = new JList(keyList);
-        //mapFile = escapeRoom.getMapImage();
-        imageFile = player.getCurrentPosition().getImage();
+
+        outScroll = new JScrollPane(outScreen);
+        notesScroll = new JScrollPane(notes);
+        inventoryScroll = new JScrollPane(inventory);
+
+        // mapFile = escapeRoom.getImage();
+        // imageFile = player.getCurrentPosition().getImage();
 
         try {
             mapPicture = ImageIO.read(new File(mapFile));
@@ -135,10 +147,15 @@ public class GameGUI extends JFrame implements ActionListener {
         command.addActionListener(this);
 
         helpInfo.setEditable(false);
+        outScroll.setPreferredSize(new Dimension(400, 650));
+        inventoryScroll.setPreferredSize(new Dimension(200,100));
+        notesScroll.setPreferredSize(new Dimension(200,100));
+        outScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        terminal.add(outScreen);
+        terminal.add(outScroll);
         terminal.add(command);
 
         mapPanel.add(mapVisual);
@@ -146,8 +163,8 @@ public class GameGUI extends JFrame implements ActionListener {
         mapImage.addTab("Map", mapPanel);
         mapImage.addTab("Location", imagePanel);
 
-        notesPanel.add(notes);
-        inventoryPanel.add(inventory);
+        notesPanel.add(notesScroll);
+        inventoryPanel.add(inventoryScroll);
         notesInventory.addTab("Notes", notesPanel);
         notesInventory.addTab("Inventory", inventoryPanel);
 
@@ -164,13 +181,16 @@ public class GameGUI extends JFrame implements ActionListener {
         add(mainPanel);
 
         setVisible(true);
-        setSize(750, 750);
+        setSize(1000, 1000);
     }
 
     public void actionPerformed(ActionEvent e) {
         Object comp = e.getSource();
         if (comp == mainMenu) {
-            new StartGUI();
+            if (escapeFile == null)
+                new StartGUI();
+            else
+                new StartGUI(escapeFile);
             this.dispose();
         }
         if (comp == saveProgress) {
@@ -194,47 +214,85 @@ public class GameGUI extends JFrame implements ActionListener {
         if (comp == command){
             commandInput = command.getText();
             String commandOutput = null;
-            if(commandInput != null && !commandInput.equals("")){
-                Scanner sc = new Scanner(commandInput);
+            Scanner sc = new Scanner(commandInput);
+            if(commandInput != null && !commandInput.equals("") && sc.hasNext()){
                 String word = sc.next();
                 word.toLowerCase();
                 switch(word){
                     case "list":
+                        // Ask if this is the intended output of list command
                         commandOutput = "";
                         for (Room room : escapeRoom.getMap()){
                             commandOutput = commandOutput + ", " + room.getName();
                         }
                         outList.addElement(commandOutput);
-                        JOptionPane.showMessageDialog(null, "You entered \"list\"");
+                        command.setText(null);
                         break;
                     case "create":
-                        commandOutput = commandInput.substring(7);
-                        noteList.addElement(commandOutput);
+                        // Error checking should be done
+                        if (sc.hasNext()){
+                            commandOutput = commandInput.substring(7);
+                            noteList.addElement(commandOutput);
+                        }
+                        else{
+                            outList.addElement("Please add a note to create");
+                        }
                         command.setText(null);
                         break;
                     case "delete":
-                        noteList.remove(notes.getSelectedIndex());
+                        // Error checking should be done
+                        if(sc.hasNext()){
+                            commandOutput = commandInput.substring(7);
+                            for(int i = 0; i < noteList.getSize(); i++){
+                                if(commandOutput.equals(noteList.get(i))){
+                                    noteList.remove(i);
+                                    break;
+                                }
+                            }
+                        }
+                        else{
+                            outList.addElement("Please add a note to remove");
+                        }
                         command.setText(null);
                         break;
                     case "help":
+                        // Takes no input, if it starts with help, should print help string
                         outList.addElement("This is a string where it specifies commands!");
                         command.setText(null);
                         break;
                     case "input":
-                        String code = sc.next();
-                        String roomName = commandInput.substring(7 + code.length());
-                        commandOutput = escapeRoom.unlock(roomName, code);
-                        outList.addElement(commandOutput);
+                        // Error checking should be done
+                        if(sc.hasNext()){
+                            String code = sc.next();
+                            if (sc.hasNext()){
+                                String roomName = commandInput.substring(7 + code.length());
+                                commandOutput = escapeRoom.unlock(roomName, code);
+                                outList.addElement(commandOutput);
+                            }
+                            else{
+                                outList.addElement("Input requires a room name, then the code");
+                            }
+                        }
+                        else{
+                            outList.addElement("Input requires a room name, then the code");
+                        }
                         command.setText(null);
                         break;
                     case "move":
-                        commandOutput = escapeRoom.moveRoom(commandInput.substring(5));
-                        if(commandOutput == null)
-                            commandOutput = "You've moved to " + commandInput.substring(5);
-                        outList.addElement(commandOutput);
+                        // Error checking should be done
+                        if(sc.hasNext()){
+                            commandOutput = escapeRoom.moveRoom(commandInput.substring(5));
+                            if(commandOutput == null)
+                                commandOutput = "You've moved to " + commandInput.substring(5);
+                            outList.addElement(commandOutput);
+                        }
+                        else{
+                            outList.addElement("Please enter a room to move to");
+                        }
                         command.setText(null);
                         break;
                     case "inspect":
+                        // Error checking should be done, no inputs
                         commandOutput = escapeRoom.inspectRoom();
                         outList.addElement(commandOutput);
                         command.setText(null);
@@ -243,10 +301,13 @@ public class GameGUI extends JFrame implements ActionListener {
                         outList.addElement("Looks like that command doesn't exist.  Try the \"help\" command!");
                         command.setText(null);
                         break;
-                }
-                sc.close();                
+                }            
             }
-            if (outList.getSize() > 10)
+            else{
+                outList.addElement("Looks like we couldn't find a command.  Try typing \"help\"!");
+            }
+            sc.close();
+            while (outList.getSize() > 50)
                 outList.removeElementAt(0);
         }
         if (comp == options){

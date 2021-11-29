@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.regex.Pattern;
 
 public class OptionsGUI extends JFrame implements ActionListener{
     private JPanel mainPanel;
@@ -220,13 +221,22 @@ public class OptionsGUI extends JFrame implements ActionListener{
             this.dispose();
         }
         if (comp == load){
+            // having issues with the regex error check.  Thinks it never matches the absolute path
+            String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.csv";
+
             int returnVal = fileLoader.showOpenDialog(OptionsGUI.this);
 
             if(returnVal == JFileChooser.APPROVE_OPTION){
                 File file = fileLoader.getSelectedFile();
                 escapeFile = file.getAbsolutePath();
             }
-            pathLabel.setText(escapeFile);
+            if (Pattern.matches(regex, escapeFile)){
+                pathLabel.setText(escapeFile);
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Please choose a .csv file");
+                //escapeFile = null;
+            }
         }
         if (comp == make){
             //Show dialog box with example of csv (web link to google drive artifact???)
