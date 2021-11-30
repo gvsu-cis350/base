@@ -9,9 +9,9 @@ public class TestRoom {
 
     @Test
     public void test_constructor() {
-        Room room = new Room("room", "room", true, "/image.png", null, null, null);
-        Room room1 = new Room("room1", "room1", false, null, "12345", null, null);
-        Room room2 = new Room("room2", "room2", false, null, "abcde", null, null);
+        Room room = new Room("room", "room", true, false, "/image.png", null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, "12345", null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, "abcde", null, null);
         Key key1 = new Key("key1", null);
         Key key2 = new Key("key2", null);
 
@@ -35,14 +35,14 @@ public class TestRoom {
 
     @Test
     public void test_getName() {
-        Room room = new Room("This is a room", "room", false, null, null, null, null);
+        Room room = new Room("This is a room", "room", false, false, null, null, null, null);
 
         assertEquals("This is a room", room.getName());
     }
 
     @Test
     public void test_setName() {
-        Room room = new Room("This is a room", "room", false, null, null, null, null);
+        Room room = new Room("This is a room", "room", false, false, null, null, null, null);
         
         assertEquals("This is a room", room.getName());
 
@@ -60,14 +60,14 @@ public class TestRoom {
 
     @Test
     public void test_getScript() {
-        Room room = new Room("room", "This is a room!", false, null, null, null, null);
+        Room room = new Room("room", "This is a room!", false, false, null, null, null, null);
 
         assertEquals("This is a room!", room.getScript());
     }
 
     @Test
     public void test_setScript() {
-        Room room = new Room("room", "This is a room!", false, null, null, null, null);
+        Room room = new Room("room", "This is a room!", false, false, null, null, null, null);
 
         assertEquals("This is a room!", room.getScript());
 
@@ -82,14 +82,14 @@ public class TestRoom {
 
     @Test
     public void test_getIsLocked() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
 
         assertFalse(room.getReqKey());
     }
 
     @Test
     public void test_setIsLocked() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
         room.setReqKey(true);
 
         assertTrue(room.getReqKey());
@@ -97,14 +97,14 @@ public class TestRoom {
 
     @Test
     public void test_getIsEnd() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
 
         assertFalse(room.getIsEnd());
     }
 
     @Test
     public void test_setIsEnd() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
         room.setIsEnd(true);
 
         assertTrue(room.getIsEnd());
@@ -115,7 +115,7 @@ public class TestRoom {
         String path1 = "/Desktop/School/GVSU/pic.png";
         String path2 = "Z:/users/annac/docs/123.png";
 
-        Room room = new Room("room", "room", false, path1, null, null, null);
+        Room room = new Room("room", "room", false, false, path1, null, null, null);
 
         assertEquals("/Desktop/School/GVSU/pic.png", room.getImage());
 
@@ -125,7 +125,7 @@ public class TestRoom {
 
     @Test
     public void test_setImage() {
-        Room room = new Room("room", "this is a room", false, null, null, null, null);
+        Room room = new Room("room", "this is a room", false, false, null, null, null, null);
         room.setImage("/Desktop/1234/GVSU/pic.png");
         room.setImage("Z:/users/annac/docs/123.png");
         room.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
@@ -157,14 +157,14 @@ public class TestRoom {
 
     @Test
     public void test_getCode() {
-        Room room = new Room("room", "room", false, null, "this is the code", null, null);
+        Room room = new Room("room", "room", false, false, null, "this is the code", null, null);
 
         assertEquals("this is the code", room.getCode());
     }
 
     @Test
     public void test_setCode() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
         room.setCode("this is the code");
 
         assertEquals("this is the code", room.getCode());
@@ -176,9 +176,9 @@ public class TestRoom {
 
     @Test
     public void test_getRooms() {
-        Room room = new Room("room", "room", false, null, null, null, null);
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         room.addRoom(room1);
         room.addRoom(room2);
@@ -189,9 +189,9 @@ public class TestRoom {
 
     @Test
     public void test_addRoom() {
-        Room room = new Room("room", "room", false, null, null, null, null);
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         room.addRoom(room1);
         room.addRoom(room2);
@@ -207,9 +207,9 @@ public class TestRoom {
 
     @Test
     public void test_delRoom() {
-        Room room = new Room("room", "room", false, null, null, null, null);
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         room.addRoom(room1);
         room.addRoom(room2);
@@ -230,7 +230,7 @@ public class TestRoom {
 
     @Test
     public void test_getKeys() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
         Key key1 = new Key("key1", null);
         Key key2 = new Key("key2", null);
 
@@ -243,7 +243,7 @@ public class TestRoom {
 
     @Test
     public void test_addKey() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
         Key key1 = new Key("key1", null);
         Key key2 = new Key("key2", null);
 
@@ -261,7 +261,7 @@ public class TestRoom {
 
     @Test
     public void test_delKey() {
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
         Key key1 = new Key("key1", null);
         Key key2 = new Key("key2", null);
 

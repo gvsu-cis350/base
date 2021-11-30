@@ -7,8 +7,8 @@ public class TestKey {
     @Test
     public void test_constructor() {
         Key key = new Key("key", null);
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         key.addRoomToUnlock(room1);
         key.addRoomToUnlock(room2);
@@ -49,8 +49,8 @@ public class TestKey {
     @Test
     public void test_getUnlocks() {
         Key key = new Key("key", null);
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         key.addRoomToUnlock(room1);
         key.addRoomToUnlock(room2);
@@ -62,8 +62,8 @@ public class TestKey {
     @Test
     public void test_addRoomToUnlock() {
         Key key = new Key("key", null);
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         key.addRoomToUnlock(room1);
         key.addRoomToUnlock(room2);
@@ -80,8 +80,8 @@ public class TestKey {
     @Test
     public void test_delRoomToUnlock() {
         Key key = new Key("key", null);
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         key.addRoomToUnlock(room1);
         key.addRoomToUnlock(room2);

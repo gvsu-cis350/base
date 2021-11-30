@@ -12,7 +12,7 @@ public class TestPlayer {
         String note2 = "This is another note!";
         Key key1 = new Key("key1", null);
         Key key2 = new Key("key2", null);
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
 
         player.addNote(note1);
         player.addNote(note2);
@@ -127,7 +127,7 @@ public class TestPlayer {
     @Test
     public void test_getCurrentPosition() {
         Player player = new Player(null, null, null);
-        Room room = new Room("room", "room", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
 
         player.setCurrentPosition(room);
 
@@ -137,8 +137,8 @@ public class TestPlayer {
     @Test
     public void test_setCurrentPosition() {
         Player player = new Player(null, null, null);
-        Room room = new Room("room", "room", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
+        Room room = new Room("room", "room", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
 
         player.setCurrentPosition(room);
 
