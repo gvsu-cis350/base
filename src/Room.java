@@ -124,6 +124,10 @@ public class Room {
         this.rooms = rooms;
     }
 
+    public void setKeys( ArrayList<Key> keys ) {
+        this.keys = keys;
+    }
+
     public void delRoom(int index) {
         try {
             rooms.remove(index);

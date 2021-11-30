@@ -1,16 +1,27 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Game {
     private ArrayList<Room> rooms;
     private ArrayList<Key> keys;
+    private String beginningScript;
+    private String endingScript;
+    private ArrayList<ArrayList<String>> roomStrings;
+    private ArrayList<ArrayList<String>> keyStrings;
     
+    /**
+     * Default initializes all of the member variables of the 
+     * Game class.
+     */
     public Game() {
         rooms = new ArrayList<Room>();
         keys = new ArrayList<Key>();
+        roomStrings = new ArrayList<ArrayList<String>>();
+        keyStrings = new ArrayList<ArrayList<String>>();
+        beginningScript = "";
+        endingScript = "";
     }
     
     /**
@@ -24,7 +35,7 @@ public class Game {
         try {
             Scanner sc = new Scanner(new File(filename));
             ArrayList<String> lines = new ArrayList<String>();
-            ArrayList<String> keyStrings = new ArrayList<String>();
+            ArrayList<String> k = new ArrayList<String>();
 
             while(sc.hasNextLine()) {
                 lines.add( sc.nextLine() );
@@ -35,10 +46,10 @@ public class Game {
             for( int i = 0; i < lines.size(); i++ ) {
                 switch(lines.get(i).toLowerCase().substring( 0, 1 ) ) {
                     case("b"):
-                        // Beginning script
+                        beginningScript = lines.get(i);
                         break;
                     case("e"):
-                        // Ending script
+                        endingScript = lines.get(i);
                         break;
                     case("r"): 
                     {
@@ -48,27 +59,55 @@ public class Game {
                         break;
                     }
                     case("k"):
-                        keyStrings.add(lines.get( i ) );
+                        k.add(lines.get( i ) );
                         break;
                 }
             }
-            addKeys( keyStrings );
+
+            // Creates all of the keys listed
+            addKeys( k );
+
+            // At this point, all of the rooms and keys should be created
+            // What I need to do is add all of the keys that I've stored the names for into my rooms
+
+            ArrayList<Room> connectedRooms = new ArrayList<Room>();
+            
+            for( int i = 0; i < rooms.size(); i++ ) {
+                for( int j = 0; j < roomStrings.get(i).size(); i++ ) {
+                    connectedRooms.add( getRoomByName( roomStrings.get(i).get(j) ) );
+                }
+                rooms.get( i ).setRooms( connectedRooms );
+            }
+
+            ArrayList<Key> connectedKeys = new ArrayList<Key>();
+
+            for( int i = 0; i < rooms.size(); i++ ) {
+                for( int j = 0; j < keyStrings.get(i).size(); i++ ) {
+                    connectedKeys.add( getKeyByName( keyStrings.get(i).get(j) ) );
+                }
+                rooms.get( i ).setKeys( connectedKeys ); 
+            }
+
         } catch(Exception e) {
             throw new NoSuchElementException("The file which has been entered cannot be utilized.");
         }
     }
 
+    /**
+     * This is a protected helper method which parses a room line and turns
+     * it into a new room object and returns it
+     * @param line
+     * @return the new room object
+     */
     protected Room parseRoom( String line ) {
         line = line.substring( 6 );
         line = line.replace( "\n", "" );
         line = line.replace( ", ", "," );
         Room newRoom = new Room();
+        ArrayList<String> newRoomString = new ArrayList<String>();
+        ArrayList<String> newKeyString = new ArrayList<String>();
         
         String[] room = line.split(",");
-
-        // Map<String, ArrayList<String>> m = new Map<String, ArrayList<String>>();
-
-        ArrayList<String> connectedRooms = new ArrayList<String>();
 
         for( int i = 0; i < room.length; i++ ) {
             switch( i )
@@ -87,26 +126,37 @@ public class Game {
                     }
                     break;
                 case 3:
-                    // newRoom.setImage( room[i] );
-                    break;
-                case 4: 
-                    newRoom.setCode( room[i] );
+                    if( room[i].toLowerCase().equals("true") ) {
+                        newRoom.setReqKey(true);
+                    } else {
+                        newRoom.setReqKey(false);
+                    }
+                case 4:
+                    newRoom.setImage( room[i] );
                     break;
                 case 5: 
+                    newRoom.setCode( room[i] );
+                    break;
+                case 6: 
                 {
-                    String[] s = room[i].split(" ");
-                    for(int j = 0; j < s.length; i++ ) {
-                        connectedRooms.add( s[i] );
+                    String[] str = room[i].split(" ");
+                    for(int j = 0; j < str.length; j++ ) {
+                        newRoomString.add( str[j] );
                     }
                     break;
                 }
-                case 6:
+                case 7:
+                {
+                    String[] str = room[i].split(" ");
+                    for(int j = 0; j < str.length; j++) {
+                        newKeyString.add( str[j] );
+                    }
                     break;
+                }
             }
         }
-
-        // newRoom.setRooms(connectedRooms);;
-
+        keyStrings.add( newKeyString );
+        roomStrings.add( newRoomString );
         return newRoom;
     }
 
@@ -142,12 +192,52 @@ public class Game {
         return null;
     }
 
+    protected Key getKeyByName( String name ) {
+        for( int i = 0; i < rooms.size(); i++ ) {
+            if( keys.get( i ).getName().toLowerCase().equals( name.toLowerCase() ) ) {
+                return keys.get( i );
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Room> getRooms() {
         return rooms;
     }
 
     public ArrayList<Key> getKeys() {
         return keys;
+    }
+
+    /**
+     * This method is just for testing so it is protected
+     * @return
+     */
+    protected ArrayList<ArrayList<String>> getKeyStrings() {
+        return keyStrings;
+    }
+
+    /**
+     * This method is just for testing so it is protected
+     * @return
+     */
+    protected ArrayList<ArrayList<String>> getRoomStrings() {
+        return roomStrings;
+    }
+
+    /**
+     * Returns the script for the beginning of the escape room. 
+     */
+    public String getBeginningScript() {
+        return beginningScript;
+    }
+
+    /**
+     * Returns the script for the end of the escape room
+     * @return
+     */
+    public String getEndingScript() {
+        return endingScript;
     }
 
     public void saveEscapeRoom(){
