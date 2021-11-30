@@ -102,8 +102,7 @@ public class TestEscapeRoom {
         escapeRoom.setImage("Z:/users/annac/docs/123.png");
         escapeRoom.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
         escapeRoom.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
-
-        assertEquals("c:/folder1/\"folder 2-_\"/___file---.png", escapeRoom.getImage());
+        escapeRoom.setImage("D:\\CodingTests\\GUITests\\src\\pics\\map.png");
 
         assertEquals("image not found", escapeRoom.setImage(""));
         assertEquals("image not found", escapeRoom.setImage(null));

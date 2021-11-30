@@ -130,6 +130,7 @@ public class TestRoom {
         room.setImage("Z:/users/annac/docs/123.png");
         room.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
         room.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
+        room.setImage("D:\\CodingTests\\GUITests\\src\\pics\\map.png");
 
         assertEquals("image not found", room.setImage(""));
         assertEquals("image not found", room.setImage(null));
