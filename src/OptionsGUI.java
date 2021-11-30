@@ -11,7 +11,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private JPanel examplePanel;
     private JPanel navigationPanel;
 
-    //private JList escapeRooms;
     private JList exampleList;
 
     private JComboBox fontSize;
@@ -19,10 +18,10 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private JComboBox colors;
 
     private JLabel exampleLabel;
+    private JLabel pathLabel;
 
     private JTextArea exampleText;
 
-    //private JButton choose;
     private JButton load;
     private JButton make;
     private JButton exampleButton;
@@ -37,7 +36,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private String[] sizeList = {"one", "two", "three", "four", "five"};
     private String[] styleList = {"Style1", "Style2", "Style3", "Style4", "Style5"};
     private String[] colorList = {"color1", "color2", "color3", "color4", "color5"};
-    //private String[] escapeRoomList = {"Room1", "Room2", "Room3"};
 
     final JFileChooser fileLoader;
 
@@ -53,7 +51,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
         visualPanel = new JPanel();
         navigationPanel = new JPanel();
 
-        //escapeRooms = new JList(escapeRoomList);
         exampleList = new JList(exampleString);
 
         fontSize = new JComboBox(sizeList);
@@ -61,10 +58,15 @@ public class OptionsGUI extends JFrame implements ActionListener{
         colors = new JComboBox(colorList);
 
         exampleLabel = new JLabel("This is a label");
+        if (escapeFile == null){
+            pathLabel = new JLabel("No escape room chosen");
+        }
+        else{
+            pathLabel = new JLabel(escapeFile);
+        }
 
         exampleText = new JTextArea("This is an area with text in it", 5, 30);
 
-        //choose = new JButton("Choose Escape Room");
         load = new JButton("Load Escape Room");
         make = new JButton("Make your own!");
         exampleButton = new JButton("Button");
@@ -75,7 +77,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
         fileLoader = new JFileChooser();
 
-        //choose.addActionListener(this);
         load.addActionListener(this);
         make.addActionListener(this);
         fontSize.addActionListener(this);
@@ -86,8 +87,9 @@ public class OptionsGUI extends JFrame implements ActionListener{
         ok.addActionListener(this);
         mainMenu.addActionListener(this);
 
-        //escapeRoomPanel.add(escapeRooms);
-        //escapeRoomPanel.add(choose);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        escapeRoomPanel.add(pathLabel);
         escapeRoomPanel.add(load);
         escapeRoomPanel.add(make);
         mainPanel.add(escapeRoomPanel);
@@ -97,7 +99,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
         examplePanel.add(exampleList);
         examplePanel.add(exampleButton);
 
-        visualPanel.add(fontSize);
         visualPanel.add(fontStyle);
         visualPanel.add(colors);
         visualPanel.add(examplePanel);
@@ -114,6 +115,79 @@ public class OptionsGUI extends JFrame implements ActionListener{
         //exampleList.setSelectionBackground(selectionColor);
         //exampleList.setSelectionForeground(selectionText);
        //mainPanel.setBackground(backgroundColor);
+
+        add(mainPanel);
+
+        setVisible(true);
+        setSize(1000,500);
+    }
+    public OptionsGUI(String filename){
+        mainPanel = new JPanel();
+        escapeRoomPanel = new JPanel();
+        examplePanel = new JPanel();
+        visualPanel = new JPanel();
+        navigationPanel = new JPanel();
+
+        exampleList = new JList(exampleString);
+
+        fontSize = new JComboBox(sizeList);
+        fontStyle = new JComboBox(styleList);
+        colors = new JComboBox(colorList);
+
+        escapeFile = filename;
+
+        exampleLabel = new JLabel("This is a label");
+        if (escapeFile == null){
+            pathLabel = new JLabel("No escape room chosen");
+        }
+        else{
+            pathLabel = new JLabel(escapeFile);
+        }
+
+        exampleText = new JTextArea("This is an area with text in it", 5, 30);
+
+        load = new JButton("Load Escape Room");
+        make = new JButton("Make your own!");
+        exampleButton = new JButton("Button");
+        defaultButton = new JButton("Restore default settings");
+        apply = new JButton("Apply Changes");
+        ok = new JButton("Ok");
+        mainMenu = new JButton("Main Menu");
+
+        fileLoader = new JFileChooser();
+
+        load.addActionListener(this);
+        make.addActionListener(this);
+        fontSize.addActionListener(this);
+        fontStyle.addActionListener(this);
+        colors.addActionListener(this);
+        defaultButton.addActionListener(this);
+        apply.addActionListener(this);
+        ok.addActionListener(this);
+        mainMenu.addActionListener(this);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        escapeRoomPanel.add(pathLabel);
+        escapeRoomPanel.add(load);
+        escapeRoomPanel.add(make);
+        mainPanel.add(escapeRoomPanel);
+
+        examplePanel.add(exampleLabel);
+        examplePanel.add(exampleText);
+        examplePanel.add(exampleList);
+        examplePanel.add(exampleButton);
+
+        visualPanel.add(fontStyle);
+        visualPanel.add(colors);
+        visualPanel.add(examplePanel);
+
+        mainPanel.add(visualPanel);
+        navigationPanel.add(mainMenu);
+        navigationPanel.add(defaultButton);
+        navigationPanel.add(apply);
+        navigationPanel.add(ok);
+        mainPanel.add(navigationPanel);
 
         add(mainPanel);
 
@@ -145,9 +219,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
             }
             this.dispose();
         }
-        //if (comp == choose){
-            //get file path string
-        //}
         if (comp == load){
             int returnVal = fileLoader.showOpenDialog(OptionsGUI.this);
 
@@ -155,13 +226,20 @@ public class OptionsGUI extends JFrame implements ActionListener{
                 File file = fileLoader.getSelectedFile();
                 escapeFile = file.getAbsolutePath();
             }
-            exampleLabel.setText(escapeFile);
+            if (escapeFile.substring(escapeFile.lastIndexOf(".")).equals(".csv")){
+                pathLabel.setText(escapeFile);
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Please choose a .csv file");
+                escapeFile = null;
+            }
         }
         if (comp == make){
             //Show dialog box with example of csv (web link to google drive artifact???)
         }
         if (comp == defaultButton){
-            //change everything back to the default values
+            //change everything back to the default values including colors
+            escapeFile = null;
         }
     }
 }

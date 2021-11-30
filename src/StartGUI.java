@@ -22,7 +22,8 @@ public class StartGUI extends JFrame implements ActionListener{
         start = new JButton("Start Game");
         options = new JButton("Options");
 
-        title.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+        title.setFont(new Font("Sans-Serif", Font.PLAIN, 20));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         exit.addActionListener(this);
         start.addActionListener(this);
@@ -53,7 +54,8 @@ public class StartGUI extends JFrame implements ActionListener{
 
         this.escapeFile = escapeFile;
 
-        title.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+        title.setFont(new Font("Sans-Serif", Font.PLAIN, 20));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         exit.addActionListener(this);
         start.addActionListener(this);
@@ -86,7 +88,11 @@ public class StartGUI extends JFrame implements ActionListener{
             this.dispose();
         }
         if(options == comp){
-            new OptionsGUI();
+            if (escapeFile == null)
+                new OptionsGUI();
+            else{
+                new OptionsGUI(escapeFile);
+            }
             this.dispose();
         }
     }
