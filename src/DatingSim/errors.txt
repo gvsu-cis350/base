@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 72: expected statement.
-    print(portrait_number)
-                          ^
+File "game/script.rpy", line 174: is not terminated with a newline. (Check strings and parenthesis.)
+(Perhaps you left out a " at the end of the first line.)
+        roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on 
 
 Ren'Py Version: Ren'Py 7.4.8.1895
-Fri Oct 15 00:47:49 2021
+Mon Nov 15 22:03:57 2021

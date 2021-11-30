@@ -310,7 +310,7 @@ screen navigation():
 
         textbutton _("Load") action ShowMenu("load")
 
-        textbutton _("Gallery") action ShowMenu("pre_gallery")
+        textbutton _("Gallery") action ShowMenu("gallery")
 
         textbutton _("Preferences") action ShowMenu("preferences")
 
@@ -536,16 +536,6 @@ style return_button:
     yalign 1.0
     yoffset -45
 
-#Gallery code
-screen pre_gallery():
-
-    tag menu
-
-    add "gallery_back"
-    use gameGallery
-    textbutton _("Return"):
-        style "return_button"
-        action Return()
 
 screen MapUI(num):
     tag MapUI
@@ -557,7 +547,7 @@ screen MapUI(num):
         ypos 214
         idle "map/library_idle.png"
         hover "map/library_hover.png"
-        
+
         if num == 1:
             action Jump("library_1")
         else:
@@ -599,7 +589,7 @@ screen MapUI(num):
             action Jump("dorms_1")
         else:
             action Jump("dorms_2")
-            
+
 
 ## About screen ################################################################
 ##
@@ -1355,6 +1345,8 @@ style notify_text:
 ## This screen is used for NVL-mode dialogue and menus.
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#nvl
+
+
 
 
 screen nvl(dialogue, items=None):

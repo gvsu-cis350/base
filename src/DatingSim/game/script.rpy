@@ -14,9 +14,6 @@ define victoria = Character("Victoria")
 define august = Character("August")
 define finley = Character("Finley")
 
-# Gallery code
-default galleryList = ["anime_street_art", "red_anime_character"]
-default Lightbox_image = ""
 
 # Pronoun data setup
 default subj_pron = ""
@@ -31,16 +28,30 @@ default skippedClass = "false"
 
 label start:
     $ portrait_number = 0
-    $ badboyPoints = 0  
-    $ prepPoints = 0 
-    $ artistPoints = 0 
-    $ tsunPoints = 0 
+    $ badboyPoints = 0
+    $ prepPoints = 0
+    $ artistPoints = 0
+    $ tsunPoints = 0
 
     scene dorm room
 
-    show roommate happy
+    "DATING SIM DEMO"
 
-    roomie "DATING SIM DEMO"
+    #####################################################################
+    #
+    #  FIRST SCENE
+    #  > Roommate introduction
+    #  > Name input
+    #  > Pronoun choice
+    #  > Portrait choice
+    #  > Personality test
+    #
+    #####################################################################
+
+    # Andrea: Start proper story?
+    roomie "Oh my goodness you're here! You're here!"
+    show roommate happy with dissolve
+    roomie "You're my new roommate, right?"
 
     # ALEXIS: Name input
     python:
@@ -48,11 +59,12 @@ label start:
         name = name.strip() or "Default"
     $ player_name = name
 
-    roomie "So your name is [player_name]... interesting."
-    player "Yup. That's me!"
+    roomie "Ah [player_name]! It's so nice to meet you!"
+    player "It's nice to meet you too!"
 
     # ANDREA: Pronoun Selection
-    roomie "What are your pronouns?"
+    roomie "Ah, also, what are your pronouns?"
+    player "Oh, thanks for asking! I use..."
     menu:
         "They/Them":
             $ subj_pron = "they"
@@ -73,11 +85,17 @@ label start:
             $ posses_pron= "his"
             $ reflex_pron = "himself"
 
-    roomie "Ah! So you're a [subj_pron] / [obj_pron]"
+    roomie "Well, it's wonderful to meet you [player_name]. I already know we're going to have a lot of fun together."
+    player "What do you mean?"
+    roomie "Well, first things first, lets get you settled in!"
+
+    hide roommate happy with dissolve
+
+    "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
+
+    player_thinking "What do I look like?"
 
     # AMELA: Character appearance selection
-
-    roomie "What do you look like?"
 
     screen portrait_selection():
         # Screen that displays 4 image buttons in a 2x2 grid.
@@ -100,17 +118,17 @@ label start:
     # player appearance set by portrait selected
     $ portrait_number = _return
 
-    # FIXME: delete this code later; for testing purposes now
-    if portrait_number == 1:
-        roomie "Your appearance is Red"
-    elif portrait_number == 2:
-        roomie "Your appearance is Green"
-    elif portrait_number == 3:
-        roomie "Your appearance is Blue"
-    elif portrait_number == 4:
-        roomie "Your appearance is Purple"
-    else:
-        roomie "Something went wrong"
+    roomie "Finished?"
+
+    player "Yeah, I'm almost done. Why, what's up?"
+
+    roomie "I found this personality quiz on a blog earlier, you should take it!"
+
+    show roommate happy with dissolve
+
+    player "A personality quiz?"
+
+    "She hands you a piece of torn notebook paper with some questions written down on them."
 
     #start of quiz
     roomie "Would you rather"
@@ -131,7 +149,7 @@ label start:
             $ badboyPoints += 1
             $ prepPoints += 1
 
-    roomie "One a first date you would like to go to "
+    roomie "On a first date, you would prefer to go to... "
     menu:
         "To a movie theater":
             $ artistPoints += 1
@@ -140,8 +158,38 @@ label start:
             $ prepPoints += 1
             $ tsunPoints += 1
 
-    # This ends the game.
+    player "What kind of blog did you find this on, again?"
+    roomie "No matter, thanks!"
+    "She looks down at your answers and seems to be counting."
+    player_thinking "What was that about?"
+    roomie "Ah! I don't know."
+    player "Don't know what?"
+    roomie "Who you'd be cuter with!"
+    player "What do you mean?"
+    roomie "My friends! I'd love for you to meet them soon. Some of them have been looking for someone,"
+    roomie "some haven't but really should.They're really nice! I'm sure you'd like them."
+    roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on"
+    roomie "AND he is a serious hottie"
+    roomie "Victoria is..." #FIXME
+    roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
+    roomie "They have the softest heart."
+    roomie "And then there's..." #FIXME
+    roomie "But! You'll meet them all eventually, I'm sure"
+    roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
 
+    hide roommate happy with dissolve
+
+
+    #####################################################################
+    #
+    #  SECOND SCENE ????
+    #
+    #####################################################################
+
+    #FIXME Change visual to the school
+    "After classes"
+    player_thinking "First day of school tends to be exciting, but generally uneventful."
+    player_thinking "It's been a long day, but there's one last thing I should do before I leave..."
     jump choose_club
 
 label choose_club:
@@ -247,7 +295,7 @@ label meet_badboy:
     dom "Because I'm too cool for school, y'know."
 
     dom "Anyways, I gotta bounce. Got hooligan activities to attend to. Because I'm a hooligan."
-    
+
     player_thinking "He sounds like he's kidding, but somehow I can't tell."
 
     dom "I'm sure we'll bump into each other again. Later!"
@@ -257,14 +305,14 @@ label meet_badboy:
     player_thinking "Before I can even say goodbye, he starts sprinting past me like a madman."
 
     player_thinking "Those hooligan activities must be urgent..."
-    
+
     jump free_time_1
 
 label free_time_1:
     player_thinking "I have some free time... what should I do?"
 
     call screen MapUI(1)
-    
+
     return
 
 label library_1:
@@ -327,7 +375,7 @@ label tenniscourts_1:
             player_thinking "By the end of it, we're both laughing at each other."
 
     dom "Are the tennis courts everything you hoped for?"
-    
+
     player "Oh, yes. And so much more."
 
     dom "Heh. That was actually the first time I'd done anything besides loitering at this place. Was pretty fun."
@@ -487,28 +535,44 @@ label dorms_2:
     jump route_determination
 
 label route_determination:
-    # check which character has the most points here --
-    # whoever it is, trigger their route
-    # set flag to current route
+    # "Badboy points: [badboyPoints], prepPoints: [prepPoints], artistPoints: [artistPoints], tsunPoints: [tsunPoints]"
+    python:
+        points = [badboyPoints, prepPoints, artistPoints, tsunPoints]
+        # print("Max points is " + str(max(points)))
+        # print("Index of max points is " + str(points.index(max(points))))
+        index_num = points.index(max(points))
 
-    "Route determined here"
+    $ route_number = index_num
+
+    if route_number == 0:
+        jump BADBOY_START
+    elif route_number == 1:
+        jump PREP_START
+    elif route_number == 2:
+        jump ARTIST_START
+    else:
+        jump TSUNDERE_START
 
     return
 
 label BADBOY_START:
     # badboy route
-    return
-
-label ARTIST_START:
-    # artist route
+    "BADBOY ROUTE START"
     return
 
 label PREP_START:
     # prep route
+    "PREP ROUTE START"
+    return
+
+label ARTIST_START:
+    # artist route
+    "ARTIST ROUTE START"
     return
 
 label TSUNDERE_START:
     # tsundere route
+    "TSUNDERE ROUTE START"
     return
 
 label FINAL_PARTY:
