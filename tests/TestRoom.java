@@ -131,6 +131,7 @@ public class TestRoom {
         room.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
         room.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
         room.setImage("D:\\CodingTests\\GUITests\\src\\pics\\map.png");
+        room.setImage("/~!@#$/%^&*(/)-_=+/\\a\"';:.>,<?/image.png");
 
         assertEquals("image not found", room.setImage(""));
         assertEquals("image not found", room.setImage(null));
@@ -146,12 +147,17 @@ public class TestRoom {
         assertEquals("setImage in class Room: invalid file path", exception.getMessage());
 
         exception = assertThrows(IllegalArgumentException.class, () -> {
-            room.setImage("/image/!/image.png");
+            room.setImage("\\image\\!\\image.png");
         });
         assertEquals("setImage in class Room: invalid file path", exception.getMessage());
 
         exception = assertThrows(IllegalArgumentException.class, () -> {
             room.setImage("/image/a folder/image.png");
+        });
+        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setImage("/image/a\nthing/image.png");
         });
         assertEquals("setImage in class Room: invalid file path", exception.getMessage());
     }
