@@ -261,6 +261,8 @@ public class TestEscapeRoom {
         assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
 
         bathroom.setCode(null);
+        assertEquals("Bathroom requires a key to enter.", escapeRoom.moveRoom("bathroom"));
+
         ArrayList<Room> unlocks = new ArrayList<>();
         unlocks.add(bathroom);
         escapeRoom.getPlayer().addToInventory(new Key("unlocks bathroom", unlocks));
