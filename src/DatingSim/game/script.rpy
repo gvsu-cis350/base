@@ -376,13 +376,80 @@ label halloween_party:
             jump pumpkin_patch
 
 label haunted_house:
-    "Haunted house event"
+    player_thinking "So this is the haunted house... I wonder if it's actually scary..."
+    player_thinking "Wait, those two look familiar."
+
+    # TODO: add dom and fin sprites here
+
+    dom "C'mon, don't be such a wuss! Let's go in!"
+    finley "Says the man willing to do any dare."
+    dom "And what about it?"
+    player "Hey! What's going on?"
+    finley "Dominic wants to go to the haunted house, but I don't want to be the minority character at the start of a horror movie."
+    dom "Finley here is a wuss who thinks they might actually die if they go inside."
+    player "I mean, it does look pretty scary..."
+    finley "What do you think, [player_name]? Would you go in?"
 
     menu:
-        "Side with bad boy":
-            pass
-        "Side with tsundere":
-            pass
+        "Side with Dominic":
+            $ badboyPoints += 1
+            player "Yeah, why not? It looks fun."
+            player_thinking "A smug grin overtakes Dominic's face, showing the triumph he feels over coming out the victor in this battle."
+            player_thinking "Finley looks like they're over it."
+            dom "See? [player_name] has the right idea."
+            dom "So, whaddaya say we go inside?"
+            player "Let's do it!"
+            finley "Have fun possibly dying. I'm gonna get some food."
+            player_thinking "And with that, Finley unbothered-ly vacated the haunted house premises."
+            # TODO: scene change, inside of HH
+            player_thinking "As I enter the haunted house, I suddenly question the choice I made."
+            player_thinking "It's dark, weird noises are coming from everywhere, the decorations are spooky..."
+            player_thinking "Dominic still has that smug look on his face as always. I think he's having a good time."
+            player_thinking "Suddenly, someone with zombie makeup jumps out at both of us and yells Boo!"
+            player "Eeeeeek!"
+            dom "Haha! Gonna have to do better than that, kid!"
+            player_thinking "I clung closely to Dominic as we traversed through the rest of the house, with ghosts and ghouls meeting us at every corner."
+            player_thinking "Hearing him laugh made my uneasiness fade and by the end of it, I was laughing along with him."
+            player_thinking "I think I might have caught him blushing, too..."
+            # TODO: scene change, outside of HH
+            dom "Well, that was as stupid as I expected."
+            player "Yeah. Totally."
+            dom "What? You were totally scared!"
+            player "They got me the first time, yeah, but the scares got kinda cheap after that..."
+            dom "Well, as corny as it was, it was pretty fun."
+            dom "Finley missed out, for sure. Probably eating cheese curds somewhere."
+            dom "We should do more stupid stuff together sometime."
+            player "Oh. Yeah, I'd like that."
+            dom "Sweet. Catch you later, nerd!"
+            # hide Dominic
+            player_thinking "Aaaaaaaaand he's gone..."
+            player_thinking "I think this was a Halloween well spent."
+        "Side with Finley":
+            $ tsunPoints += 1
+            player "No, you have a point, Finley. Why risk it?"
+            player_thinking "Are they blushing? Dominic looks tired."
+            if subj_pron == "they":
+                finley "See, [subj_pron] get it. You have fun, Dominic."
+            else:
+                finley "See, [subj_pron] gets it. You have fun, Dominic."
+            dom "You know what? I think I will. See ya later, losers!"
+            # TODO hide dominic
+            player_thinking "And with that, Dominic almost comically skipped off into the darkness past the haunted house's front door."
+            finley "I'm going to go get some cheese curds. You want to come or not?"
+            player "Sure!"
+            # TODO scene change
+            player_thinking "I think the cheese curd stand isn't far from here. Finley is coming back from the counter with two baskets of cheese curds."
+            finley "Here, you want one? Not that I bought you some for siding with me or anything. It was just cheaper to buy two."
+            player "Sure, thanks. We should probably find somewhere to eat these."
+            finley "That tree over there looks pretty comfy. Let's head over there."
+            player_thinking "I take a bite of my cheese curds and taste the gooey goodness of the cheese wash over my taste buds."
+            player_thinking "I look over to see Finley with their eyes closed and the softest smile on their face."
+            finley "What are you looking at?"
+            player "Nothing. These cheese curds are really good."
+            finley "Of course they are. It's fried cheese. What could be better?"
+            finley "I guess we should probably go make sure Dominic isn't dead."
+            # TODO hide finley
+            player_thinking "As we head back to the haunted house, I can still see Finley's soft smile in my head."
 
     jump free_time_2
 
