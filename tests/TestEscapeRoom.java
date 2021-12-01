@@ -183,9 +183,10 @@ public class TestEscapeRoom {
         map.add(room7);
 
         ArrayList<String> notes = new ArrayList<>();
-        notes.add("first note");
-        notes.add("second note");
-        notes.add("third note");
+        notes.add("first note\"\" note,,");
+        notes.add("second ... , \"note");
+        notes.add("third__ &^%#@! note");
+        notes.add("fourth \n note");
 
         ArrayList<Room> key1Unlocks = new ArrayList<>();
         key1Unlocks.add(room1);
@@ -217,9 +218,10 @@ public class TestEscapeRoom {
 
         escapeRoom.loadProgress("progress");
 
-        assertEquals("first note", escapeRoom.getPlayer().getNotes().get(0));
-        assertEquals("second note", escapeRoom.getPlayer().getNotes().get(1));
-        assertEquals("third note", escapeRoom.getPlayer().getNotes().get(2));
+        assertEquals("first note\"\" note,,", escapeRoom.getPlayer().getNotes().get(0));
+        assertEquals("second ... , \"note", escapeRoom.getPlayer().getNotes().get(1));
+        assertEquals("third__ &^%#@! note", escapeRoom.getPlayer().getNotes().get(2));
+        assertEquals(3, escapeRoom.getPlayer().getNotes().size());
 
         assertEquals("key1", escapeRoom.getPlayer().getInventory().get(0).getName());
         assertEquals(room1, escapeRoom.getPlayer().getInventory().get(0).getUnlocks().get(0));
@@ -266,7 +268,6 @@ public class TestEscapeRoom {
         ArrayList<Room> unlocks = new ArrayList<>();
         unlocks.add(bathroom);
         escapeRoom.getPlayer().addToInventory(new Key("unlocks bathroom", unlocks));
-
         assertEquals(null, escapeRoom.moveRoom("bathroom"));
         assertEquals(bathroom, escapeRoom.getPlayer().getCurrentPosition());
 

@@ -54,6 +54,9 @@ public class Room {
         if (name.equals(""))
             throw new IllegalArgumentException("setName in class Room: empty string");
 
+        if (name.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("setName in class Room: contains line separator");
+
         this.name = name;
     }
 

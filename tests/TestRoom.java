@@ -56,6 +56,10 @@ public class TestRoom {
         });
         assertEquals("setName in class Room: empty string", exception.getMessage());
 
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            room.setName("\n");
+        });
+        assertEquals("setName in class Room: contains line separator", exception.getMessage());
     }
 
     @Test
