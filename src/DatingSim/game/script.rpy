@@ -14,9 +14,6 @@ define victoria = Character("Victoria")
 define august = Character("August")
 define finley = Character("Finley")
 
-# Gallery code
-default galleryList = ["anime_street_art", "red_anime_character"]
-default Lightbox_image = ""
 
 # Pronoun data setup
 default subj_pron = ""
@@ -25,22 +22,38 @@ default posses_adj = ""
 default posses_pron = ""
 default reflex_pron = ""
 
-# Flags
+# Flags for Dom route
 default club = "no club"
 default skippedClass = "false"
+default slept_in = "false"
+default answered_door = "false"
 
 label start:
     $ portrait_number = 0
-    $ badboyPoints = 0  
-    $ prepPoints = 0 
-    $ artistPoints = 0 
-    $ tsunPoints = 0 
+    $ badboyPoints = 0
+    $ prepPoints = 0
+    $ artistPoints = 0
+    $ tsunPoints = 0
 
     scene dorm room
 
-    show roommate happy
+    "DATING SIM DEMO"
 
-    roomie "DATING SIM DEMO"
+    #####################################################################
+    #
+    #  FIRST SCENE
+    #  > Roommate introduction
+    #  > Name input
+    #  > Pronoun choice
+    #  > Portrait choice
+    #  > Personality test
+    #
+    #####################################################################
+
+    # Andrea: Start proper story?
+    roomie "Oh my goodness you're here! You're here!"
+    show roommate happy with dissolve
+    roomie "You're my new roommate, right?"
 
     # ALEXIS: Name input
     python:
@@ -48,11 +61,12 @@ label start:
         name = name.strip() or "Default"
     $ player_name = name
 
-    roomie "So your name is [player_name]... interesting."
-    player "Yup. That's me!"
+    roomie "Ah [player_name]! It's so nice to meet you!"
+    player "It's nice to meet you too!"
 
     # ANDREA: Pronoun Selection
-    roomie "What are your pronouns?"
+    roomie "Ah, also, what are your pronouns?"
+    player "Oh, thanks for asking! I use..."
     menu:
         "They/Them":
             $ subj_pron = "they"
@@ -73,11 +87,17 @@ label start:
             $ posses_pron= "his"
             $ reflex_pron = "himself"
 
-    roomie "Ah! So you're a [subj_pron] / [obj_pron]"
+    roomie "Well, it's wonderful to meet you [player_name]. I already know we're going to have a lot of fun together."
+    player "What do you mean?"
+    roomie "Well, first things first, lets get you settled in!"
+
+    hide roommate happy with dissolve
+
+    "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
+
+    player_thinking "What do I look like?"
 
     # AMELA: Character appearance selection
-
-    roomie "What do you look like?"
 
     screen portrait_selection():
         # Screen that displays 4 image buttons in a 2x2 grid.
@@ -100,17 +120,17 @@ label start:
     # player appearance set by portrait selected
     $ portrait_number = _return
 
-    # FIXME: delete this code later; for testing purposes now
-    if portrait_number == 1:
-        roomie "Your appearance is Red"
-    elif portrait_number == 2:
-        roomie "Your appearance is Green"
-    elif portrait_number == 3:
-        roomie "Your appearance is Blue"
-    elif portrait_number == 4:
-        roomie "Your appearance is Purple"
-    else:
-        roomie "Something went wrong"
+    roomie "Finished?"
+
+    player "Yeah, I'm almost done. Why, what's up?"
+
+    roomie "I found this personality quiz on a blog earlier, you should take it!"
+
+    show roommate happy with dissolve
+
+    player "A personality quiz?"
+
+    "She hands you a piece of torn notebook paper with some questions written down on them."
 
     #start of quiz
     roomie "Would you rather"
@@ -131,7 +151,7 @@ label start:
             $ badboyPoints += 1
             $ prepPoints += 1
 
-    roomie "One a first date you would like to go to "
+    roomie "On a first date, you would prefer to go to... "
     menu:
         "To a movie theater":
             $ artistPoints += 1
@@ -140,8 +160,38 @@ label start:
             $ prepPoints += 1
             $ tsunPoints += 1
 
-    # This ends the game.
+    player "What kind of blog did you find this on, again?"
+    roomie "No matter, thanks!"
+    "She looks down at your answers and seems to be counting."
+    player_thinking "What was that about?"
+    roomie "Ah! I don't know."
+    player "Don't know what?"
+    roomie "Who you'd be cuter with!"
+    player "What do you mean?"
+    roomie "My friends! I'd love for you to meet them soon. Some of them have been looking for someone,"
+    roomie "some haven't but really should.They're really nice! I'm sure you'd like them."
+    roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on"
+    roomie "AND he is a serious hottie"
+    roomie "Victoria is..." #FIXME
+    roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
+    roomie "They have the softest heart."
+    roomie "And then there's..." #FIXME
+    roomie "But! You'll meet them all eventually, I'm sure"
+    roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
 
+    hide roommate happy with dissolve
+
+
+    #####################################################################
+    #
+    #  SECOND SCENE ????
+    #
+    #####################################################################
+
+    #FIXME Change visual to the school
+    "After classes"
+    player_thinking "First day of school tends to be exciting, but generally uneventful."
+    player_thinking "It's been a long day, but there's one last thing I should do before I leave..."
     jump choose_club
 
 label choose_club:
@@ -187,29 +237,21 @@ label meet_badboy:
     $ skippedClass = "true"
 
     player_thinking "You know what? I think I will skip class."
-
     player_thinking "I deserve a break! I'm only human, right?"
 
     scene outside campus 2
 
     player_thinking "I find myself taking a pleasant stroll throughout campus."
-
     player_thinking "Around me I hear people chatting, leaves gently rustling, the distant ringing of bells..."
-
     player_thinking "It's really peaceful. I'm glad I took this time for myself."
-
     player_thinking "Even if I might regret it later..."
-
     player_thinking "As I walk around, someone catches my eye."
 
     show badboy
 
     player_thinking "A boy wearing all black, with facial piercings and what looks like a snake tattoo peeking out of his shirt."
-
     player_thinking "He looks so... edgy."
-
     player_thinking "I don't realize that I'm staring until he looks right back at me with a devilish smirk."
-
     dom "You like what you see?"
 
     menu:
@@ -223,48 +265,33 @@ label meet_badboy:
             dom "Haha! I was just teasing."
 
     dom "So, what're you up to? Heading to class?"
-
     player "No, I'm... skipping class, actually..."
-
     dom "Whoa! Got ourselves a rule-breaker over here!"
-
     player_thinking "I feel my face going pink..."
-
     dom "I'm doing the same, actually. Going to class is lame."
-
     player_thinking "He's so right."
-
     dom "You just moved in to ROOMMATE's place, right? [player_name], is it?"
-
     player_thinking "Oh! This must be Dominic."
-
     player "Yeah. She told me about you. I didn't expect to bump into you like this."
-
     dom "Heh. I'm sure she only had great things to say about me..."
-
     dom "Well, you're least likely to find me in a classroom-setting, that's for sure."
-
     dom "Because I'm too cool for school, y'know."
-
     dom "Anyways, I gotta bounce. Got hooligan activities to attend to. Because I'm a hooligan."
-    
     player_thinking "He sounds like he's kidding, but somehow I can't tell."
-
     dom "I'm sure we'll bump into each other again. Later!"
 
     hide badboy
 
     player_thinking "Before I can even say goodbye, he starts sprinting past me like a madman."
-
     player_thinking "Those hooligan activities must be urgent..."
-    
+
     jump free_time_1
 
 label free_time_1:
     player_thinking "I have some free time... what should I do?"
 
     call screen MapUI(1)
-    
+
     return
 
 label library_1:
@@ -294,25 +321,15 @@ label tenniscourts_1:
         player "I just had some free time. I hadn't seen the tennis courts yet..."
 
     dom "Well, I gotta tell you, there isn't much to see..."
-
     dom "Apart from me, of course."
-
     player_thinking "He's so smug..."
-
     player "Do you come here to play tennis, or just to loiter like a hooligan?"
-
     player_thinking "He cracks a smirk at that."
-
     dom "I think you know the answer to that."
-
     dom "But since we're both here, might as well have ourselves a game, no?"
-
     player "Pausing the hooligan activities for now?"
-
     dom "There's always time for them."
-
     player_thinking "I guess we're playing a friendly game of tennis."
-
     player_thinking "Should I..."
 
     menu:
@@ -327,13 +344,9 @@ label tenniscourts_1:
             player_thinking "By the end of it, we're both laughing at each other."
 
     dom "Are the tennis courts everything you hoped for?"
-    
     player "Oh, yes. And so much more."
-
     dom "Heh. That was actually the first time I'd done anything besides loitering at this place. Was pretty fun."
-
     player_thinking "I peek down at my watch and realize it's almost time for my next class."
-
     player "Hey, I've got class to get to, but thanks for the game."
 
     if skippedClass == "true":
@@ -345,7 +358,6 @@ label tenniscourts_1:
     hide badboy
 
     player_thinking "Before I can open my mouth to speak, Dominic sprints towards the nearest tennis net, leaps over it, and continues sprinting towards the exit gate."
-
     player_thinking "That guy must not have a care in the world..."
 
     jump halloween_party
@@ -405,7 +417,6 @@ label schoolstore_2:
     show badboy
 
     player_thinking "...now, directly in front of my eyes."
-
     player "Dominic!"
 
     if skippedClass == "true":
@@ -420,15 +431,10 @@ label schoolstore_2:
         dom "Hey, Jane's roomie!"
 
     player "What're you doing here? Doesn't seem like a place I'd find you at."
-
     dom "Why not? Where else would I shoplift, if not at a shop?"
-
     player "You shoplift?!"
-
     dom "Pfft! Duh! I've got an image to maintain!"
-
     player_thinking "I can't tell if he's joking..."
-
     dom "Whaddaya say? Wanna help me pocket a keychain without getting caught?"
 
     menu:
@@ -487,21 +493,93 @@ label dorms_2:
     jump route_determination
 
 label route_determination:
-    # check which character has the most points here --
-    # whoever it is, trigger their route
-    # set flag to current route
+    # "Badboy points: [badboyPoints], prepPoints: [prepPoints], artistPoints: [artistPoints], tsunPoints: [tsunPoints]"
+    python:
+        points = [badboyPoints, prepPoints, artistPoints, tsunPoints]
+        # print("Max points is " + str(max(points)))
+        # print("Index of max points is " + str(points.index(max(points))))
+        index_num = points.index(max(points))
 
-    "Route determined here"
+    $ route_number = index_num
+
+    if route_number == 0:
+        jump BADBOY_START
+    elif route_number == 1:
+        jump PREP_START
+    elif route_number == 2:
+        jump ARTIST_START
+    else:
+        jump TSUNDERE_START
 
     return
 
 label BADBOY_START:
-    # badboy route
-    return
+    jump dominic_event_1
 
 label dominic_event_1:
+    player_thinking "BRRING BRRING..."
+    player "... another great day to be alive."
+    player_thinking "I sleepily rise from bed and look at the time. I really don't feel like going to class today."
+    player_thinking "I should..."
 
-    # TODO graphic
+    menu:
+        "Sleep in":
+            $ slept_in = "true"
+            player "I won't die if I miss this one class."
+            player_thinking "Before I'm able to crawl back into bed, I hear a knock at the door."
+        "Get out of bed":
+            $ slept_in = "false"
+            player "Yeah, I guess I better get out of bed."
+            player_thinking "Before I take even one step out of my room, I hear a knock at the door."
+
+    player_thinking "That's weird. That can't be Jane. She has a key, and would text if she lost it."
+    player_thinking "Jane's also in class right now, so she wouldn't have a friend over, right?"
+    player_thinking "Who could that be...?"
+
+    menu:
+        "Answer the door":
+            $ answered_door = "true"
+            player_thinking "A little apprehensively, I rise from bed, still in my pajamas, and make my way to the front door."
+            player_thinking "I'm really curious who it could be... is it a prank?"
+            player_thinking "I open the door to a unexpected familiar face."
+            show badboy
+            dom "Hey, does [player_name] live here?"
+            player "Um... no."
+            dom "Oh. Bummer. I'll try all the other rooms, then."
+            player "Er... did you need something? Jane's in class."
+            hide badboy
+        "Ignore it":
+            $ answered_door = "false"
+            if slept_in == "true":
+                player "Maybe they have the wrong dorm. I'll pretend I didn't hear that."
+                player_thinking ""
+            else:
+                player "Er... I really don't wanna get that..."
+                player_thinking "I'll get ready and leave once I think they're gone."
+
+    # Time skip to MC with Jane at the dorm
+
+    scene dorm room
+    show roommate happy
+
+    if answered_door == "false":
+        roommate "Hey, were you here around 10 this morning?"
+        player "Yeah, why do you ask?"
+        roommate "Dominic sent me a text earlier saying that he came by but no one answered the door."
+        roommate "I was in class, but I thought you were still home."
+        player_thinking "Oh, shoot... what should I say?"
+        menu:
+            "I didn't hear it":
+                player "Oh, really? I didn't hear anything. Maybe he came while I was still asleep."
+                roommate "Haha! Bummer. He's the spontaneous type, as you've probably noticed."
+                roommate "I'll let him know to knock louder next time."
+            "I didn't know who it was":
+                player "Er... I didn't answer because I thought it was a stranger..."
+                roommate "Haha! You're a careful one. It was just Dom."
+                roommate "He seemed kinda bummed. I'll tell him to text next time, but he's not one to plan things."
+    else:
+        roommate "Hey, where were you earlier? You're usually back sooner."
+        player "Dominic came by this morning so we hung out for a bit."
 
     pass
 
@@ -541,10 +619,17 @@ label ARTIST_START:
 
 label PREP_START:
     # prep route
+    "PREP ROUTE START"
+    return
+
+label ARTIST_START:
+    # artist route
+    "ARTIST ROUTE START"
     return
 
 label TSUNDERE_START:
     # tsundere route
+    "TSUNDERE ROUTE START"
     return
 
 label FINAL_PARTY:
