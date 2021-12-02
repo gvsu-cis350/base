@@ -22,9 +22,11 @@ default posses_adj = ""
 default posses_pron = ""
 default reflex_pron = ""
 
-# Flags
+# Flags for Dom route
 default club = "no club"
 default skippedClass = "false"
+default slept_in = "false"
+default answered_door = "false"
 
 label start:
     $ portrait_number = 0
@@ -235,29 +237,21 @@ label meet_badboy:
     $ skippedClass = "true"
 
     player_thinking "You know what? I think I will skip class."
-
     player_thinking "I deserve a break! I'm only human, right?"
 
     scene outside campus 2
 
     player_thinking "I find myself taking a pleasant stroll throughout campus."
-
     player_thinking "Around me I hear people chatting, leaves gently rustling, the distant ringing of bells..."
-
     player_thinking "It's really peaceful. I'm glad I took this time for myself."
-
     player_thinking "Even if I might regret it later..."
-
     player_thinking "As I walk around, someone catches my eye."
 
     show badboy
 
     player_thinking "A boy wearing all black, with facial piercings and what looks like a snake tattoo peeking out of his shirt."
-
     player_thinking "He looks so... edgy."
-
     player_thinking "I don't realize that I'm staring until he looks right back at me with a devilish smirk."
-
     dom "You like what you see?"
 
     menu:
@@ -271,39 +265,24 @@ label meet_badboy:
             dom "Haha! I was just teasing."
 
     dom "So, what're you up to? Heading to class?"
-
     player "No, I'm... skipping class, actually..."
-
     dom "Whoa! Got ourselves a rule-breaker over here!"
-
     player_thinking "I feel my face going pink..."
-
     dom "I'm doing the same, actually. Going to class is lame."
-
     player_thinking "He's so right."
-
     dom "You just moved in to ROOMMATE's place, right? [player_name], is it?"
-
     player_thinking "Oh! This must be Dominic."
-
     player "Yeah. She told me about you. I didn't expect to bump into you like this."
-
     dom "Heh. I'm sure she only had great things to say about me..."
-
     dom "Well, you're least likely to find me in a classroom-setting, that's for sure."
-
     dom "Because I'm too cool for school, y'know."
-
     dom "Anyways, I gotta bounce. Got hooligan activities to attend to. Because I'm a hooligan."
-
     player_thinking "He sounds like he's kidding, but somehow I can't tell."
-
     dom "I'm sure we'll bump into each other again. Later!"
 
     hide badboy
 
     player_thinking "Before I can even say goodbye, he starts sprinting past me like a madman."
-
     player_thinking "Those hooligan activities must be urgent..."
 
     jump free_time_1
@@ -342,25 +321,15 @@ label tenniscourts_1:
         player "I just had some free time. I hadn't seen the tennis courts yet..."
 
     dom "Well, I gotta tell you, there isn't much to see..."
-
     dom "Apart from me, of course."
-
     player_thinking "He's so smug..."
-
     player "Do you come here to play tennis, or just to loiter like a hooligan?"
-
     player_thinking "He cracks a smirk at that."
-
     dom "I think you know the answer to that."
-
     dom "But since we're both here, might as well have ourselves a game, no?"
-
     player "Pausing the hooligan activities for now?"
-
     dom "There's always time for them."
-
     player_thinking "I guess we're playing a friendly game of tennis."
-
     player_thinking "Should I..."
 
     menu:
@@ -375,13 +344,9 @@ label tenniscourts_1:
             player_thinking "By the end of it, we're both laughing at each other."
 
     dom "Are the tennis courts everything you hoped for?"
-
     player "Oh, yes. And so much more."
-
     dom "Heh. That was actually the first time I'd done anything besides loitering at this place. Was pretty fun."
-
     player_thinking "I peek down at my watch and realize it's almost time for my next class."
-
     player "Hey, I've got class to get to, but thanks for the game."
 
     if skippedClass == "true":
@@ -393,7 +358,6 @@ label tenniscourts_1:
     hide badboy
 
     player_thinking "Before I can open my mouth to speak, Dominic sprints towards the nearest tennis net, leaps over it, and continues sprinting towards the exit gate."
-
     player_thinking "That guy must not have a care in the world..."
 
     jump halloween_party
@@ -412,13 +376,80 @@ label halloween_party:
             jump pumpkin_patch
 
 label haunted_house:
-    "Haunted house event"
+    player_thinking "So this is the haunted house... I wonder if it's actually scary..."
+    player_thinking "Wait, those two look familiar."
+
+    # TODO: add dom and fin sprites here
+
+    dom "C'mon, don't be such a wuss! Let's go in!"
+    finley "Says the man willing to do any dare."
+    dom "And what about it?"
+    player "Hey! What's going on?"
+    finley "Dominic wants to go to the haunted house, but I don't want to be the minority character at the start of a horror movie."
+    dom "Finley here is a wuss who thinks they might actually die if they go inside."
+    player "I mean, it does look pretty scary..."
+    finley "What do you think, [player_name]? Would you go in?"
 
     menu:
-        "Side with bad boy":
-            pass
-        "Side with tsundere":
-            pass
+        "Side with Dominic":
+            $ badboyPoints += 1
+            player "Yeah, why not? It looks fun."
+            player_thinking "A smug grin overtakes Dominic's face, showing the triumph he feels over coming out the victor in this battle."
+            player_thinking "Finley looks like they're over it."
+            dom "See? [player_name] has the right idea."
+            dom "So, whaddaya say we go inside?"
+            player "Let's do it!"
+            finley "Have fun possibly dying. I'm gonna get some food."
+            player_thinking "And with that, Finley unbothered-ly vacated the haunted house premises."
+            # TODO: scene change, inside of HH
+            player_thinking "As I enter the haunted house, I suddenly question the choice I made."
+            player_thinking "It's dark, weird noises are coming from everywhere, the decorations are spooky..."
+            player_thinking "Dominic still has that smug look on his face as always. I think he's having a good time."
+            player_thinking "Suddenly, someone with zombie makeup jumps out at both of us and yells Boo!"
+            player "Eeeeeek!"
+            dom "Haha! Gonna have to do better than that, kid!"
+            player_thinking "I clung closely to Dominic as we traversed through the rest of the house, with ghosts and ghouls meeting us at every corner."
+            player_thinking "Hearing him laugh made my uneasiness fade and by the end of it, I was laughing along with him."
+            player_thinking "I think I might have caught him blushing, too..."
+            # TODO: scene change, outside of HH
+            dom "Well, that was as stupid as I expected."
+            player "Yeah. Totally."
+            dom "What? You were totally scared!"
+            player "They got me the first time, yeah, but the scares got kinda cheap after that..."
+            dom "Well, as corny as it was, it was pretty fun."
+            dom "Finley missed out, for sure. Probably eating cheese curds somewhere."
+            dom "We should do more stupid stuff together sometime."
+            player "Oh. Yeah, I'd like that."
+            dom "Sweet. Catch you later, nerd!"
+            # hide Dominic
+            player_thinking "Aaaaaaaaand he's gone..."
+            player_thinking "I think this was a Halloween well spent."
+        "Side with Finley":
+            $ tsunPoints += 1
+            player "No, you have a point, Finley. Why risk it?"
+            player_thinking "Are they blushing? Dominic looks tired."
+            if subj_pron == "they":
+                finley "See, [subj_pron] get it. You have fun, Dominic."
+            else:
+                finley "See, [subj_pron] gets it. You have fun, Dominic."
+            dom "You know what? I think I will. See ya later, losers!"
+            # TODO hide dominic
+            player_thinking "And with that, Dominic almost comically skipped off into the darkness past the haunted house's front door."
+            finley "I'm going to go get some cheese curds. You want to come or not?"
+            player "Sure!"
+            # TODO scene change
+            player_thinking "I think the cheese curd stand isn't far from here. Finley is coming back from the counter with two baskets of cheese curds."
+            finley "Here, you want one? Not that I bought you some for siding with me or anything. It was just cheaper to buy two."
+            player "Sure, thanks. We should probably find somewhere to eat these."
+            finley "That tree over there looks pretty comfy. Let's head over there."
+            player_thinking "I take a bite of my cheese curds and taste the gooey goodness of the cheese wash over my taste buds."
+            player_thinking "I look over to see Finley with their eyes closed and the softest smile on their face."
+            finley "What are you looking at?"
+            player "Nothing. These cheese curds are really good."
+            finley "Of course they are. It's fried cheese. What could be better?"
+            finley "I guess we should probably go make sure Dominic isn't dead."
+            # TODO hide finley
+            player_thinking "As we head back to the haunted house, I can still see Finley's soft smile in my head."
 
     jump free_time_2
 
@@ -453,7 +484,6 @@ label schoolstore_2:
     show badboy
 
     player_thinking "...now, directly in front of my eyes."
-
     player "Dominic!"
 
     if skippedClass == "true":
@@ -468,15 +498,10 @@ label schoolstore_2:
         dom "Hey, Jane's roomie!"
 
     player "What're you doing here? Doesn't seem like a place I'd find you at."
-
     dom "Why not? Where else would I shoplift, if not at a shop?"
-
     player "You shoplift?!"
-
     dom "Pfft! Duh! I've got an image to maintain!"
-
     player_thinking "I can't tell if he's joking..."
-
     dom "Whaddaya say? Wanna help me pocket a keychain without getting caught?"
 
     menu:
@@ -556,8 +581,107 @@ label route_determination:
     return
 
 label BADBOY_START:
-    # badboy route
-    "BADBOY ROUTE START"
+    jump dominic_event_1
+
+label dominic_event_1:
+    player_thinking "BRRING BRRING..."
+    player "... another great day to be alive."
+    player_thinking "I sleepily rise from bed and look at the time. I really don't feel like going to class today."
+    player_thinking "I should..."
+
+    menu:
+        "Sleep in":
+            $ slept_in = "true"
+            player "I won't die if I miss this one class."
+            player_thinking "Before I'm able to crawl back into bed, I hear a knock at the door."
+        "Get out of bed":
+            $ slept_in = "false"
+            player "Yeah, I guess I better get out of bed."
+            player_thinking "Before I take even one step out of my room, I hear a knock at the door."
+
+    player_thinking "That's weird. That can't be Jane. She has a key, and would text if she lost it."
+    player_thinking "Jane's also in class right now, so she wouldn't have a friend over, right?"
+    player_thinking "Who could that be...?"
+
+    menu:
+        "Answer the door":
+            $ answered_door = "true"
+            player_thinking "A little apprehensively, I rise from bed, still in my pajamas, and make my way to the front door."
+            player_thinking "I'm really curious who it could be... is it a prank?"
+            player_thinking "I open the door to a unexpected familiar face."
+            show badboy
+            dom "Hey, does [player_name] live here?"
+            player "Um... no."
+            dom "Oh. Bummer. I'll try all the other rooms, then."
+            player "Er... did you need something? Jane's in class."
+            hide badboy
+        "Ignore it":
+            $ answered_door = "false"
+            if slept_in == "true":
+                player "Maybe they have the wrong dorm. I'll pretend I didn't hear that."
+                player_thinking ""
+            else:
+                player "Er... I really don't wanna get that..."
+                player_thinking "I'll get ready and leave once I think they're gone."
+
+    # Time skip to MC with Jane at the dorm
+
+    scene dorm room
+    show roommate happy
+
+    if answered_door == "false":
+        roommate "Hey, were you here around 10 this morning?"
+        player "Yeah, why do you ask?"
+        roommate "Dominic sent me a text earlier saying that he came by but no one answered the door."
+        roommate "I was in class, but I thought you were still home."
+        player_thinking "Oh, shoot... what should I say?"
+        menu:
+            "I didn't hear it":
+                player "Oh, really? I didn't hear anything. Maybe he came while I was still asleep."
+                roommate "Haha! Bummer. He's the spontaneous type, as you've probably noticed."
+                roommate "I'll let him know to knock louder next time."
+            "I didn't know who it was":
+                player "Er... I didn't answer because I thought it was a stranger..."
+                roommate "Haha! You're a careful one. It was just Dom."
+                roommate "He seemed kinda bummed. I'll tell him to text next time, but he's not one to plan things."
+    else:
+        roommate "Hey, where were you earlier? You're usually back sooner."
+        player "Dominic came by this morning so we hung out for a bit."
+
+    pass
+
+label dominic_event_2:
+
+    # TODO graphic
+
+    show badboy
+
+    dom "... you know, I wasn't always like this."
+    player_thinking "What do you mean?"
+    dom "I wasn't always this edgy 'hooligan' type I make myself out to be."
+    player_thinking "His voice's usual brightness is gone, along with the default smug on his face."
+    player_thinking "For the first time, I'm certain he's serious."
+    player "Well, what were you like before?"
+    player_thinking "He ponders that question for a moment, takes a short breath."
+    dom "I was... a 'good kid'. I think. As good as I could be compared to my brother, at least."
+    dom ""
+
+    pass
+
+label dominic_event_3:
+
+    # TODO graphic
+
+    player_thinking "... so this is where Dominic lives."
+    player_thinking "It's a tiny, dingy apartment. There are holes in the walls and rips in the carpet."
+    player_thinking "He told me his family was well-off. Does he choose to live like this?"
+
+    dom "Hey! What're you doing here?"
+
+    pass
+
+label ARTIST_START:
+    # artist route
     return
 
 label PREP_START:
