@@ -14,7 +14,6 @@ define victoria = Character("Victoria")
 define august = Character("August")
 define finley = Character("Finley")
 
-
 # Pronoun data setup
 default subj_pron = ""
 default obj_pron = ""
@@ -50,7 +49,7 @@ label start:
 
     # Andrea: Start proper story?
     roomie "Oh my goodness you're here! You're here!"
-    show roommate happy with dissolve
+    show roommate happy with moveinleft
     roomie "You're my new roommate, right?"
 
     # ALEXIS: Name input
@@ -119,15 +118,12 @@ label start:
     $ portrait_number = _return
 
     roomie "Finished?"
-
     player "Yeah, I'm almost done. Why, what's up?"
-
     roomie "I found this personality quiz on a blog earlier, you should take it!"
 
-    show roommate happy with dissolve
+    show roommate happy with moveinright
 
     player "A personality quiz?"
-
     "She hands you a piece of torn notebook paper with some questions written down on them."
 
     #start of quiz
@@ -139,7 +135,7 @@ label start:
             "Go out to a raging party":
                 $ badboyPoints += 1
                 $ tsunPoints += 1
-
+            
     roomie "Would you rather have"
     menu:
         "A close group of friends":
@@ -179,6 +175,7 @@ label start:
 
     hide roommate happy with dissolve
 
+    player_thinking "First day... I'm a little nervous. I wonder what tomorrow will be like."
 
     #####################################################################
     #
@@ -186,7 +183,7 @@ label start:
     #
     #####################################################################
 
-    #FIXME Change visual to the school
+    scene outside campus 1 with dissolve
     "After classes"
     player_thinking "First day of school tends to be exciting, but generally uneventful."
     player_thinking "It's been a long day, but there's one last thing I should do before I leave..."
@@ -206,8 +203,57 @@ label choose_club:
             $ club = "no club"
             jump meet_tsun
 
+# Meet Artist: Andrea
 label meet_artist:
-    "MEET THE ARTIST"
+    scene design club with dissolve
+    player_thinking "There's only one spot left..."
+    show artist with moveinleft
+    player_thinking "The person sitting next to me is looking at me. Why are they blushing?"
+    menu:
+        "Introduce yourself":
+            player "Hi, I'm [player_name]. I'm new here."
+            "The person sitting next to you is smiling at their screen."
+            august "I'm August."
+            player "August? I like your name!"
+            august "Really? I like yours too..."
+            player_thinking "Am I blushing now?"
+            "You start up your laptop and open your most recent design project"
+            august "Oh wow, you're really talented!"
+            player "Ah, you think so? Thank you!"
+        "Sit in silence":
+            player "..."
+
+    "The club president calls everyone's attention and introduces you to all the club members. They are very welcoming."
+    "The person sitting next to you, August, keeps glancing at you. "
+
+    menu:
+        "Ask August about what they are working on":
+            player "What have you been working on?"
+            august "Do you want to see?"
+            player "Absolutely!"
+            "August shows you a sketch of a creepy but beautiful mermaid."
+            menu:
+                "Oh wow, that's stunning!": 
+                    august "Thank you!"
+                    $ artistPoints += 1
+                "...Ew, that's weird.":
+                    august "Oh. Sorry."
+                    $ assholeToAugust = "true"        
+        "Tell August they're being creepy":
+            player "What are you looking at me for?"
+            august "Oh! I uh..."
+            player "You what? huh? need anything?"
+            august "No, no! I'm sorry, I didn't mean to bother you."
+            player "Yeah, I don't care, just stop being creepy."
+            $ assholeToAugust = "true"
+        "..."
+    
+    "You spend the rest of the hour desigining in August's company."
+    if assholeToAugust == "true":
+        "They looked really uncomfortable the entire time."
+    else:
+        "It was nice."
+
     jump skip_class
 
 label meet_tsun:
@@ -220,6 +266,9 @@ label meet_prep:
     jump skip_class
 
 label skip_class:
+
+    scene outside campus 2 with dissolve
+    "The next day..."
     player_thinking "I'm not really feeling it today. Do I skip class?"
 
     # jump to meet_badboy, else go to class, then jump to free time
