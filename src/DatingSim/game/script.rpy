@@ -14,6 +14,9 @@ define victoria = Character("Victoria")
 define august = Character("August")
 define finley = Character("Finley")
 
+# Have you met a romanceable character?
+default knowAugust = "false"
+
 # Pronoun data setup
 default subj_pron = ""
 default obj_pron = ""
@@ -61,121 +64,118 @@ label start:
     roomie "Ah [player_name]! It's so nice to meet you!"
     player "It's nice to meet you too!"
 
-    # ANDREA: Pronoun Selection
-    roomie "Ah, also, what are your pronouns?"
-    player "Oh, thanks for asking! I use..."
-    menu:
-        "They/Them":
-            $ subj_pron = "they"
-            $ obj_pron = "them"
-            $ posses_adj = "their"
-            $ posses_pron = "theirs"
-            $ reflex_pron = "themselves"
-        "She/Her":
-            $ subj_pron = "she"
-            $ obj_pron = "her"
-            $ posses_adj = "her"
-            $ posses_pron = "hers"
-            $ reflex_pron = "herself"
-        "He/Him":
-            $ subj_pron = "he"
-            $ obj_pron = "him"
-            $ posses_adj = "his"
-            $ posses_pron= "his"
-            $ reflex_pron = "himself"
+    # # ANDREA: Pronoun Selection
+    # roomie "Ah, also, what are your pronouns?"
+    # player "Oh, thanks for asking! I use..."
+    # menu:
+    #     "They/Them":
+    #         $ subj_pron = "they"
+    #         $ obj_pron = "them"
+    #         $ posses_adj = "their"
+    #         $ posses_pron = "theirs"
+    #         $ reflex_pron = "themselves"
+    #     "She/Her":
+    #         $ subj_pron = "she"
+    #         $ obj_pron = "her"
+    #         $ posses_adj = "her"
+    #         $ posses_pron = "hers"
+    #         $ reflex_pron = "herself"
+    #     "He/Him":
+    #         $ subj_pron = "he"
+    #         $ obj_pron = "him"
+    #         $ posses_adj = "his"
+    #         $ posses_pron= "his"
+    #         $ reflex_pron = "himself"
 
-    roomie "Well, it's wonderful to meet you [player_name]. I already know we're going to have a lot of fun together."
-    player "What do you mean?"
-    roomie "Well, first things first, lets get you settled in!"
+    # roomie "Well, it's wonderful to meet you [player_name]. I already know we're going to have a lot of fun together."
+    # player "What do you mean?"
+    # roomie "Well, first things first, lets get you settled in!"
 
-    hide roommate happy with dissolve
+    # hide roommate happy with dissolve
 
-    "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
+    # "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
 
-    player_thinking "What do I look like?"
+    # player_thinking "What do I look like?"
 
-    # AMELA: Character appearance selection
+    # # AMELA: Character appearance selection
 
-    screen portrait_selection():
-        # Screen that displays 4 image buttons in a 2x2 grid.
-        # The player clicks on an image to set their "appearance".
+    # screen portrait_selection():
+    #     # Screen that displays 4 image buttons in a 2x2 grid.
+    #     # The player clicks on an image to set their "appearance".
 
-        vpgrid:
-            cols 2
-            spacing 20
+    #     vpgrid:
+    #         cols 2
+    #         spacing 20
 
-            xalign 0.5
-            yalign 0.5
+    #         xalign 0.5
+    #         yalign 0.5
 
-            imagebutton auto "portraits/portrait1_%s.png" action Return(1)
-            imagebutton auto "portraits/portrait2_%s.png" action Return(2)
-            imagebutton auto "portraits/portrait3_%s.png" action Return(3)
-            imagebutton auto "portraits/portrait4_%s.png" action Return(4)
+    #         imagebutton auto "portraits/portrait1_%s.png" action Return(1)
+    #         imagebutton auto "portraits/portrait2_%s.png" action Return(2)
+    #         imagebutton auto "portraits/portrait3_%s.png" action Return(3)
+    #         imagebutton auto "portraits/portrait4_%s.png" action Return(4)
 
-    call screen portrait_selection
+    # call screen portrait_selection
 
-    # player appearance set by portrait selected
-    $ portrait_number = _return
+    # # player appearance set by portrait selected
+    # $ portrait_number = _return
 
-    roomie "Finished?"
-    player "Yeah, I'm almost done. Why, what's up?"
-    roomie "I found this personality quiz on a blog earlier, you should take it!"
+    # roomie "Finished?"
+    # player "Yeah, I'm almost done. Why, what's up?"
+    # roomie "I found this personality quiz on a blog earlier, you should take it!"
 
-    show roommate happy with moveinright
+    # show roommate happy with moveinright
 
-    player "A personality quiz?"
-    "She hands you a piece of torn notebook paper with some questions written down on them."
+    # player "A personality quiz?"
+    # "She hands you a piece of torn notebook paper with some questions written down on them."
 
-    #start of quiz
-    roomie "Would you rather"
-    menu:
-            "Read a book at home":
-                $ artistPoints += 1
-                $ prepPoints += 1
-            "Go out to a raging party":
-                $ badboyPoints += 1
-                $ tsunPoints += 1
+    # #start of quiz
+    # roomie "Would you rather"
+    # menu:
+    #         "Read a book at home":
+    #             $ artistPoints += 1
+    #             $ prepPoints += 1
+    #         "Go out to a raging party":
+    #             $ badboyPoints += 1
+    #             $ tsunPoints += 1
             
-    roomie "Would you rather have"
-    menu:
-        "A close group of friends":
-            $ artistPoints += 1
-            $ tsunPoints += 1
-        "A large number of acquaintances":
-            $ badboyPoints += 1
-            $ prepPoints += 1
+    # roomie "Would you rather have"
+    # menu:
+    #     "A close group of friends":
+    #         $ artistPoints += 1
+    #         $ tsunPoints += 1
+    #     "A large number of acquaintances":
+    #         $ badboyPoints += 1
+    #         $ prepPoints += 1
 
-    roomie "On a first date, you would prefer to go to... "
-    menu:
-        "To a movie theater":
-            $ artistPoints += 1
-            $ badboyPoints += 1
-        "On a picnic":
-            $ prepPoints += 1
-            $ tsunPoints += 1
+    # roomie "On a first date, you would prefer to go to... "
+    # menu:
+    #     "To a movie theater":
+    #         $ artistPoints += 1
+    #         $ badboyPoints += 1
+    #     "On a picnic":
+    #         $ prepPoints += 1
+    #         $ tsunPoints += 1
 
-    player "What kind of blog did you find this on, again?"
-    roomie "No matter, thanks!"
-    "She looks down at your answers and seems to be counting."
-    player_thinking "What was that about?"
-    roomie "Ah! I don't know."
-    player "Don't know what?"
-    roomie "Who you'd be cuter with!"
-    player "What do you mean?"
-    roomie "My friends! I'd love for you to meet them soon. Some of them have been looking for someone,"
-    roomie "some haven't but really should.They're really nice! I'm sure you'd like them."
-    roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on"
-    roomie "AND he is a serious hottie"
-    roomie "Victoria is..." #FIXME
-    roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
-    roomie "They have the softest heart."
-    roomie "And then there's..." #FIXME
-    roomie "But! You'll meet them all eventually, I'm sure"
-    roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
+    # player "What kind of blog did you find this on, again?"
+    # roomie "No matter, thanks!"
+    # "She looks down at your answers and seems to be counting."
+    # player_thinking "What was that about?"
+    # roomie "Ah! I don't know."
+    # player "Don't know what?"
+    # roomie "Who you'd be cuter with!"
+    # player "What do you mean?"
+    # roomie "My friends! I'd love for you to meet them soon. Some of them have been looking for someone, some haven't but really should.They're really nice! I'm sure you'd like them."
+    # roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on AND he is a serious hottie"
+    # roomie "Victoria is..." #FIXME
+    # roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down. They have the softest heart."
+    # roomie "And then there's..." #FIXME
+    # roomie "But! You'll meet them all eventually, I'm sure"
+    # roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
 
-    hide roommate happy with dissolve
+    # hide roommate happy with dissolve
 
-    player_thinking "First day... I'm a little nervous. I wonder what tomorrow will be like."
+    # player_thinking "First day... I'm a little nervous. I wonder what tomorrow will be like."
 
     #####################################################################
     #
@@ -187,7 +187,7 @@ label start:
     #
     #####################################################################
 
-    scene outside campus 1 with dissolve
+    scene outside campus 1 with fade
     "After classes"
     player_thinking "First day of school tends to be exciting, but generally uneventful."
     player_thinking "It's been a long day, but there's one last thing I should do before I leave..."
@@ -212,6 +212,8 @@ label meet_artist:
     scene design club with dissolve
     player_thinking "There's only one spot left..."
     show artist with moveinleft
+    $ knowAugust = "true"
+    $ assholeToAugust = "false"
     player_thinking "The person sitting next to me is looking at me. Why are they blushing?"
     menu:
         "Introduce yourself":
@@ -283,7 +285,7 @@ label meet_prep:
 
 label skip_class:
 
-    scene outside campus 2 with dissolve
+    scene outside campus 2 with fade
     "The next day..."
     player_thinking "I'm not really feeling it today. Do I skip class?"
 
@@ -373,6 +375,7 @@ label meet_badboy:
 
     jump free_time_1
 
+# Free time choice, MAP UI interaction 
 label free_time_1:
     player_thinking "I have some free time... what should I do?"
 
@@ -385,10 +388,89 @@ label library_1:
     "LIBRARY 1: PREP IS THERE"
     jump halloween_party
 
+# See Artist in school store (Andrea)
 label schoolstore_1:
-    scene school store
-    "SCHOOL STORE 1: ARTIST IS THERE"
+    scene school store with dissolve
+    "You decided you need to buy some supplies at the school store."
+    
+    if knowAugust == "true":    
+        "Walking around, you see a familiar figure."
+        player "August?"
+        show artist with dissolve
+        if assholeToAugust == "true":
+            august "[player_name]."
+            hide artist with moveoutright
+            menu:
+                "Apologize":
+                    player "August, wait!"
+                    show artist with dissolve
+                    august "Yes?"
+                    player "I wanted to apologize about what I said during graphic design club. It was mean and you didn't deserve it."
+                    august "Oh?"
+                    player "I don't know why I said those cruel things, I promise I'm not usually like that."
+                    august "Okay. It's okay... We all have bad days."
+                    player "Yeah, but it's still no excuse."
+                    $ assholeToAugust = "false"
+                "...":
+                    "You get your supplies and leave."
+                    jump halloween_party
+        else:
+            august "[player_name]! It's lovely to see you again."
+            player "It's lovely to see you too! What are you up to?"
+            august "Oh! I was just buying some supplies for our next meeting, but then I got distracted by the snacks."
+            player_thinking "They're funny in a kind of awkward way..."
+            august "I was planning on getting some chocolates for Jane, she really likes them! I'll probably drop by your dorm at some point to give these to her."
+            august "If that's okay with you, of course."
+            player "Absolutely!"
+    else:
+        "You run into someone by the art supply section."
+        show artist with dissolve
+        "They seem to recognize you"
+        august "Hey, you're Jane's new roommate, aren't you?"
+        player "I am!" 
+        august "My name is August! What's your name?"
+        player "I'm [player_name]."
+        august "It's really nice to meet you!"
+        $ knowAugust = "true"
+
+    # If you just met them, if you were nice to them, and if you apologized.
+    player "Are you and Jane close?"
+    august "We are! At least, I think we are. We've only been close for a little bit, but I consider her one of my best friends!"
+    player_thinking "They look embarassed..."
+    menu:
+        "Well, I should get going":
+            player "It'll be a long day tomorrow, and I should really go work on my homework."
+            august "I completely understand, it was nice seeing you!"
+            player "It was nice seeing you too!"
+            jump halloween_party
+        "I can tell you're a good friend":
+            pass
+    august "I! Well, I try to be! She's a wonderful friend to me, too."
+    player "She told me you take really good care of her."
+    august "Well... I haven't had that many friends in my life. I just want to make sure the friends I have are happy."
+    player "You haven't had many friends?"
+    august "No, I'm not sure why... People make me really nervous sometimes."
+    player "You don't seem nervous right now."
+    august "...I'm not. I'm really comfortable around you, I don't know why."
+    menu:
+        "I'm glad you feel that way. I feel that way about you, too":
+            august "I guess that means we have to be friends!"
+            player "Yeah, I guess so!"
+            $ artistPoints += 1
+        "I just try to be nice and honest.": 
+            august "I wish more people were like you then."
+            $ artistPoints += 1
+        "You just met me.": 
+            august "...Yeah. You're right."
+
+    "August's phone starts ringing."
+    august "It's my mom. I should take this. It was nice seeing you, though, [player_name]."
+    player "It was nice seeing you too."
+
+    hide artist with fade
+
     jump halloween_party
+
 
 label tenniscourts_1:
     scene tennis courts
