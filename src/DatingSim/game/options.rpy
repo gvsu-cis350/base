@@ -30,7 +30,7 @@ define config.version = "1.0"
 ## triple-quotes, and leave a blank line between paragraphs.
 
 define gui.about = _p("""
-A visual novel created for CIS 350.
+A visual novel created for CIS 350. This game is a prototype with placeholder assets.
 
 Music Credits:
 
@@ -61,6 +61,28 @@ License: https://filmmusic.io/standard-license
 Unseen Horrors by Kevin MacLeod\n
 Link: https://incompetech.filmmusic.io/song/4569-unseen-horrors\n
 License: https://filmmusic.io/standard-license
+
+Le Grand Chase by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4670-le-grand-chase\n
+License: https://filmmusic.io/standard-license
+
+The Show Must Be Go by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4509-the-show-must-be-go\n
+License: https://filmmusic.io/standard-license
+
+Funk Game Loop by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/3787-funk-game-loop\n
+License: https://filmmusic.io/standard-license
+
+Peppers Theme by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4998-peppers-theme\n
+License: https://filmmusic.io/standard-license
+
+Past Sadness by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/5024-past-sadness\n
+License: https://filmmusic.io/standard-license
+
+All images taken from unsplash.com.
 """)
 
 

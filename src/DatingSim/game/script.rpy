@@ -14,7 +14,6 @@ define victoria = Character("Victoria")
 define august = Character("August")
 define finley = Character("Finley")
 
-
 # Pronoun data setup
 default subj_pron = ""
 default obj_pron = ""
@@ -22,9 +21,12 @@ default posses_adj = ""
 default posses_pron = ""
 default reflex_pron = ""
 
-# Flags for Dom route
+# General Flags
 default club = "no club"
-default skippedClass = "false"
+default skipped_class = "false"
+default haunted_house = "none"
+
+# Flags for Dom route
 default slept_in = "false"
 default answered_door = "false"
 
@@ -222,7 +224,7 @@ label meet_prep:
     jump skip_class
 
 label skip_class:
-    play music "music/easy-lemon.mp3"
+    play music "music/easy-lemon.mp3" loop
     scene dorm room with fade
     "BRRRING BRRRING..."
     player_thinking "Ah... another day of university..."
@@ -239,7 +241,7 @@ label skip_class:
     jump free_time_1
 
 label meet_badboy:
-    $ skippedClass = "true"
+    $ skipped_class = "true"
 
     player_thinking "You know what? I think I will skip class."
     player_thinking "I deserve a break! I'm only human, right?"
@@ -253,6 +255,7 @@ label meet_badboy:
     player_thinking "As I walk around, someone catches my eye."
 
     show badboy
+    play music "music/acid-trumpet.mp3" loop fadein 1.0
 
     player_thinking "A boy wearing all black, with facial piercings and what looks like a snake tattoo peeking out of his shirt."
     player_thinking "He looks so... edgy."
@@ -290,9 +293,12 @@ label meet_badboy:
     player_thinking "Before I can even say goodbye, he starts sprinting past me like a madman."
     player_thinking "Those hooligan activities must be urgent..."
 
+    play music "music/easy-lemon.mp3" loop fadein 1.0
+
     jump free_time_1
 
 label free_time_1:
+    
     player_thinking "I have some free time... what should I do?"
 
     call screen MapUI(1)
@@ -311,20 +317,24 @@ label schoolstore_1:
 
 label tenniscourts_1:
     scene tennis courts
+    play music "music/windswept.mp3" loop fadein 1.0
     player_thinking "I make my way over to the school tennis courts."
     player_thinking "They're pretty huge, with multiple courts arranged in a grid. I walk onto one that isn't occupied and can see some other students having an intense game past the gate in front of me."
     player_thinking "The fresh air is pretty nice."
+    stop music
 
-    if skippedClass == "true":
+    if skipped_class == "true":
         dom "Well, well, well, if it isn't the rule-breaker! You skipping class again?"
         player_thinking "That voice sounds familiar..."
         show badboy
+        play music "music/acid-trumpet.mp3" loop fadein 1.0
         player_thinking "It's Dominic!"
         player "No! I just had some free time, actually. I haven't seen the tennis courts before..."
     else:
         dom "Hey! You're Jane's friend, right? What're you doing here?"
         player_thinking "Who could that be?"
         show badboy
+        play music "music/acid-trumpet.mp3" loop fadein 1.0
         player_thinking "This must be Dominic."
         player "I just had some free time. I hadn't seen the tennis courts yet..."
 
@@ -357,7 +367,7 @@ label tenniscourts_1:
     player_thinking "I peek down at my watch and realize it's almost time for my next class."
     player "Hey, I've got class to get to, but thanks for the game."
 
-    if skippedClass == "true":
+    if skipped_class == "true":
         dom "Going to class? I'm surprised."
         player "Hey!"
 
@@ -376,7 +386,14 @@ label dorms_1:
     jump halloween_party
 
 label halloween_party:
-    player_thinking "HALLOWEEN PARTY -- where should I go?"
+    scene autumn trees with fade
+    play music "music/the-show-must-be-go.mp3" loop fadein 1.0
+    player_thinking "It's Halloween and the festivities on campus are kicking in."
+    player_thinking "I'm surprised how many people are walking around in costume. I feel a little out of place."
+    player_thinking "I don't have any classes today, so I might as well have some fun."
+    player_thinking "There's a haunted house attraction, and I heard there's a pumpkin patch nearby..."
+    player_thinking "Where should I go?"
+
     menu:
         "Haunted house":
             jump haunted_house
@@ -385,7 +402,8 @@ label halloween_party:
 
 label haunted_house:
     scene haunted house outside
-    
+    play music "music/dark-times.mp3" loop fadein 1.0
+
     player_thinking "So this is the haunted house... I wonder if it's actually scary..."
     player_thinking "Wait, those two look familiar."
 
@@ -404,6 +422,7 @@ label haunted_house:
     menu:
         "Side with Dominic":
             $ badboyPoints += 1
+            $ haunted_house = "true"
             player "Yeah, why not? It looks fun."
             player_thinking "A smug grin overtakes Dominic's face, showing the triumph he feels over coming out the victor in this battle."
             player_thinking "Finley looks like they're over it."
@@ -415,6 +434,7 @@ label haunted_house:
             hide badboy
             hide tsundere
             scene haunted house inside
+            play music "music/unseen-horrors.mp3" loop fadein 1.0 fadeout 1.0
             player_thinking "As I enter the haunted house, I suddenly question the choice I made."
             player_thinking "It's dark, weird noises are coming from everywhere, the decorations are spooky..."
             player_thinking "Dominic still has that smug look on his face as always. I think he's having a good time."
@@ -426,6 +446,7 @@ label haunted_house:
             player_thinking "I think I might have caught him blushing, too..."
             scene haunted house outside
             show badboy with dissolve
+            play music "music/acid-trumpet.mp3" loop fadein 1.0
             dom "Well, that was as stupid as I expected."
             player "Yeah. Totally."
             dom "What? You were totally scared!"
@@ -436,10 +457,12 @@ label haunted_house:
             player "Oh. Yeah, I'd like that."
             dom "Sweet. Catch you later, nerd!"
             hide badboy
+            stop music
             player_thinking "Aaaaaaaaand he's gone..."
             player_thinking "I think this was a Halloween well spent."
         "Side with Finley":
             $ tsunPoints += 1
+            $ haunted_house = "false"
             player "No, you have a point, Finley. Why risk it?"
             player_thinking "Are they blushing? Dominic looks tired."
             if subj_pron == "they":
@@ -452,7 +475,8 @@ label haunted_house:
             finley "I'm going to go get some cheese curds. You want to come or not?"
             player "Sure!"
             hide tsundere
-            scene outside campus 1
+            play music "music/the-show-must-be-go.mp3" loop fadein 1.0
+            scene autumn trees
             show tsundere
             player_thinking "I think the cheese curd stand isn't far from here. Finley is coming back from the counter with two baskets of cheese curds."
             finley "Here, you want one? Not that I bought you some for siding with me or anything. It was just cheaper to buy two."
@@ -466,6 +490,7 @@ label haunted_house:
             finley "I guess we should probably go make sure Dominic isn't dead."
             hide tsundere
             player_thinking "As we head back to the haunted house, I can still see Finley's soft smile in my head."
+            stop music
 
     jump free_time_2
 
@@ -480,7 +505,18 @@ label pumpkin_patch:
     jump free_time_2
 
 label free_time_2:
-    player_thinking "I have some free time... what should I do?"
+    scene dorm room with fade
+    play music "music/on-my-way.mp3" loop fadein 1.0
+
+    if haunted_house == "true":
+        player_thinking "It's been a week since I went to the haunted house with Dominic."
+    elif haunted_house == "false":
+        player_thinking "It's been a week since I hung out with Finley."
+    else:
+        player_thinking "A week has passed since Halloween. I find myself still missing all of the festivities."
+
+    player_thinking "I wish it could be Halloween every day..."
+    player_thinking "Well, I have some free time now. What should I do?"
 
     call screen MapUI(2)
 
@@ -491,8 +527,6 @@ label library_2:
     jump route_determination
 
 label schoolstore_2:
-    # TODO scene here ? 
-
     player_thinking "I might as well head to the school store and shop with my eyes."
 
     scene school store
@@ -500,11 +534,12 @@ label schoolstore_2:
     player_thinking "As I peruse the various university-branded whats-its and thingy-mabobs, I spot a familiar figure in the corner of my eye..."
 
     show badboy
+    play music "music/acid-trumpet.mp3" loop fadein 1.0
 
     player_thinking "...now, directly in front of my eyes."
     player "Dominic!"
 
-    if skippedClass == "true":
+    if skipped_class == "true":
         dom "Hey, class-skipper!"
     elif club == "debate team":
         dom "Hey, debate team!"
@@ -562,7 +597,8 @@ label schoolstore_2:
             player_thinking "Aaaand he's gone."
             player_thinking "I stick my hands in both of my pant pockets and felt something small and metallic."
             player_thinking "Confused beyond belief, with a shiny new keychain in my hand, I stood there, dumbfounded."
-
+    
+    stop music
     player_thinking "I'll never understand that guy."
     
     jump route_determination
@@ -599,10 +635,8 @@ label route_determination:
     return
 
 label BADBOY_START:
-    jump dominic_event_1
-
-label dominic_event_1:
     scene bedroom
+    play music "music/easy-lemon.mp3" loop fadein 1.0
 
     player_thinking "BRRING BRRING..."
     player "... another great day to be alive."
@@ -613,15 +647,19 @@ label dominic_event_1:
         "Sleep in":
             $ slept_in = "true"
             player "I won't die if I miss this one class."
+            if skipped_class == "true":
+                player "I probably shouldn't make this a habit, though... I think Dom's rubbing off on me..."
             player_thinking "Before I'm able to crawl back into bed, I hear a knock at the door."
         "Get out of bed":
             $ slept_in = "false"
             player "Yeah, I guess I better get out of bed."
+            player "Life is hard, being a human with obligations."
             player_thinking "Before I take even one step out of my room, I hear a knock at the door."
 
+    stop music
     player_thinking "That's weird. That can't be Jane. She has a key, and would text if she lost it."
     player_thinking "Jane's also in class right now, so she wouldn't have a friend over, right?"
-    player_thinking "Who could that be...?"
+    player_thinking "Who could that be...? Are we expecting maintenance or something?"
 
     menu:
         "Answer the door":
@@ -631,75 +669,252 @@ label dominic_event_1:
             player_thinking "I'm really curious who it could be... is it a prank?"
             player_thinking "I open the door to a unexpected familiar face."
             show badboy
+            play music "music/acid-trumpet.mp3" loop fadein 1.0
             dom "Hey, does [player_name] live here?"
             player "Um... no."
             dom "Oh. Bummer. I'll try all the other rooms, then."
             player "Er... did you need something? Jane's in class."
+            dom "Yeah, I have some hooligan errands I need to run and could use some assistance. You in?"
+            player "Like, what kind of 'hooligan errands'?"
+            dom "Like loitering outside the lecture halls. If I don't, who else will?"
+            player_thinking "Is this how he asks people to hang out? 'Hey, come loiter with me'?"
+            player "That's a fair point. Let's go!"
             hide badboy
+            jump dominic_event_1
         "Ignore it":
             $ answered_door = "false"
             if slept_in == "true":
                 player "Maybe they have the wrong dorm. I'll pretend I didn't hear that."
-                player_thinking ""
+                player_thinking "Time to enjoy some shut-eye!"
             else:
                 player "Er... I really don't wanna get that..."
                 player_thinking "I'll get ready and leave once I think they're gone."
 
     # Time skip to MC with Jane at the dorm
 
-    scene dorm room
+    scene dorm room with fade
+    play music "music/on-my-way.mp3" loop fadein 1.0
     show roommate happy
 
-    if answered_door == "false":
-        roomie "Hey, were you here around 10 this morning?"
-        player "Yeah, why do you ask?"
-        roomie "Dominic sent me a text earlier saying that he came by but no one answered the door."
-        roomie "I was in class, but I thought you were still home."
-        player_thinking "Oh, shoot... what should I say?"
-        menu:
-            "I didn't hear it":
-                player "Oh, really? I didn't hear anything. Maybe he came while I was still asleep."
-                roomie "Haha! Bummer. He's the spontaneous type, as you've probably noticed."
-                roomie "I'll let him know to knock louder next time."
-            "I didn't know who it was":
-                player "Er... I didn't answer because I thought it was a stranger..."
-                roomie "Haha! You're a careful one. It was just Dom."
-                roomie "He seemed kinda bummed. I'll tell him to text next time, but he's not one to plan things."
-    else:
-        roomie "Hey, where were you earlier? You're usually back sooner."
-        player "Dominic came by this morning so we hung out for a bit."
+    roomie "Hey, were you here around 10 this morning?"
+    player "Yeah, why do you ask?"
+    roomie "Dominic sent me a text earlier saying that he came by but no one answered the door."
+    roomie "I was in class, but I thought you were still home."
+    player_thinking "Oh, shoot... what should I say?"
+    menu:
+        "I didn't hear it":
+            player "Oh, really? I didn't hear anything. Maybe he came while I was still asleep."
+            roomie "Haha! Bummer. He's the spontaneous type, as you've probably noticed."
+            roomie "I'll let him know to knock louder next time."
+        "I didn't know who it was":
+            player "Er... I didn't answer because I thought it was a stranger..."
+            roomie "Haha! You're a careful one. It was just Dom."
+            roomie "He seemed kinda bummed. I'll tell him to text next time, but he's not one to plan things."
 
-    pass
+    roomie "Oh, well. Don't tell him I said this, but I think he likes you."
+    player "Huh? What makes you say that?"
+    roomie "I don't know. It's just a feeling. I could be wrong."
+    roomie "I think you remind him of someone..."
+    roomie "Well, I've got some cramming to do. Talk to you later?"
+    player "Yeah, me too. Catch you later."
+
+    hide roommate happy
+    stop music
+    scene bedroom with fade
+
+    player_thinking "I remind him of someone?"
+    player_thinking "I sat on my bed and did some homework, but it was difficult to concentrate."
+
+    jump dominic_event_2
+
+label dominic_event_1:
+    scene outside campus snow
+    # play music 
 
 label dominic_event_2:
 
-    # TODO graphic
+    scene outside dorms snow with fade
+    play music "music/past-sadness.mp3" loop fadein 1.0
 
+    player_thinking "Man, it's cold outside. But it's kinda nice."
+    player_thinking "With the end of the semester approaching, I've had a lot on my plate."
+    player_thinking "The cold air is refreshing."
+    player_thinking "After a couple minutes of aimless vibing, I take a look around and see a familiar figure a few feet away."
+    player_thinking "I walk over to him, leaving footprints in the snow behind me."
+    
     show badboy
 
+    player "Hey, Dominic. What are you doing here?"
+    player_thinking "I catch him a little off guard. Something seems different about him."
+
+    dom "Oh, hey, [player_name]. Loitering, of course."
+    player_thinking "He doesn't have the usual smugness about him."
+    player_thinking "We stand in silence for a bit. It's more comforting than awkward."
+    player_thinking "After stewing in the silence, Dominic sighs."
+
     dom "... you know, I wasn't always like this."
-    player_thinking "What do you mean?"
-    dom "I wasn't always this edgy 'hooligan' type I make myself out to be."
-    player_thinking "His voice's usual brightness is gone, along with the default smug on his face."
+    player "What do you mean?"
+    dom "I wasn't always this... fake edgy 'hooligan' type I make myself out to be."
+    player_thinking "His voice's usual brightness is gone, along with the default smirk on his face."
     player_thinking "For the first time, I'm certain he's serious."
     player "Well, what were you like before?"
     player_thinking "He ponders that question for a moment, takes a short breath."
     dom "I was... a 'good kid'. I think. As good as I could be compared to my brother, at least."
-    dom ""
+    dom "Then I stopped trying because it felt pointless. All work, no play wasn't working for me."
+    dom "Heh. I'm surprised I'm still in school, to be honest. I think part of me still doesn't want to disappoint my folks."
+    player "Huh. I can't imagine you being that different."
+    player_thinking "Suddenly, the familiar smirk returns to his face."
+    dom "Can't picture me being a hard-worker, eh? I guess I have changed a lot."
+    player_thinking "Snowflakes begin to gently fall onto us."
+    player_thinking "Is this the real Dominic? Has he been putting on an act this whole time?"
+    player_thinking "I wonder what's gotten into him..."
+    
+    if skipped_class == "true":
+        dom "... you shouldn't skip class, [player_name]. Even if it's just one time, it's easy to keep doing it."
+        player "Wow. You, telling me I should go to class? I'm shocked!"
+        player_thinking "This whole time, I thought Dominic didn't have a care in the world. He must really care to give me advice like that."
 
-    pass
+    dom "[player_name]... do you think I did the right thing?"
+    player "What do you mean?"
+    dom "Becoming a delinquent...  should I have kept trying?"
+    player_thinking "What should I tell him?"
+
+    menu:
+        "Do what makes you happy":
+            player "I think life is too short to be perfect all the time."
+            player "If trying to stack up against your brother was bringing you pain, I can see why you stopped trying."
+            player "If that makes you happier, I say it was the right decision."
+            player "Pleasing yourself is more important than pleasing others, right?"
+            dom "Wow. That's what you think, huh?"
+            dom "At least someone approves of my lifestyle..."
+            player_thinking "Despite his words, he looks a little disappointed. Did I say the wrong thing?"
+        "Do what's best for you":
+            $ badboyPoints += 1
+            player "Well... to be honest, I think you should have kept trying in school."
+            player "Even if it's hard, or you feel like you're not good enough, it's for your own good."
+            player "It's easy to do what makes you happy in the short-term, but harder to do what's best for the long-run."
+            player "I'd love to skip class all the time and do what I want, but I know it'd only hurt me in the future."
+            player "I can't tell you how to live your life, but that's the way I see it."
+            dom "Hm."
+            player_thinking "There's a silence. Was I too harsh?"
+            dom "You know, only one other person has actually said that to me before."
+            dom "Not even my parents told me that. There was no protest when I started getting in trouble. It was like they expected it."
+            if answered_door == "false":
+                player_thinking "One other person... could that be who Jane mentioned?"
+
+    player_thinking "Dominic takes my hands in his and looks down at them pensively. My heart beats loud in my chest."
+    player_thinking "He lets go and looks back up at me."
+    dom "Thanks for the talk. I think I've done enough loitering today. It's pretty cold, anyway."
+    player "No problem. Catch you later."
+
+    hide badboy
+    stop music
+
+    player_thinking "That was weird... I've never seen that side of him before..."
+    player_thinking "I hope he's okay."
+
+    jump dominic_event_3
 
 label dominic_event_3:
+    play music "music/past-sadness.mp3" loop fadein 1.0
+    scene outside campus snow with fade
 
-    # TODO graphic
+    player_thinking "A couple weeks have passed since I spoke to Dominic in the snow."
+    player_thinking "I've been thinking about the conversation we had. He showed a completely different side of him."
+    player_thinking "I hadn't bumped into him anywhere on campus since then, which was odd. I normally see him hanging around somewhere."
+    player_thinking "I texted him, but he hasn't replied..."
+    player_thinking "I hope he's okay."
 
-    player_thinking "... so this is where Dominic lives."
-    player_thinking "It's a tiny, dingy apartment. There are holes in the walls and rips in the carpet."
-    player_thinking "He told me his family was well-off. Does he choose to live like this?"
+    scene dorm room with fade
+    show roommate happy
 
-    dom "Hey! What're you doing here?"
+    player "Hey, Jane, have you heard from Dominic recently?"
+    roomie "Oh, you haven't heard?"
+    player "Haven't heard what?"
+    roomie "He got arrested. Tagged some buildings on campus."
+    player "What?!"
+    player_thinking "So that's why I haven't seen him..."
+    roomie "Usually he gets left off the hook, but he actually got jailtime this time."
+    player_thinking "How can she be so nonchalant about this? Has he been arrested before?"
+    player "When does he get out?"
+    roomie "Today, I think. I'm not sure."
+    player "You're his friend and you don't know when he's getting out of jail?!"
+    player "How are you so okay with this?"
+    player_thinking "Jane looks a little embarrassed."
+    roomie "I mean... that's just the way he is... You've noticed that by now, right?"
+    player "Just because that's how he is doesn't make it right!"
 
-    pass
+    scene bedroom with fade
+    player_thinking "I head to my room to think. I take out my phone and text Dominic right away."
+    player_thinking "Is this really so normal for him? He must have been caught a lot for them to actually arrest him this time."
+    player_thinking "I need to talk to him."
+
+    scene outside dorms snow with fade
+    player_thinking "It's the next day. Dominic texted me back and said he'd meet me by the dorms."
+    player_thinking "After waiting a bit, I see him approaching in the distance."
+
+    show badboy
+
+    dom "What's up, [player_name]? You wanted to see my beautiful face?"
+    player_thinking "There's the smug Dominic I've come to know."
+    player "Hey. Are you okay?"
+    dom "Never been better. Why?"
+    player "Why? Jane told me you were in jail for the past two weeks!"
+    dom "Oh, that? Yeah, it happens. What did you think the life of a bad boy was like?"
+    player_thinking "He's put up this joking, teasing wall around himself again. Months ago, I would have played along, but this has gone too far."
+    player "I need to say something to him..."
+
+    menu:
+        "Stop causing trouble":
+            $ badboyPoints += 1
+            player "I know your whole thing is that you do what you want and you like breaking rules, but I think it's getting out of hand."
+            player "Having a criminal record isn't a minor thing, Dom. It can only get worse from here."
+            player "If you get caught breaking the law again, they could lock you up for even longer..."
+            player "I was worried. Jane didn't even seem concerned when she told me."
+            player_thinking "The smug air around him faded. The facade, the mask he puts on, finally came off."
+            player_thinking "He looked down at the ground, like a dog with its tail between its legs."
+            player_thinking "Why am I scolding a grown adult? Did I overstep?"
+            dom "You know, [player_name], you remind me a lot of this buddy I had growing up."
+            dom "He was my best friend in school. I messed with him all the time because his reactions were funny."
+            dom "I never told him I was having a hard time. We only had fun together. I didn't want to have it any other way."
+            dom "When I started skipping school, he was the only one who cared."
+            dom "Not my parents, not my brother, only him."
+            dom "Y'know, Jane and them, I don't blame them for not saying anything. They accept me as I am, and I'm grateful for it."
+            dom "But you... you are the only person to tell me what I'm doing is wrong. And I know it's because you care."
+            player_thinking "This is the most sentimental I've seen him."
+            player "Do you still talk to your friend?"
+            dom "No, he's not around anymore. Hasn't been since we graduated."
+            player "Oh. I'm sorry."
+            dom "Nothing to be sorry about. He wouldn't want me to be sad about it."
+            dom "He passed in the winter, too. That's why I get so weird this time of the year."
+            dom "You know... he called me Dom, too."
+            dom "Anyway, thanks for that. I needed to hear it."
+            player_thinking "As he starts walking away, he stops in his tracks and turns to look at me."
+            dom "[player_name]. Never change, okay?"
+            player "I'll try not to."
+            hide badboy
+            player_thinking "He laughs at this before giving me a wink and heading on his way."
+            player_thinking "Now, I can see the difference between this happiness and the usual smugness he comes to me with. This one is genuine."
+        "Don't get caught next time":
+            player "Look, tag buildings as much as you want, but you really need to be more careful."
+            player "And why would you do it on campus? There are always people around. No wonder you got caught."
+            player "If you're going to cause trouble, you shouldn't be so careless about it..."
+            player_thinking "Dominic cracked a chuckle, but one that almost sounded a little sad."
+            dom "I've been doing this a long time, [player_name]. I know the risks, and I can't say I really care."
+            dom "It happens all the time. Trust me, it's not a big deal. 'Preciate the concern, though."
+            dom "I can't imagine how hard it must have been without having me around to mess with you."
+            player_thinking "I'm not sure how to respond to that. It's like he's put up a wall that I can't break through."
+            player_thinking "He awkwardly looks at his feet before sighing. Is he annoyed?"
+            dom "Is that all you had to say?"
+            player "Um... yeah."
+            dom "Aight. Well, I've got some more tagging to do, so I'm gonna go."
+            dom "I won't get caught this time, though. I'll be careful."
+            player_thinking "He gives me a wink and starts walking away."
+            dom "See ya around."
+            hide badboy
+            player_thinking "Maybe I'll never understand him..."
+
+    jump FINAL_PARTY
 
 label PREP_START:
     # prep route
@@ -726,3 +941,7 @@ label BAD_END:
 
 # TODO: good endings for whichever route
 # check flag variable for route
+
+label dominic_ending:
+    pass
+    # TODO graphic
