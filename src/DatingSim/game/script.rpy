@@ -179,7 +179,11 @@ label start:
 
     #####################################################################
     #
-    #  SECOND SCENE ????
+    #  SECOND SCENE -- Choose Club
+    #  > Choose Club
+    #  > If Graphic Design -- Meet Artist
+    #  > If Debate Team -- Meet Prep
+    #  > If No Club -- Meet Tsundere
     #
     #####################################################################
 
@@ -220,8 +224,8 @@ label meet_artist:
             "You start up your laptop and open your most recent design project"
             august "Oh wow, you're really talented!"
             player "Ah, you think so? Thank you!"
-        "Sit in silence":
-            player "..."
+        "...":
+            pass
 
     "The club president calls everyone's attention and introduces you to all the club members. They are very welcoming."
     "The person sitting next to you, August, keeps glancing at you. "
@@ -264,6 +268,18 @@ label meet_prep:
     "MEET PREP"
 
     jump skip_class
+
+    #####################################################################
+    #
+    #  THIRD SCENE -- Free time
+    #  > If skip class == meet bad boy
+    #  > Free time 
+    #    > If library == see prep
+    #    > If school store == see artist
+    #    > If tennis court == see bad boy
+    #    > If dorm == see tsundere
+    #
+    #####################################################################
 
 label skip_class:
 
@@ -452,6 +468,14 @@ label dorms_1:
     "DORMS 1: TSUN IS THERE"
     jump halloween_party
 
+    #####################################################################
+    #
+    #  FOURTH SCENE: Halloween Party 
+    #  > If Haunted House -- see bad boy & tsundere
+    #  > If Pumpkin Patch -- see prep & artist
+    #
+    #####################################################################
+
 label halloween_party:
     player_thinking "HALLOWEEN PARTY -- where should I go?"
     menu:
@@ -480,6 +504,16 @@ label pumpkin_patch:
         "Side with artist":
             pass
     jump free_time_2
+
+    #####################################################################
+    #
+    #  FIFTH SCENE -- Free Time pt. 2 
+    #    > If library == see tsundere
+    #    > If school store == see bad boy
+    #    > If tennis court == see prep
+    #    > If dorm == see tsundere
+    #
+    #####################################################################
 
 label free_time_2:
     player_thinking "I have some free time... what should I do?"
