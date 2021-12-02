@@ -35,6 +35,7 @@ label start:
     $ artistPoints = 0
     $ tsunPoints = 0
 
+    play music "music/on-my-way.mp3" loop fadein 1.0
     scene dorm room
 
     "DATING SIM DEMO"
@@ -181,7 +182,6 @@ label start:
 
     hide roommate happy with dissolve
 
-
     #####################################################################
     #
     #  SECOND SCENE ????
@@ -222,15 +222,20 @@ label meet_prep:
     jump skip_class
 
 label skip_class:
-    player_thinking "I'm not really feeling it today. Do I skip class?"
+    play music "music/easy-lemon.mp3"
+    scene dorm room with fade
+    "BRRRING BRRRING..."
+    player_thinking "Ah... another day of university..."
+    player_thinking "Hrrg... I'm not really feeling it today. Do I skip class?"
 
-    # jump to meet_badboy, else go to class, then jump to free time
     menu:
         "Skip class":
             jump meet_badboy
         "Go to class":
-            pass
-    player_thinking "I'm going to class."
+            player_thinking "Yeah, I guess I should. That's what I'm paying for, anyway."
+            scene outside campus 1 with fade
+            player_thinking "I went to my only class of the day, which in itself felt like a massive undertaking. I can feel myself getting smarter, though."
+
     jump free_time_1
 
 label meet_badboy:
@@ -306,6 +311,9 @@ label schoolstore_1:
 
 label tenniscourts_1:
     scene tennis courts
+    player_thinking "I make my way over to the school tennis courts."
+    player_thinking "They're pretty huge, with multiple courts arranged in a grid. I walk onto one that isn't occupied and can see some other students having an intense game past the gate in front of me."
+    player_thinking "The fresh air is pretty nice."
 
     if skippedClass == "true":
         dom "Well, well, well, if it isn't the rule-breaker! You skipping class again?"
