@@ -270,7 +270,7 @@ label meet_badboy:
     player_thinking "I feel my face going pink..."
     dom "I'm doing the same, actually. Going to class is lame."
     player_thinking "He's so right."
-    dom "You just moved in to ROOMMATE's place, right? [player_name], is it?"
+    dom "You just moved in to Jane's place, right? [player_name], is it?"
     player_thinking "Oh! This must be Dominic."
     player "Yeah. She told me about you. I didn't expect to bump into you like this."
     dom "Heh. I'm sure she only had great things to say about me..."
@@ -314,7 +314,7 @@ label tenniscourts_1:
         player_thinking "It's Dominic!"
         player "No! I just had some free time, actually. I haven't seen the tennis courts before..."
     else:
-        dom "Hey! You're ROOMMATE's friend, right? What're you doing here?"
+        dom "Hey! You're Jane's friend, right? What're you doing here?"
         player_thinking "Who could that be?"
         show badboy
         player_thinking "This must be Dominic."
@@ -376,10 +376,13 @@ label halloween_party:
             jump pumpkin_patch
 
 label haunted_house:
+    scene haunted house outside
+    
     player_thinking "So this is the haunted house... I wonder if it's actually scary..."
     player_thinking "Wait, those two look familiar."
 
-    # TODO: add dom and fin sprites here
+    show badboy at left with easeinleft
+    show tsundere at right with easeinright
 
     dom "C'mon, don't be such a wuss! Let's go in!"
     finley "Says the man willing to do any dare."
@@ -401,7 +404,9 @@ label haunted_house:
             player "Let's do it!"
             finley "Have fun possibly dying. I'm gonna get some food."
             player_thinking "And with that, Finley unbothered-ly vacated the haunted house premises."
-            # TODO: scene change, inside of HH
+            hide badboy
+            hide tsundere
+            scene haunted house inside
             player_thinking "As I enter the haunted house, I suddenly question the choice I made."
             player_thinking "It's dark, weird noises are coming from everywhere, the decorations are spooky..."
             player_thinking "Dominic still has that smug look on his face as always. I think he's having a good time."
@@ -411,7 +416,8 @@ label haunted_house:
             player_thinking "I clung closely to Dominic as we traversed through the rest of the house, with ghosts and ghouls meeting us at every corner."
             player_thinking "Hearing him laugh made my uneasiness fade and by the end of it, I was laughing along with him."
             player_thinking "I think I might have caught him blushing, too..."
-            # TODO: scene change, outside of HH
+            scene haunted house outside
+            show badboy with dissolve
             dom "Well, that was as stupid as I expected."
             player "Yeah. Totally."
             dom "What? You were totally scared!"
@@ -421,7 +427,7 @@ label haunted_house:
             dom "We should do more stupid stuff together sometime."
             player "Oh. Yeah, I'd like that."
             dom "Sweet. Catch you later, nerd!"
-            # hide Dominic
+            hide badboy
             player_thinking "Aaaaaaaaand he's gone..."
             player_thinking "I think this was a Halloween well spent."
         "Side with Finley":
@@ -433,11 +439,13 @@ label haunted_house:
             else:
                 finley "See, [subj_pron] gets it. You have fun, Dominic."
             dom "You know what? I think I will. See ya later, losers!"
-            # TODO hide dominic
+            hide badboy
             player_thinking "And with that, Dominic almost comically skipped off into the darkness past the haunted house's front door."
             finley "I'm going to go get some cheese curds. You want to come or not?"
             player "Sure!"
-            # TODO scene change
+            hide tsundere
+            scene outside campus 1
+            show tsundere
             player_thinking "I think the cheese curd stand isn't far from here. Finley is coming back from the counter with two baskets of cheese curds."
             finley "Here, you want one? Not that I bought you some for siding with me or anything. It was just cheaper to buy two."
             player "Sure, thanks. We should probably find somewhere to eat these."
@@ -448,7 +456,7 @@ label haunted_house:
             player "Nothing. These cheese curds are really good."
             finley "Of course they are. It's fried cheese. What could be better?"
             finley "I guess we should probably go make sure Dominic isn't dead."
-            # TODO hide finley
+            hide tsundere
             player_thinking "As we head back to the haunted house, I can still see Finley's soft smile in my head."
 
     jump free_time_2
@@ -475,6 +483,8 @@ label library_2:
     jump route_determination
 
 label schoolstore_2:
+    # TODO scene here ? 
+
     player_thinking "I might as well head to the school store and shop with my eyes."
 
     scene school store
@@ -584,6 +594,8 @@ label BADBOY_START:
     jump dominic_event_1
 
 label dominic_event_1:
+    scene bedroom
+
     player_thinking "BRRING BRRING..."
     player "... another great day to be alive."
     player_thinking "I sleepily rise from bed and look at the time. I really don't feel like going to class today."
@@ -606,6 +618,7 @@ label dominic_event_1:
     menu:
         "Answer the door":
             $ answered_door = "true"
+            scene dorm room
             player_thinking "A little apprehensively, I rise from bed, still in my pajamas, and make my way to the front door."
             player_thinking "I'm really curious who it could be... is it a prank?"
             player_thinking "I open the door to a unexpected familiar face."
@@ -630,22 +643,22 @@ label dominic_event_1:
     show roommate happy
 
     if answered_door == "false":
-        roommate "Hey, were you here around 10 this morning?"
+        roomie "Hey, were you here around 10 this morning?"
         player "Yeah, why do you ask?"
-        roommate "Dominic sent me a text earlier saying that he came by but no one answered the door."
-        roommate "I was in class, but I thought you were still home."
+        roomie "Dominic sent me a text earlier saying that he came by but no one answered the door."
+        roomie "I was in class, but I thought you were still home."
         player_thinking "Oh, shoot... what should I say?"
         menu:
             "I didn't hear it":
                 player "Oh, really? I didn't hear anything. Maybe he came while I was still asleep."
-                roommate "Haha! Bummer. He's the spontaneous type, as you've probably noticed."
-                roommate "I'll let him know to knock louder next time."
+                roomie "Haha! Bummer. He's the spontaneous type, as you've probably noticed."
+                roomie "I'll let him know to knock louder next time."
             "I didn't know who it was":
                 player "Er... I didn't answer because I thought it was a stranger..."
-                roommate "Haha! You're a careful one. It was just Dom."
-                roommate "He seemed kinda bummed. I'll tell him to text next time, but he's not one to plan things."
+                roomie "Haha! You're a careful one. It was just Dom."
+                roomie "He seemed kinda bummed. I'll tell him to text next time, but he's not one to plan things."
     else:
-        roommate "Hey, where were you earlier? You're usually back sooner."
+        roomie "Hey, where were you earlier? You're usually back sooner."
         player "Dominic came by this morning so we hung out for a bit."
 
     pass
@@ -679,10 +692,6 @@ label dominic_event_3:
     dom "Hey! What're you doing here?"
 
     pass
-
-label ARTIST_START:
-    # artist route
-    return
 
 label PREP_START:
     # prep route
