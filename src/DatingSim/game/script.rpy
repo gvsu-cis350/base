@@ -65,117 +65,117 @@ label start:
     player "It's nice to meet you too!"
 
     # # ANDREA: Pronoun Selection
-    # roomie "Ah, also, what are your pronouns?"
-    # player "Oh, thanks for asking! I use..."
-    # menu:
-    #     "They/Them":
-    #         $ subj_pron = "they"
-    #         $ obj_pron = "them"
-    #         $ posses_adj = "their"
-    #         $ posses_pron = "theirs"
-    #         $ reflex_pron = "themselves"
-    #     "She/Her":
-    #         $ subj_pron = "she"
-    #         $ obj_pron = "her"
-    #         $ posses_adj = "her"
-    #         $ posses_pron = "hers"
-    #         $ reflex_pron = "herself"
-    #     "He/Him":
-    #         $ subj_pron = "he"
-    #         $ obj_pron = "him"
-    #         $ posses_adj = "his"
-    #         $ posses_pron= "his"
-    #         $ reflex_pron = "himself"
+    roomie "Ah, also, what are your pronouns?"
+    player "Oh, thanks for asking! I use..."
+    menu:
+        "They/Them":
+            $ subj_pron = "they"
+            $ obj_pron = "them"
+            $ posses_adj = "their"
+            $ posses_pron = "theirs"
+            $ reflex_pron = "themselves"
+        "She/Her":
+            $ subj_pron = "she"
+            $ obj_pron = "her"
+            $ posses_adj = "her"
+            $ posses_pron = "hers"
+            $ reflex_pron = "herself"
+        "He/Him":
+            $ subj_pron = "he"
+            $ obj_pron = "him"
+            $ posses_adj = "his"
+            $ posses_pron= "his"
+            $ reflex_pron = "himself"
 
-    # roomie "Well, it's wonderful to meet you [player_name]. I already know we're going to have a lot of fun together."
-    # player "What do you mean?"
-    # roomie "Well, first things first, lets get you settled in!"
+    roomie "Well, it's wonderful to meet you [player_name]. I already know we're going to have a lot of fun together."
+    player "What do you mean?"
+    roomie "Well, first things first, lets get you settled in!"
 
-    # hide roommate happy with dissolve
+    hide roommate happy with dissolve
 
-    # "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
+    "Your roommate helps you put your bags down, and leaves you to start unpacking. There's a mirror next to your bed you glance at yourself in."
 
-    # player_thinking "What do I look like?"
+    player_thinking "What do I look like?"
 
-    # # AMELA: Character appearance selection
+    # AMELA: Character appearance selection
 
-    # screen portrait_selection():
-    #     # Screen that displays 4 image buttons in a 2x2 grid.
-    #     # The player clicks on an image to set their "appearance".
+    screen portrait_selection():
+        # Screen that displays 4 image buttons in a 2x2 grid.
+        # The player clicks on an image to set their "appearance".
 
-    #     vpgrid:
-    #         cols 2
-    #         spacing 20
+        vpgrid:
+            cols 2
+            spacing 20
 
-    #         xalign 0.5
-    #         yalign 0.5
+            xalign 0.5
+            yalign 0.5
 
-    #         imagebutton auto "portraits/portrait1_%s.png" action Return(1)
-    #         imagebutton auto "portraits/portrait2_%s.png" action Return(2)
-    #         imagebutton auto "portraits/portrait3_%s.png" action Return(3)
-    #         imagebutton auto "portraits/portrait4_%s.png" action Return(4)
+            imagebutton auto "portraits/portrait1_%s.png" action Return(1)
+            imagebutton auto "portraits/portrait2_%s.png" action Return(2)
+            imagebutton auto "portraits/portrait3_%s.png" action Return(3)
+            imagebutton auto "portraits/portrait4_%s.png" action Return(4)
 
-    # call screen portrait_selection
+    call screen portrait_selection
 
-    # # player appearance set by portrait selected
-    # $ portrait_number = _return
+    # player appearance set by portrait selected
+    $ portrait_number = _return
 
-    # roomie "Finished?"
-    # player "Yeah, I'm almost done. Why, what's up?"
-    # roomie "I found this personality quiz on a blog earlier, you should take it!"
+    roomie "Finished?"
+    player "Yeah, I'm almost done. Why, what's up?"
+    roomie "I found this personality quiz on a blog earlier, you should take it!"
 
-    # show roommate happy with moveinright
+    show roommate happy with moveinright
 
-    # player "A personality quiz?"
-    # "She hands you a piece of torn notebook paper with some questions written down on them."
+    player "A personality quiz?"
+    "She hands you a piece of torn notebook paper with some questions written down on them."
 
-    # #start of quiz
-    # roomie "Would you rather"
-    # menu:
-    #         "Read a book at home":
-    #             $ artistPoints += 1
-    #             $ prepPoints += 1
-    #         "Go out to a raging party":
-    #             $ badboyPoints += 1
-    #             $ tsunPoints += 1
+    #start of quiz
+    roomie "Would you rather"
+    menu:
+            "Read a book at home":
+                $ artistPoints += 1
+                $ prepPoints += 1
+            "Go out to a raging party":
+                $ badboyPoints += 1
+                $ tsunPoints += 1
             
-    # roomie "Would you rather have"
-    # menu:
-    #     "A close group of friends":
-    #         $ artistPoints += 1
-    #         $ tsunPoints += 1
-    #     "A large number of acquaintances":
-    #         $ badboyPoints += 1
-    #         $ prepPoints += 1
+    roomie "Would you rather have"
+    menu:
+        "A close group of friends":
+            $ artistPoints += 1
+            $ tsunPoints += 1
+        "A large number of acquaintances":
+            $ badboyPoints += 1
+            $ prepPoints += 1
 
-    # roomie "On a first date, you would prefer to go to... "
-    # menu:
-    #     "To a movie theater":
-    #         $ artistPoints += 1
-    #         $ badboyPoints += 1
-    #     "On a picnic":
-    #         $ prepPoints += 1
-    #         $ tsunPoints += 1
+    roomie "On a first date, you would prefer to go to... "
+    menu:
+        "To a movie theater":
+            $ artistPoints += 1
+            $ badboyPoints += 1
+        "On a picnic":
+            $ prepPoints += 1
+            $ tsunPoints += 1
 
-    # player "What kind of blog did you find this on, again?"
-    # roomie "No matter, thanks!"
-    # "She looks down at your answers and seems to be counting."
-    # player_thinking "What was that about?"
-    # roomie "Ah! I don't know."
-    # player "Don't know what?"
-    # roomie "Who you'd be cuter with!"
-    # player "What do you mean?"
-    # roomie "My friends! I'd love for you to meet them soon. Some of them have been looking for someone, some haven't but really should.They're really nice! I'm sure you'd like them."
-    # roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on AND he is a serious hottie"
-    # roomie "Victoria is..." #FIXME
-    # roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down. They have the softest heart."
-    # roomie "And then there's..." #FIXME
-    # roomie "But! You'll meet them all eventually, I'm sure"
-    # roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
+    player "What kind of blog did you find this on, again?"
+    roomie "No matter, thanks!"
+    "She looks down at your answers and seems to be counting."
+    player_thinking "What was that about?"
+    roomie "Ah! I don't know."
+    player "Don't know what?"
+    roomie "Who you'd be cuter with!"
+    player "What do you mean?"
+    roomie "My friends! I'd love for you to meet them soon. Some of them have been looking for someone, some haven't but really should.They're really nice! I'm sure you'd like them."
+    roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on AND he is a serious hottie"
+    roomie "Victoria is..." #FIXME
+    roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down. They have the softest heart."
+    roomie "And then there's..." #FIXME
+    roomie "But! You'll meet them all eventually, I'm sure"
+    roomie "Look at me prattling on, I should let you get some rest before tomorrow! First day!"
 
-    # hide roommate happy with dissolve
+    hide roommate happy with dissolve
 
-    # player_thinking "First day... I'm a little nervous. I wonder what tomorrow will be like."
+    player_thinking "First day... I'm a little nervous. I wonder what tomorrow will be like."
 
     #####################################################################
     #
