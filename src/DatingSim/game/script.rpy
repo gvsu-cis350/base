@@ -644,7 +644,7 @@ label haunted_house:
     player_thinking "Wait, those two look familiar."
 
     show badboy at left with easeinleft
-    show tsundere at right with easeinright
+    show finley at right with easeinright
 
     dom "C'mon, don't be such a wuss! Let's go in!"
     finley "Says the man willing to do any dare."
@@ -713,7 +713,7 @@ label haunted_house:
             hide tsundere
             play music "music/the-show-must-be-go.mp3" loop fadein 1.0
             scene autumn trees
-            show tsundere
+            show finley
             player_thinking "I think the cheese curd stand isn't far from here. Finley is coming back from the counter with two baskets of cheese curds."
             finley "Here, you want one? Not that I bought you some for siding with me or anything. It was just cheaper to buy two."
             player "Sure, thanks. We should probably find somewhere to eat these."
