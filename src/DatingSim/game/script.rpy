@@ -1,5 +1,6 @@
 ﻿# The script of the game goes in this file.
 
+
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
@@ -23,6 +24,7 @@ default reflex_pron = ""
 
 # General Flags
 default club = "no club"
+default meetPrep = "false"
 default skipped_class = "false"
 default haunted_house = "none"
 
@@ -175,7 +177,7 @@ label start:
     roomie "some haven't but really should.They're really nice! I'm sure you'd like them."
     roomie "Dominic is my oldest friend. He's a bit of a meanie but he's got the whole badboy look going on"
     roomie "AND he is a serious hottie"
-    roomie "Victoria is..." #FIXME
+    roomie "Victoria is honest. She can be blunt, but she's also the most sincere person I've met."
     roomie "August I didn't meet until freshman year, but they've been super helpful whenever I'm feeling down."
     roomie "They have the softest heart."
     roomie "And then there's..." #FIXME
@@ -219,7 +221,95 @@ label meet_tsun:
     jump skip_class
 
 label meet_prep:
-    "MEET PREP"
+
+    $ meetPrep = "true"
+
+    player_thinking "I guess there’s a debate team recruiting event going on today. I could probably improve my argumentation skills…"
+
+    player_thinking "I guess I'll give it a try."
+
+    scene debate room
+
+    player_thinking "The room I enter is filled to the brim with other students."
+
+    player_thinking "I walk up to a table filled with debate team keychains, pens, and pamphlets."
+
+    player_thinking "A student is standing next to the table, scribbling something on a clipboard. "
+
+    player_thinking "Her hair is a deep brown, and her eyes are grey. "
+
+    player_thinking "She’s wearing a beige sweater with black slacks, a pretty bland outfit overall."
+
+    player_thinking "But despite that, something about her is sort of intimidating..."
+
+    player_thinking "She notices me after a few seconds and steps towards me."
+
+    show prep
+
+    victoria "So you think you might be good enough to join the debate team, huh?"
+
+    victoria "It’s not going to be up to me, but I can tell you right now that it’s not easy."
+
+    victoria "I’m Victoria, by the way. I’ve seen you around before. "
+
+    victoria "You’re Jane’s roommate, [player_name]."
+
+    player "Yep, that's me."
+
+    player_thinking "She smirks and looks down at her clipboard again."
+
+    victoria "So, you still want to sign up?"
+
+    menu:
+        "Heck yeah!":
+            $ prepPoints += 1
+
+            player "Yeah, I could hold my own in a debate!"
+
+            victoria "Wow, you seem really confident. I hope that means you're actually good."
+
+            victoria "Good luck! I'll see you around."
+
+            player "Thanks!"
+
+            player_thinking "She turns around and walks towards another student."
+
+            player_thinking "She seems hard to please, and a bit bland (at least fashion-wise), but maybe there's more to her."
+
+            player_thinking "And now I have to try out... let's see how this goes."
+
+            scene dorm room
+
+            player_thinking "I crushed it! I get to be on the debate team!"
+
+            player_thinking "I wonder what Victoria has to do with the team... she must be pretty high-up in the ranks."
+
+        "I'm not sure...":
+            player "I don't know... I guess I'll give it a shot..."
+
+            victoria "You won't make it with that attitude. Maybe a less competitive club would suit you better?"
+
+            player "Um... I'm sorry?"
+
+            victoria "*groan*"
+
+            victoria "Whatever. Later."
+
+            hide prep
+
+            player_thinking "She turns around and walks towards another student."
+
+            player_thinking "Since I'm here, I'll try out anyways."
+
+            player_thinking "I doubt I'll make it, though."
+
+            scene dorm room
+
+            player_thinking "Somehow, I got in. I think I did well enough."
+
+            player_thinking "Victoria doesn't seem to like me, though."
+
+            player_thinking "Maybe I'll have another chance to prove myself."
 
     jump skip_class
 
@@ -306,8 +396,98 @@ label free_time_1:
     return
 
 label library_1:
+    player_thinking "I'll go to the library. Maybe I can get some homework done."
+
     scene library
-    "LIBRARY 1: PREP IS THERE"
+
+    player_thinking "I walk into the library, and look around for a good spot to study."
+
+    if meetPrep == "true":
+        player_thinking "However, I notice Victoria sitting in a dark corner of the library at a desk."
+    else:
+        player_thinking "I notice a girl I recognize sitting in a dark corner of the library at a desk."
+        player_thinking "I realize it's Victoria, one of Jane's friends. She showed me a picture of her last night."
+
+
+    player_thinking "She has earphones in and looks really focused, with multiple textbooks, papers, and a laptop scattered about her desk."
+
+    player_thinking "I probably shouldn't bother her... but seeing the look on her face if I startle her might be worth it."
+
+    menu:
+        "No scaring today. Go in front of her and wave.":
+            $ prepPoints += 1
+            player_thinking "Nah, I don't fee like messing with her. It's probably not a good idea anyways."
+
+            player_thinking "I walk closer to her desk and give a little wave. She surprisingly looks up at me, smiles, and takes out her earphones."
+
+            show prep
+
+            victoria "Hey, [player_name]! Long time no see!"
+
+            player "Hi, Victoria! You look like you're hard at work. I don't mean to bother you. I'm here to study, myself."
+
+            player_thinking "Her face lights up at this. I haven't seen her this happy to see me before."
+
+            victoria "Oh, it's no problem! I'm studying for my public policy test. Have I ever told you that I'm majoring in political science?"
+
+            player_thinking "She pats the chair next to her. I have a seat and set my backpack down."
+
+            player "I don't think you have. I have some homework to do, do you mind if I do it here?"
+
+            victoria "Not at all!"
+
+            player_thinking "For a couple hours, we sit together and study our respective materials, occasionally exchanging small-talk and glancing over at one another. A few of her glances linger."
+
+            victoria "Sigh."
+
+            victoria "Alright, I think I'm done for the day. I'm going back to my dorm, I have plans with my roommate tonight."
+
+            victoria "It was fun studying with you, let's do it again sometime!"
+
+            player "Yeah, let's!"
+
+            hide prep
+
+            player_thinking "I watch her walk away. I'm starting to think that we could becom friends! Or possibly more..."
+        "Go behind her and scare her!":
+            player_thinking "Yeah, why not? This will be hilarious!"
+
+            player_thinking "She hasn't noticed me yet, so I sneak around the edge of the room until I'm behind her, and slowly approach."
+
+            player "BOO!"
+
+            player_thinking "I grab her shoulders."
+
+            show prep
+
+            victoria "Aaaah!"
+
+            player_thinking "She screams and shoots out of her seat, nearly knocking over her desk."
+
+            player_thinking "She immediately turns around."
+
+            victoria "What the heck, [player_name]? What was that for!?!"
+
+            player "I just thought it would be funny..."
+
+            victoria "Well, you were dead wrong, buddy. No one's laughing at your stupid prank."
+
+            victoria "Just go away."
+
+            player_thinking "I notice she's rubbing her knee. She must've slammed it into the desk when she stood up."
+
+            player_thinking "Oops."
+
+            player_thinking "She huffs, turns away, and sits back down, not giving me any time to respond."
+
+            hide prep
+
+            player_thinking "I should probably go. I shouldn't have done that... that was mean."
+
+            player_thinking "As I walk out of the library, I notice everyone is staring at me. I really messed up."
+
+            player_thinking "I'll do my homework in my dorm room."
+
     jump halloween_party
 
 label schoolstore_1:
