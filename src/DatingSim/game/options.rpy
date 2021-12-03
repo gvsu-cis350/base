@@ -30,6 +30,59 @@ define config.version = "1.0"
 ## triple-quotes, and leave a blank line between paragraphs.
 
 define gui.about = _p("""
+A visual novel created for CIS 350. This game is a prototype with placeholder assets.
+
+Music Credits:
+
+Acid Trumpet by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/3340-acid-trumpet\n
+License: https://filmmusic.io/standard-license
+
+On My Way by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4163-on-my-way\n
+License: https://filmmusic.io/standard-license
+
+Easy Lemon by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/3697-easy-lemon\n
+License: https://filmmusic.io/standard-license
+
+Windswept by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4629-windswept\n
+License: https://filmmusic.io/standard-license
+
+White by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4626-white\n
+License: https://filmmusic.io/standard-license
+
+Dark Times by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/3611-dark-times\n
+License: https://filmmusic.io/standard-license
+
+Unseen Horrors by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4569-unseen-horrors\n
+License: https://filmmusic.io/standard-license
+
+Le Grand Chase by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4670-le-grand-chase\n
+License: https://filmmusic.io/standard-license
+
+The Show Must Be Go by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4509-the-show-must-be-go\n
+License: https://filmmusic.io/standard-license
+
+Funk Game Loop by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/3787-funk-game-loop\n
+License: https://filmmusic.io/standard-license
+
+Peppers Theme by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/4998-peppers-theme\n
+License: https://filmmusic.io/standard-license
+
+Past Sadness by Kevin MacLeod\n
+Link: https://incompetech.filmmusic.io/song/5024-past-sadness\n
+License: https://filmmusic.io/standard-license
+
+All images taken from unsplash.com.
 """)
 
 
@@ -61,7 +114,7 @@ define config.has_voice = True
 ## the player is at the main menu. This file will continue playing into the
 ## game, until it is stopped or another file is played.
 
-# define config.main_menu_music = "main-menu-theme.ogg"
+define config.main_menu_music = "music/windswept.mp3"
 
 
 ## Transitions #################################################################
