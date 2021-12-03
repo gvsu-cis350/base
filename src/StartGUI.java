@@ -24,6 +24,7 @@ public class StartGUI extends JFrame implements ActionListener{
 
         title.setFont(new Font("Sans-Serif", Font.PLAIN, 20));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         exit.addActionListener(this);
         start.addActionListener(this);
@@ -56,6 +57,7 @@ public class StartGUI extends JFrame implements ActionListener{
 
         title.setFont(new Font("Sans-Serif", Font.PLAIN, 20));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         exit.addActionListener(this);
         start.addActionListener(this);

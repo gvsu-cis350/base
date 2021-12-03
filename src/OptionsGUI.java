@@ -7,6 +7,7 @@ import java.io.*;
 public class OptionsGUI extends JFrame implements ActionListener{
     private JPanel mainPanel;
     private JPanel escapeRoomPanel;
+    private JPanel comboPanel;
     private JPanel visualPanel;
     private JPanel examplePanel;
     private JPanel navigationPanel;
@@ -48,6 +49,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
         mainPanel = new JPanel();
         escapeRoomPanel = new JPanel();
         examplePanel = new JPanel();
+        comboPanel = new JPanel();
         visualPanel = new JPanel();
         navigationPanel = new JPanel();
 
@@ -88,6 +90,8 @@ public class OptionsGUI extends JFrame implements ActionListener{
         mainMenu.addActionListener(this);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        visualPanel.setLayout(new BoxLayout(visualPanel, BoxLayout.Y_AXIS));
 
         escapeRoomPanel.add(pathLabel);
         escapeRoomPanel.add(load);
@@ -99,8 +103,10 @@ public class OptionsGUI extends JFrame implements ActionListener{
         examplePanel.add(exampleList);
         examplePanel.add(exampleButton);
 
-        visualPanel.add(fontStyle);
-        visualPanel.add(colors);
+        comboPanel.add(fontStyle);
+        comboPanel.add(colors);
+
+        visualPanel.add(comboPanel);
         visualPanel.add(examplePanel);
 
         mainPanel.add(visualPanel);
@@ -125,6 +131,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
         mainPanel = new JPanel();
         escapeRoomPanel = new JPanel();
         examplePanel = new JPanel();
+        comboPanel = new JPanel();
         visualPanel = new JPanel();
         navigationPanel = new JPanel();
 
@@ -167,6 +174,8 @@ public class OptionsGUI extends JFrame implements ActionListener{
         mainMenu.addActionListener(this);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        visualPanel.setLayout(new BoxLayout(visualPanel, BoxLayout.Y_AXIS));
 
         escapeRoomPanel.add(pathLabel);
         escapeRoomPanel.add(load);
@@ -178,8 +187,10 @@ public class OptionsGUI extends JFrame implements ActionListener{
         examplePanel.add(exampleList);
         examplePanel.add(exampleButton);
 
-        visualPanel.add(fontStyle);
-        visualPanel.add(colors);
+        comboPanel.add(fontStyle);
+        comboPanel.add(colors);
+
+        visualPanel.add(comboPanel);
         visualPanel.add(examplePanel);
 
         mainPanel.add(visualPanel);

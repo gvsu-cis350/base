@@ -1,5 +1,4 @@
 import javax.imageio.ImageIO;
-import javax.lang.model.util.ElementScanner14;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,11 +10,14 @@ import java.util.*;
 public class GameGUI extends JFrame implements ActionListener {
     private JPanel mainPanel;
     private JPanel terminal;
+    private JPanel sidePanel;
     private JPanel mapPanel;
     private JPanel imagePanel;
     private JPanel notesPanel;
     private JPanel inventoryPanel;
     private JPanel help;
+    private JPanel mainButtons;
+    private JPanel helpText;
 
     private JTabbedPane mapImage;
     private JTabbedPane notesInventory;
@@ -53,9 +55,6 @@ public class GameGUI extends JFrame implements ActionListener {
     private String saveLoadFile = null;
     private String commandInput = null;
     private String escapeFile = null;
-
-    private Color backgroundColor = new Color(0xCB4335);
-    private Color textColor = new Color(0xFFFFFF);
 
     final JFileChooser fileLoader = new JFileChooser();
 
@@ -97,18 +96,21 @@ public class GameGUI extends JFrame implements ActionListener {
 
         mainPanel = new JPanel();
         terminal = new JPanel();
+        sidePanel = new JPanel();
         mapPanel = new JPanel();
         imagePanel = new JPanel();
         notesPanel = new JPanel();
         inventoryPanel = new JPanel();
         help = new JPanel();
+        mainButtons = new JPanel();
+        helpText = new JPanel();
 
         mapImage = new JTabbedPane();
         notesInventory = new JTabbedPane();
 
-        command = new JTextField(10);
+        command = new JTextField();
 
-        helpInfo = new JTextArea("Blurb about helpful things", 2, 30);
+        helpInfo = new JTextArea("Blurb about helpful things");
 
         outList = new DefaultListModel();
         noteList = new DefaultListModel();
@@ -148,9 +150,18 @@ public class GameGUI extends JFrame implements ActionListener {
 
         helpInfo.setEditable(false);
         outScroll.setPreferredSize(new Dimension(400, 650));
+        command.setPreferredSize(new Dimension(400,20));
+
         inventoryScroll.setPreferredSize(new Dimension(200,100));
         notesScroll.setPreferredSize(new Dimension(200,100));
+        helpInfo.setPreferredSize(new Dimension(200,100));
+
         outScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+
+        help.setLayout(new BoxLayout(help, BoxLayout.Y_AXIS));
+        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -168,20 +179,26 @@ public class GameGUI extends JFrame implements ActionListener {
         notesInventory.addTab("Notes", notesPanel);
         notesInventory.addTab("Inventory", inventoryPanel);
 
-        help.add(helpInfo);
-        help.add(saveProgress);
-        help.add(loadProgress);
-        help.add(mainMenu);
+        mainButtons.add(saveProgress);
+        mainButtons.add(loadProgress);
+        mainButtons.add(mainMenu);
+
+        helpText.add(helpInfo);
+
+        help.add(helpText);
+        help.add(mainButtons);
+
+        sidePanel.add(mapImage);
+        sidePanel.add(notesInventory);
+        sidePanel.add(help);
 
         mainPanel.add(terminal);
-        mainPanel.add(mapImage);
-        mainPanel.add(notesInventory);
-        mainPanel.add(help);
+        mainPanel.add(sidePanel);
 
         add(mainPanel);
 
         setVisible(true);
-        setSize(1000, 1000);
+        setSize(700, 730);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -212,6 +229,7 @@ public class GameGUI extends JFrame implements ActionListener {
             }
         }
         if (comp == command){
+            keyList.clear();
             commandInput = command.getText();
             String commandOutput = null;
             Scanner sc = new Scanner(commandInput);
@@ -233,6 +251,7 @@ public class GameGUI extends JFrame implements ActionListener {
                         if (sc.hasNext()){
                             commandOutput = commandInput.substring(7);
                             noteList.addElement(commandOutput);
+                            player.addNote(commandOutput);
                         }
                         else{
                             outList.addElement("Please add a note to create");
@@ -246,6 +265,7 @@ public class GameGUI extends JFrame implements ActionListener {
                             for(int i = 0; i < noteList.getSize(); i++){
                                 if(commandOutput.equals(noteList.get(i))){
                                     noteList.remove(i);
+                                    player.delNote(i);
                                     break;
                                 }
                             }
@@ -307,6 +327,11 @@ public class GameGUI extends JFrame implements ActionListener {
                 outList.addElement("Looks like we couldn't find a command.  Try typing \"help\"!");
             }
             sc.close();
+
+            for(Key key: player.getInventory()){
+                keyList.addElement(key);
+            }
+
             while (outList.getSize() > 50)
                 outList.removeElementAt(0);
         }
