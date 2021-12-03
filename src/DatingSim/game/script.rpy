@@ -1264,10 +1264,9 @@ label TSUNDERE_START:
             $ tsunPoints += 1
             finley "That movie is bad it's amazing good choice!"
             player_thinking "Finley face lit up like a christmas tree when I chose this movie and is that a blush on their cheeks. Finley picks up the movie to put it in the DVD player."
-
         "Choose the good movie":
-           finley "That's a cool choice."
-           player_thinking "Is Finley sad that I didn't choose the bad moive?"
+            finley "That's a cool choice."
+            player_thinking "Is Finley sad that I didn't choose the bad movie?"
 
     player_thinking "We spent the night watching movies together."
 
