@@ -131,39 +131,12 @@ public class TestRoom {
     public void test_setImage() {
         Room room = new Room("room", "this is a room", false, false, null, null, null, null);
         room.setImage("/Desktop/1234/GVSU/pic.png");
-        room.setImage("Z:/users/annac/docs/123.png");
-        room.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
-        room.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
-        room.setImage("D:\\CodingTests\\GUITests\\src\\pics\\map.png");
-        room.setImage("/~!@#$/%^&*(/)-_=+/\\a\"';:.>,<?/image.png");
 
-        assertEquals("image not found", room.setImage(""));
+        assertEquals("/Desktop/1234/GVSU/pic.png", room.getImage());
+
         assertEquals("image not found", room.setImage(null));
-
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-            room.setImage("Mult:/image.png");
-        });
-        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            room.setImage("/image.pdf");
-        });
-        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            room.setImage("\\image\\!\\image.png");
-        });
-        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            room.setImage("/image/a folder/image.png");
-        });
-        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            room.setImage("/image/a\nthing/image.png");
-        });
-        assertEquals("setImage in class Room: invalid file path", exception.getMessage());
+        assertEquals("image not found", room.setImage(""));
+        assertEquals("image not found", room.setImage("\n"));
     }
 
     @Test
