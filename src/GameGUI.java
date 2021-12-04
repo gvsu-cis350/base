@@ -10,11 +10,14 @@ import java.util.*;
 public class GameGUI extends JFrame implements ActionListener {
     private JPanel mainPanel;
     private JPanel terminal;
+    private JPanel sidePanel;
     private JPanel mapPanel;
     private JPanel imagePanel;
     private JPanel notesPanel;
     private JPanel inventoryPanel;
     private JPanel help;
+    private JPanel mainButtons;
+    private JPanel helpText;
 
     private JTabbedPane mapImage;
     private JTabbedPane notesInventory;
@@ -26,7 +29,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private JTextField command;
 
-    private JTextArea helpInfo;
+    private JLabel helpInfo;
 
     private DefaultListModel<String> noteList;
     private DefaultListModel<String> outList;
@@ -53,18 +56,20 @@ public class GameGUI extends JFrame implements ActionListener {
     private String commandInput = null;
     private String escapeFile = null;
 
-    private Color backgroundColor = new Color(0xCB4335);
-    private Color textColor = new Color(0xFFFFFF);
+    public Color backgroundColor = new Color(0x222222);
+    public Color textColor = new Color(0xFFFFFF);
+    public Color itemColor = new Color(0x383B3F);
+    public Color terminalColor = new Color(0x2A3C5C);
+    public Color selectedColor = new Color(0x5F5F5F);
 
     final JFileChooser fileLoader = new JFileChooser();
 
-    private Game escapeGame = new Game();
     private EscapeRoom escapeRoom;
     private Player player;
 
     public GameGUI(){
         mainPanel = new JPanel();
-        helpInfo = new JTextArea("It looks like an escape room isn't properly loaded.  Please go to options to load one\n", 1, 50);
+        helpInfo = new JLabel("It looks like an escape room isn't properly loaded.  Please go to options to load one");
         options = new JButton("Options");
         mainMenu = new JButton("Main Menu");
 
@@ -72,6 +77,15 @@ public class GameGUI extends JFrame implements ActionListener {
         options.addActionListener(this);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        mainPanel.setBackground(backgroundColor);
+
+        options.setBackground(itemColor);
+        mainMenu.setBackground(itemColor);
+        
+        options.setForeground(textColor);
+        mainMenu.setForeground(textColor);
+        helpInfo.setForeground(textColor);
 
         mainPanel.add(helpInfo);
         mainPanel.add(options);
@@ -81,39 +95,87 @@ public class GameGUI extends JFrame implements ActionListener {
 
         setVisible(true);
         setSize(750,750);
+        setLocationRelativeTo(null);
+    }
+    public GameGUI(Color b, Color txt, Color item, Color out, Color sel){
+        this.backgroundColor = b;
+        this.textColor = txt;
+        this.itemColor = item;
+        this.terminalColor = out;
+        this.selectedColor = sel;
+
+        mainPanel = new JPanel();
+        helpInfo = new JLabel("It looks like an escape room isn't properly loaded.  Please go to options to load one");
+        options = new JButton("Options");
+        mainMenu = new JButton("Main Menu");
+
+        mainMenu.addActionListener(this);
+        options.addActionListener(this);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        mainPanel.setBackground(backgroundColor);
+
+        options.setBackground(itemColor);
+        mainMenu.setBackground(itemColor);
+        
+        options.setForeground(textColor);
+        mainMenu.setForeground(textColor);
+        helpInfo.setForeground(textColor);
+
+        mainPanel.add(helpInfo);
+        mainPanel.add(options);
+        mainPanel.add(mainMenu);
+
+        add(mainPanel);
+
+        setVisible(true);
+        setSize(750,750);
+        setLocationRelativeTo(null);
     }
 
-    public GameGUI(String filename) {
-        // try{
-        //     escapeRoom = escapeGame.buildEscapeRoom(filename);
-        // }catch(Exception e){
-        //     new GameGUI();
-        //     this.dispose();
-        // }
+    public GameGUI(String filename, Color b, Color txt, Color item, Color out, Color sel) {
+        try{
+            escapeRoom = new EscapeRoom(filename);
+        }catch(Exception e){
+            new GameGUI();
+            this.dispose();
+        }
 
-        // player = escapeRoom.getPlayer();
+        player = escapeRoom.getPlayer();
         this.escapeFile = filename;
+
+        this.backgroundColor = b;
+        this.textColor = txt;
+        this.itemColor = item;
+        this.terminalColor = out;
+        this.selectedColor = sel;
+
+        UIManager.put("TabbedPane.selected", selectedColor);
 
         mainPanel = new JPanel();
         terminal = new JPanel();
+        sidePanel = new JPanel();
         mapPanel = new JPanel();
         imagePanel = new JPanel();
         notesPanel = new JPanel();
         inventoryPanel = new JPanel();
         help = new JPanel();
+        mainButtons = new JPanel();
+        helpText = new JPanel();
 
         mapImage = new JTabbedPane();
         notesInventory = new JTabbedPane();
 
-        command = new JTextField(10);
+        command = new JTextField();
 
-        helpInfo = new JTextArea("Blurb about helpful things", 2, 30);
+        helpInfo = new JLabel("Blurb about helpful things");
 
         outList = new DefaultListModel();
         noteList = new DefaultListModel();
         keyList = new DefaultListModel();
 
-        outList.addElement("Welcome!");
+        outList.addElement(escapeRoom.getBeginningScript());
 
         outScreen = new JList(outList);
         notes = new JList(noteList);
@@ -123,8 +185,8 @@ public class GameGUI extends JFrame implements ActionListener {
         notesScroll = new JScrollPane(notes);
         inventoryScroll = new JScrollPane(inventory);
 
-        // mapFile = escapeRoom.getImage();
-        // imageFile = player.getCurrentPosition().getImage();
+        mapFile = escapeRoom.getImage();
+        imageFile = player.getCurrentPosition().getImage();
 
         try {
             mapPicture = ImageIO.read(new File(mapFile));
@@ -145,14 +207,66 @@ public class GameGUI extends JFrame implements ActionListener {
         mainMenu.addActionListener(this);
         command.addActionListener(this);
 
-        helpInfo.setEditable(false);
         outScroll.setPreferredSize(new Dimension(400, 650));
+        command.setPreferredSize(new Dimension(400,20));
+
         inventoryScroll.setPreferredSize(new Dimension(200,100));
         notesScroll.setPreferredSize(new Dimension(200,100));
+
         outScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 
+        help.setLayout(new BoxLayout(help, BoxLayout.Y_AXIS));
+        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        mainPanel.setBackground(backgroundColor);
+        terminal.setBackground(backgroundColor);
+        sidePanel.setBackground(backgroundColor);
+        mapPanel.setBackground(backgroundColor);
+        imagePanel.setBackground(backgroundColor);
+        notesPanel.setBackground(backgroundColor);
+        inventoryPanel.setBackground(backgroundColor);
+        help.setBackground(backgroundColor);
+        mainButtons.setBackground(backgroundColor);
+        helpText.setBackground(backgroundColor);
+
+        command.setBackground(terminalColor);
+        outScreen.setBackground(terminalColor);
+        
+        mapImage.setBackground(itemColor);
+        notesInventory.setBackground(itemColor);
+        notes.setBackground(itemColor);
+        inventory.setBackground(itemColor);
+        saveProgress.setBackground(itemColor);
+        loadProgress.setBackground(itemColor);
+        mainMenu.setBackground(itemColor);
+
+        command.setForeground(textColor);
+        outScreen.setForeground(textColor);
+
+        mapImage.setForeground(textColor);
+        notesInventory.setForeground(textColor);
+        notes.setForeground(textColor);
+        inventory.setForeground(textColor);
+        saveProgress.setForeground(textColor);
+        loadProgress.setForeground(textColor);
+        mainMenu.setForeground(textColor);
+
+        helpInfo.setForeground(textColor);
+        mapVisual.setForeground(textColor);
+        imageVisual.setForeground(textColor);
+
+        outScreen.setSelectionBackground(terminalColor);
+        notes.setSelectionBackground(itemColor);
+        inventory.setSelectionBackground(itemColor);
+
+        outScreen.setSelectionForeground(textColor);
+        notes.setSelectionForeground(textColor);
+        inventory.setSelectionForeground(textColor);
 
         terminal.add(outScroll);
         terminal.add(command);
@@ -167,29 +281,33 @@ public class GameGUI extends JFrame implements ActionListener {
         notesInventory.addTab("Notes", notesPanel);
         notesInventory.addTab("Inventory", inventoryPanel);
 
-        help.add(helpInfo);
-        help.add(saveProgress);
-        help.add(loadProgress);
-        help.add(mainMenu);
+        mainButtons.add(saveProgress);
+        mainButtons.add(loadProgress);
+        mainButtons.add(mainMenu);
+
+        helpText.add(helpInfo);
+
+        help.add(helpText);
+        help.add(mainButtons);
+
+        sidePanel.add(mapImage);
+        sidePanel.add(notesInventory);
+        sidePanel.add(help);
 
         mainPanel.add(terminal);
-        mainPanel.add(mapImage);
-        mainPanel.add(notesInventory);
-        mainPanel.add(help);
+        mainPanel.add(sidePanel);
 
         add(mainPanel);
 
         setVisible(true);
-        setSize(1000, 1000);
+        setSize(700, 730);
+        setLocationRelativeTo(null);
     }
 
     public void actionPerformed(ActionEvent e) {
         Object comp = e.getSource();
         if (comp == mainMenu) {
-            if (escapeFile == null)
-                new StartGUI();
-            else
-                new StartGUI(escapeFile);
+            new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             this.dispose();
         }
         if (comp == saveProgress) {
@@ -211,6 +329,7 @@ public class GameGUI extends JFrame implements ActionListener {
             }
         }
         if (comp == command){
+            keyList.clear();
             commandInput = command.getText();
             String commandOutput = null;
             Scanner sc = new Scanner(commandInput);
@@ -232,6 +351,7 @@ public class GameGUI extends JFrame implements ActionListener {
                         if (sc.hasNext()){
                             commandOutput = commandInput.substring(7);
                             noteList.addElement(commandOutput);
+                            player.addNote(commandOutput);
                         }
                         else{
                             outList.addElement("Please add a note to create");
@@ -245,6 +365,7 @@ public class GameGUI extends JFrame implements ActionListener {
                             for(int i = 0; i < noteList.getSize(); i++){
                                 if(commandOutput.equals(noteList.get(i))){
                                     noteList.remove(i);
+                                    player.delNote(i);
                                     break;
                                 }
                             }
@@ -303,14 +424,19 @@ public class GameGUI extends JFrame implements ActionListener {
                 }            
             }
             else{
-                outList.addElement("Looks like we couldn't find a command.  Try typing \"help\"!");
+                outList.addElement("Looks like we couldn't find that command.  Try typing \"help\"!");
             }
             sc.close();
+
+            for(Key key: player.getInventory()){
+                keyList.addElement(key);
+            }
+
             while (outList.getSize() > 50)
                 outList.removeElementAt(0);
         }
         if (comp == options){
-            new OptionsGUI();
+            new OptionsGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             this.dispose();
         }
     }
