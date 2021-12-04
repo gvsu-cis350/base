@@ -30,7 +30,7 @@ public class Player {
     }
 
     public void addNote(String note) {
-        if (note == null || note.equals("")) 
+        if (note == null || note.equals("") || note.contains(System.getProperty("line.separator"))) 
             return;
         notes.add(note);
     }
@@ -39,7 +39,6 @@ public class Player {
         try {
             notes.remove(index);
         } catch (IndexOutOfBoundsException e) {
-            // throw new IndexOutOfBoundsException("delNote in class Player: index out of bounds");
             return "Index out of bounds";
         }
         return "";

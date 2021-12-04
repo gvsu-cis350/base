@@ -24,6 +24,8 @@ public class Key {
             throw new IllegalArgumentException("setName in class Key: null input");
         if (name.equals(""))
             throw new IllegalArgumentException("setName in class Key: empty string");
+        if (name.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("setName in class Key: contains line separator");
 
         this.name = name;
     }

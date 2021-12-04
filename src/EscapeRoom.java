@@ -5,13 +5,15 @@ import java.util.regex.Pattern;
 
 
 public class EscapeRoom {
-    private String name;
+    private String beginText;
+    private String endText;
     private Player player;
     private String image;
     private ArrayList<Room> map;
 
-    public EscapeRoom(String name, Player player, String image, ArrayList<Room> map) {
-        this.setName(name);
+    public EscapeRoom(String beginText, String endText, Player player, String image, ArrayList<Room> map) {
+        this.setBeginText(beginText);
+        this.setEndText(endText);
         this.setPlayer(player);
         this.setImage(image);
         this.map = new ArrayList<Room>();
@@ -21,17 +23,34 @@ public class EscapeRoom {
             this.player.setCurrentPosition(map.get(0));
     }
 
-    public String getName(){
-        return name;
+    public String getBeginText(){
+        return beginText;
     }
 
-    public void setName(String name){
-        if (name == null)
-            throw new IllegalArgumentException("setName in class EscapeRoom: null input");
-        if (name.equals(""))
-            throw new IllegalArgumentException("setName in class EscapeRoom: empty string");
+    public void setBeginText(String beginText){
+        if (beginText == null)
+            throw new IllegalArgumentException("setBeginText in class EscapeRoom: null input");
+        if (beginText.equals(""))
+            throw new IllegalArgumentException("setBeginText in class EscapeRoom: empty string");
+        if (beginText.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("setBeginText in class EscapeRoom: contains line separator");
 
-        this.name = name;
+        this.beginText = beginText;
+    }
+
+    public String getEndText(){
+        return endText;
+    }
+
+    public void setEndText(String endText){
+        if (endText == null)
+            throw new IllegalArgumentException("setEndText in class EscapeRoom: null input");
+        if (endText.equals(""))
+            throw new IllegalArgumentException("setEndText in class EscapeRoom: empty string");
+        if (endText.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("setEndText in class EscapeRoom: contains line separator");
+
+        this.endText = endText;
     }
 
     public Player getPlayer() {
@@ -50,10 +69,11 @@ public class EscapeRoom {
         if (path == null || path.equals(""))
             return "image not found";
 
-        String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
-
-        if (!Pattern.matches(regex, path))
-            throw new IllegalArgumentException("setImage in class EscapeRoom: invalid file path");
+            String regexMac = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
+            String regexWin = "([\\w]:)?((\\\\[\\w-.]+)|(\\\\\"[\\w\\s-.]+\"))+.png";
+    
+            if (!Pattern.matches(regexMac, path) && !Pattern.matches(regexWin, path))
+                throw new IllegalArgumentException("setImage in class EscapeRoom: invalid file path");
 
         this.image = path;
         return null;
@@ -72,6 +92,8 @@ public class EscapeRoom {
             throw new IllegalArgumentException("saveProgress in class EscapeRoom: null filename");
         if (filename.equals(""))
             throw new IllegalArgumentException("saveProgress in class EscapeRoom: empty string");
+        if (filename.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("saveProgress in class EscapeRoom: contains line separator");
 
         PrintWriter out = null;
 
@@ -107,7 +129,8 @@ public class EscapeRoom {
 
         try {
             Scanner scanner = new Scanner(new File(filename));
-            String regex = "\"[\\w\\s-.]+\"";
+            String regex = "\"[\\w\\W]+\"";
+
             String temp;
 
             scanner.nextLine();
@@ -226,8 +249,7 @@ public class EscapeRoom {
                     player.addToInventory(k);
                     keysToDelete.add(k);
                     output += k.getName() + "\n";
-                } else 
-                    keysToDelete.add(k);
+                }
             }
         }
 
