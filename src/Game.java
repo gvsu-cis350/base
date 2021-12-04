@@ -109,6 +109,7 @@ public class Game {
         line = line.replace( "\n", "" );
         line = line.replace( "| ", "|" );
         line = line.replace( " |", "|" );
+        line = line.replace(", ", ",");
         Room newRoom = new Room();
         ArrayList<String> newRoomString = new ArrayList<String>();
         ArrayList<String> newKeyString = new ArrayList<String>();
@@ -146,7 +147,7 @@ public class Game {
                     break;
                 case 6: 
                 {
-                    String[] str = room[i].split(" ");
+                    String[] str = room[i].split(",");
                     for(int j = 0; j < str.length; j++ ) {
                         newRoomString.add( str[j] );
                     }
@@ -154,7 +155,7 @@ public class Game {
                 }
                 case 7:
                 {
-                    String[] str = room[i].split(" ");
+                    String[] str = room[i].split(",");
                     for(int j = 0; j < str.length; j++) {
                         newKeyString.add( str[j] );
                     }

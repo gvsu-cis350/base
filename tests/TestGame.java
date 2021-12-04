@@ -47,7 +47,7 @@ public class TestGame extends Game {
     @Test
     public void parse_Room_Test() {
         Game g = new Game();
-        String line = "Room: Bathroom| This is a description of the bathroom| false| false| \\image.png| ABC| Library Bedroom Kitchen| null";
+        String line = "Room: Bathroom| This is a description of the bathroom| false| false| \\image.png| ABC| Library,Bedroom,Kitchen| null";
         Room r = g.parseRoom( line );
 
         assertEquals( "Bathroom", r.getName() );
