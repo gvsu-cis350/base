@@ -30,6 +30,8 @@ public class EscapeRoom {
             throw new IllegalArgumentException("setName in class EscapeRoom: null input");
         if (name.equals(""))
             throw new IllegalArgumentException("setName in class EscapeRoom: empty string");
+        if (name.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("setName in class EscapeRoom: contains line separator");
 
         this.name = name;
     }
@@ -50,10 +52,11 @@ public class EscapeRoom {
         if (path == null || path.equals(""))
             return "image not found";
 
-        String regex = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
-
-        if (!Pattern.matches(regex, path))
-            throw new IllegalArgumentException("setImage in class EscapeRoom: invalid file path");
+            String regexMac = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
+            String regexWin = "([\\w]:)?((\\\\[\\w-.]+)|(\\\\\"[\\w\\s-.]+\"))+.png";
+    
+            if (!Pattern.matches(regexMac, path) && !Pattern.matches(regexWin, path))
+                throw new IllegalArgumentException("setImage in class EscapeRoom: invalid file path");
 
         this.image = path;
         return null;
@@ -72,6 +75,8 @@ public class EscapeRoom {
             throw new IllegalArgumentException("saveProgress in class EscapeRoom: null filename");
         if (filename.equals(""))
             throw new IllegalArgumentException("saveProgress in class EscapeRoom: empty string");
+        if (filename.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("saveProgress in class EscapeRoom: contains line separator");
 
         PrintWriter out = null;
 
@@ -107,7 +112,8 @@ public class EscapeRoom {
 
         try {
             Scanner scanner = new Scanner(new File(filename));
-            String regex = "\"[\\w\\s-.]+\"";
+            String regex = "\"[\\w\\W]+\"";
+
             String temp;
 
             scanner.nextLine();
@@ -226,8 +232,9 @@ public class EscapeRoom {
                     player.addToInventory(k);
                     keysToDelete.add(k);
                     output += k.getName() + "\n";
-                } else 
-                    keysToDelete.add(k);
+                }
+                // else 
+                //     keysToDelete.add(k);
             }
         }
 
