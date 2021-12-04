@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Game {
     private ArrayList<Room> rooms;
@@ -64,7 +65,7 @@ public class Game {
                         k.add(lines.get( i ) );
                         break;
                     case("m"):
-                        mapLocationString = lines.get( i );
+                        mapLocationString = lines.get( i ).substring(5);
                 }
             }
 
@@ -107,12 +108,18 @@ public class Game {
     protected Room parseRoom( String line ) {
         line = line.substring( 6 );
         line = line.replace( "\n", "" );
-        line = line.replace( ", ", "," );
+        line = line.replace( "| ", "|" );
         Room newRoom = new Room();
         ArrayList<String> newRoomString = new ArrayList<String>();
         ArrayList<String> newKeyString = new ArrayList<String>();
         
-        String[] room = line.split(",");
+        System.out.println(line);
+
+        String[] room = line.split("\\|");
+
+        for(int i = 0; i < room.length; i++) {
+            System.out.println(room[i]);
+        }
 
         for( int i = 0; i < room.length; i++ ) {
             switch( i )
@@ -138,7 +145,7 @@ public class Game {
                     }
                     break;
                 case 4:
-                    // newRoom.setImage( room[i] );
+                    newRoom.setImage( room[i] );
                     break;
                 case 5: 
                     newRoom.setCode( room[i] );
@@ -183,7 +190,7 @@ public class Game {
             name = line.split(":")[0];
             line = line.substring(name.length() + 1);
 
-            String[] keyRooms = line.split(",");
+            String[] keyRooms = line.split("\\|");
             for( int j = 0; j < keyRooms.length; j++ ) {
                 keyRooms[j] = keyRooms[j].replace(" ", "");
                 roomsKeyUnlocks.add( getRoomByName( keyRooms[j] ) );
