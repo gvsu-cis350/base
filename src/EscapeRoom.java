@@ -81,14 +81,8 @@ public class EscapeRoom {
     }
 
     public String setImage(String path) {
-        if (path == null || path.equals(""))
+        if (path == null || path.equals("") || path.contains(System.getProperty("line.separator")))
             return "image not found";
-
-            String regexMac = "([\\w]:)?((/[\\w-.]+)|(/\"[\\w\\s-.]+\"))+.png";
-            String regexWin = "([\\w]:)?((\\\\[\\w-.]+)|(\\\\\"[\\w\\s-.]+\"))+.png";
-    
-            if (!Pattern.matches(regexMac, path) && !Pattern.matches(regexWin, path))
-                throw new IllegalArgumentException("setImage in class EscapeRoom: invalid file path");
 
         this.image = path;
         return null;

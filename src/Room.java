@@ -89,14 +89,8 @@ public class Room {
     }
 
     public String setImage(String path) {
-        if (path == null || path.equals(""))
+        if (path == null || path.equals("") || path.contains(System.getProperty("line.separator")))
             return "image not found";
-
-        String regexMac = "([\\w]:)?((/[\\S]+)|(/\"[\\w\\W]+\"))+.png";
-        String regexWin = "([\\w]:)?((\\\\[\\w-.]+)|(\\\\\"[\\w\\s-.]+\"))+.png";
-
-        if (!Pattern.matches(regexMac, path) && !Pattern.matches(regexWin, path) || path.contains(System.getProperty("line.separator")))
-            throw new IllegalArgumentException("setImage in class Room: invalid file path");
 
         this.image = path;
         return null;
