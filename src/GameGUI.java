@@ -175,7 +175,7 @@ public class GameGUI extends JFrame implements ActionListener {
         noteList = new DefaultListModel();
         keyList = new DefaultListModel();
 
-        outList.addElement(escapeRoom.getBeginningScript());
+        outList.addElement(escapeRoom.getBeginText());
 
         outScreen = new JList(outList);
         notes = new JList(noteList);

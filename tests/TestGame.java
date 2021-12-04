@@ -53,7 +53,7 @@ public class TestGame extends Game {
         assertEquals( "Bathroom", r.getName() );
         assertEquals( "This is a description of the bathroom", r.getScript() );
         assertEquals( false, r.getIsEnd() );
-        assertEquals( "/image.png", r.getImage() );
+        assertEquals( "\\image.png", r.getImage() );
         assertEquals( "ABC", r.getCode() );
         assertEquals( null, r.getKeys() );
         assertEquals( null, r.getRooms() );
