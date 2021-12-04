@@ -11,19 +11,20 @@ public class TestEscapeRoom {
     @Test
     public void test_constructor() {
         ArrayList<Room> rooms = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, null, null, null, null);
-        Room room4 = new Room("room4", "room4", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
+        Room room4 = new Room("room4", "room4", false, false, null, null, null, null);
         rooms.add(room1);
         rooms.add(room2);
         rooms.add(room3);
         rooms.add(room4);
         Player player = new Player(null, null, null);
         String image = "c:/this-is-an-image.png";
-        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", player, image, rooms);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", player, image, rooms);
 
-        assertEquals("escapeRoom", escapeRoom.getName());
+        assertEquals("begin", escapeRoom.getBeginText());
+        assertEquals("end", escapeRoom.getEndText());
         assertEquals(player, escapeRoom.getPlayer());
         assertEquals("c:/this-is-an-image.png", escapeRoom.getImage());
         assertEquals(room1, escapeRoom.getMap().get(0));
@@ -34,37 +35,75 @@ public class TestEscapeRoom {
     }
 
     @Test
-    public void test_getName() {
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom yay!!", null, null, null);
+    public void test_getBeginText() {
+        EscapeRoom escapeRoom = new EscapeRoom("beginning text!!", "end", null, null, null);
 
-        assertEquals("escaperoom yay!!", escapeRoom.getName());
+        assertEquals("beginning text!!", escapeRoom.getBeginText());
     }
 
    @Test
-   public void test_setName() {
-       EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null, null);
+   public void test_setBeginText() {
+       EscapeRoom escapeRoom = new EscapeRoom("begin", "end", null, null, null);
 
-       assertEquals("escaperoom", escapeRoom.getName());
+       assertEquals("begin", escapeRoom.getBeginText());
 
-       escapeRoom.setName("new escaperoom");
+       escapeRoom.setBeginText("new beginning text");
 
-       assertEquals("new escaperoom", escapeRoom.getName());
+       assertEquals("new beginning text", escapeRoom.getBeginText());
 
        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-           escapeRoom.setName(null);
+           escapeRoom.setBeginText(null);
        });
-       assertEquals("setName in class EscapeRoom: null input", exception.getMessage());
+       assertEquals("setBeginText in class EscapeRoom: null input", exception.getMessage());
 
        exception = assertThrows(IllegalArgumentException.class, () -> {
-           escapeRoom.setName("");
+           escapeRoom.setBeginText("");
        });
-       assertEquals("setName in class EscapeRoom: empty string", exception.getMessage());
+       assertEquals("setBeginText in class EscapeRoom: empty string", exception.getMessage());
+       
+       exception = assertThrows(IllegalArgumentException.class, () -> {
+        escapeRoom.setBeginText("\n");
+        });
+        assertEquals("setBeginText in class EscapeRoom: contains line separator", exception.getMessage());
+   }
+
+   @Test
+    public void test_getEndText() {
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "ending text!!", null, null, null);
+
+        assertEquals("ending text!!", escapeRoom.getEndText());
+    }
+
+   @Test
+   public void test_setEndText() {
+       EscapeRoom escapeRoom = new EscapeRoom("begin", "end", null, null, null);
+
+       assertEquals("end", escapeRoom.getEndText());
+
+       escapeRoom.setEndText("new ending text");
+
+       assertEquals("new ending text", escapeRoom.getEndText());
+
+       Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+           escapeRoom.setEndText(null);
+       });
+       assertEquals("setEndText in class EscapeRoom: null input", exception.getMessage());
+
+       exception = assertThrows(IllegalArgumentException.class, () -> {
+           escapeRoom.setEndText("");
+       });
+       assertEquals("setEndText in class EscapeRoom: empty string", exception.getMessage());
+       
+       exception = assertThrows(IllegalArgumentException.class, () -> {
+        escapeRoom.setEndText("\n");
+        });
+        assertEquals("setEndText in class EscapeRoom: contains line separator", exception.getMessage());
    }
 
     @Test
     public void test_getPlayer() {
         Player player = new Player(null, null, null);
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, null);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", player, null, null);
 
         assertEquals(player, escapeRoom.getPlayer());
     }
@@ -72,7 +111,7 @@ public class TestEscapeRoom {
     @Test
     public void test_setPlayer() {
         Player player = new Player(null, null, null);
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, null);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", player, null, null);
 
         assertEquals(player, escapeRoom.getPlayer());
 
@@ -87,7 +126,7 @@ public class TestEscapeRoom {
         String path1 = "/Desktop/School/GVSU/pic.png";
         String path2 = "Z:/users/annac/docs/123.png";
 
-        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", null, path1, null);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", null, path1, null);
 
         assertEquals("/Desktop/School/GVSU/pic.png", escapeRoom.getImage());
 
@@ -97,13 +136,12 @@ public class TestEscapeRoom {
 
     @Test
     public void test_setImage() {
-        EscapeRoom escapeRoom = new EscapeRoom("escapeRoom", null, null, null);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", null, null, null);
         escapeRoom.setImage("/Desktop/1234/GVSU/pic.png");
         escapeRoom.setImage("Z:/users/annac/docs/123.png");
         escapeRoom.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
         escapeRoom.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
-
-        assertEquals("c:/folder1/\"folder 2-_\"/___file---.png", escapeRoom.getImage());
+        escapeRoom.setImage("D:\\CodingTests\\GUITests\\src\\pics\\map.png");
 
         assertEquals("image not found", escapeRoom.setImage(""));
         assertEquals("image not found", escapeRoom.setImage(null));
@@ -132,14 +170,14 @@ public class TestEscapeRoom {
     @Test
     public void test_getMap() {
         ArrayList<Room> map = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
         map.add(room1);
         map.add(room2);
         map.add(room3);
 
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null, map);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", null, null, map);
 
         assertEquals(room1, escapeRoom.getMap().get(0));
         assertEquals(room2, escapeRoom.getMap().get(1));
@@ -149,14 +187,14 @@ public class TestEscapeRoom {
     @Test
     public void test_setMap() {
         ArrayList<Room> map = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
         map.add(room1);
         map.add(room2);
         map.add(room3);
 
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", null, null, null);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", null, null, null);
         escapeRoom.setMap(map);
 
         assertEquals(room1, escapeRoom.getMap().get(0));
@@ -168,13 +206,13 @@ public class TestEscapeRoom {
     public void test_saveLoadProgress() {
 
         ArrayList<Room> map = new ArrayList<>();
-        Room room1 = new Room("room1", "room1", false, null, null, null, null);
-        Room room2 = new Room("room2", "room2", false, null, null, null, null);
-        Room room3 = new Room("room3", "room3", false, null, null, null, null);
-        Room room4 = new Room("room4", "room4", false, null, null, null, null);
-        Room room5 = new Room("room5", "room5", false, null, null, null, null);
-        Room room6 = new Room("room6", "room6", false, null, null, null, null);
-        Room room7 = new Room("room7", "room7", false, null, null, null, null);
+        Room room1 = new Room("room1", "room1", false, false, null, null, null, null);
+        Room room2 = new Room("room2", "room2", false, false, null, null, null, null);
+        Room room3 = new Room("room3", "room3", false, false, null, null, null, null);
+        Room room4 = new Room("room4", "room4", false, false, null, null, null, null);
+        Room room5 = new Room("room5", "room5", false, false, null, null, null, null);
+        Room room6 = new Room("room6", "room6", false, false, null, null, null, null);
+        Room room7 = new Room("room7", "room7", false, false, null, null, null, null);
         map.add(room1);
         map.add(room2);
         map.add(room3);
@@ -184,9 +222,10 @@ public class TestEscapeRoom {
         map.add(room7);
 
         ArrayList<String> notes = new ArrayList<>();
-        notes.add("first note");
-        notes.add("second note");
-        notes.add("third note");
+        notes.add("first note\"\" note,,");
+        notes.add("second ... , \"note");
+        notes.add("third__ &^%#@! note");
+        notes.add("fourth \n note");
 
         ArrayList<Room> key1Unlocks = new ArrayList<>();
         key1Unlocks.add(room1);
@@ -210,7 +249,7 @@ public class TestEscapeRoom {
 
         Player player = new Player(notes, inventory, room7);
 
-        EscapeRoom escapeRoom = new EscapeRoom("escaperoom", player, null, map);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", player, null, map);
 
         escapeRoom.saveProgress("progress");
 
@@ -218,9 +257,10 @@ public class TestEscapeRoom {
 
         escapeRoom.loadProgress("progress");
 
-        assertEquals("first note", escapeRoom.getPlayer().getNotes().get(0));
-        assertEquals("second note", escapeRoom.getPlayer().getNotes().get(1));
-        assertEquals("third note", escapeRoom.getPlayer().getNotes().get(2));
+        assertEquals("first note\"\" note,,", escapeRoom.getPlayer().getNotes().get(0));
+        assertEquals("second ... , \"note", escapeRoom.getPlayer().getNotes().get(1));
+        assertEquals("third__ &^%#@! note", escapeRoom.getPlayer().getNotes().get(2));
+        assertEquals(3, escapeRoom.getPlayer().getNotes().size());
 
         assertEquals("key1", escapeRoom.getPlayer().getInventory().get(0).getName());
         assertEquals(room1, escapeRoom.getPlayer().getInventory().get(0).getUnlocks().get(0));
@@ -239,9 +279,9 @@ public class TestEscapeRoom {
     @Test
     public void test_moveRoom() {
         ArrayList<Room> map = new ArrayList<>();
-        Room upstairs = new Room("Upstairs", "This is the upstairs", false, null, null, null, null);
-        Room bedroom = new Room("Bedroom", "This is the bedroom", false, null, "123", null, null);
-        Room bathroom = new Room("Bathroom", "This is the bathroom", true, null, "123", null, null);
+        Room upstairs = new Room("Upstairs", "This is the upstairs", false, false, null, null, null, null);
+        Room bedroom = new Room("Bedroom", "This is the bedroom", false, false, null, "123", null, null);
+        Room bathroom = new Room("Bathroom", "This is the bathroom", true, false, null, "123", null, null);
         map.add(upstairs);
         map.add(bedroom);
         map.add(bathroom);
@@ -249,7 +289,7 @@ public class TestEscapeRoom {
         bedroom.addRoom(upstairs);
         bedroom.addRoom(bathroom);
         bathroom.addRoom(bedroom);
-        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), null, map);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", new Player(null, null, null), null, map);
 
         assertEquals("Bedroom requires a code to enter.", escapeRoom.moveRoom("bEdroom"));
 
@@ -262,10 +302,11 @@ public class TestEscapeRoom {
         assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
 
         bathroom.setCode(null);
+        assertEquals("Bathroom requires a key to enter.", escapeRoom.moveRoom("bathroom"));
+
         ArrayList<Room> unlocks = new ArrayList<>();
         unlocks.add(bathroom);
         escapeRoom.getPlayer().addToInventory(new Key("unlocks bathroom", unlocks));
-
         assertEquals(null, escapeRoom.moveRoom("bathroom"));
         assertEquals(bathroom, escapeRoom.getPlayer().getCurrentPosition());
 
@@ -276,13 +317,13 @@ public class TestEscapeRoom {
     @Test
     public void test_unlock() {
         ArrayList<Room> map = new ArrayList<>();
-        Room upstairs = new Room("Upstairs", "This is the upstairs", false, null, null, null, null);
-        Room bedroom = new Room("Bedroom", "This is the bedroom", true, null, "123", null, null);
+        Room upstairs = new Room("Upstairs", "This is the upstairs", false, false, null, null, null, null);
+        Room bedroom = new Room("Bedroom", "This is the bedroom", true, false, null, "123", null, null);
         map.add(upstairs);
         map.add(bedroom);
         upstairs.addRoom(bedroom);
         bedroom.addRoom(upstairs);
-        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), null, map);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", new Player(null, null, null), null, map);
 
         assertEquals("Bedroom requires a key and a code to enter.", escapeRoom.moveRoom("bedroom"));
         assertEquals("abc is incorrect!", escapeRoom.unlock("bedroom", "abc"));
@@ -303,9 +344,9 @@ public class TestEscapeRoom {
     @Test
     public void test_inspectRoom() {
         ArrayList<Room> map = new ArrayList<>();
-        Room upstairs = new Room("Upstairs", "This is the upstairs", false, null, null, null, null);
-        Room bedroom = new Room("Bedroom", "This is the bedroom", false, null, null, null, null);
-        Room bathroom = new Room("Bathroom", "This is the bathroom", true, null, null, null, null);
+        Room upstairs = new Room("Upstairs", "This is the upstairs", false, false, null, null, null, null);
+        Room bedroom = new Room("Bedroom", "This is the bedroom", false, false, null, null, null, null);
+        Room bathroom = new Room("Bathroom", "This is the bathroom", true, false, null, null, null, null);
         ArrayList<Room> unlocks = new ArrayList<>();
         unlocks.add(bathroom);
         bedroom.addKey(new Key("unlocks bathroom", unlocks));
@@ -316,7 +357,7 @@ public class TestEscapeRoom {
         bedroom.addRoom(upstairs);
         bedroom.addRoom(bathroom);
         bathroom.addRoom(bedroom);
-        EscapeRoom escapeRoom = new EscapeRoom("The house", new Player(null, null, null), null, map);
+        EscapeRoom escapeRoom = new EscapeRoom("begin", "end", new Player(null, null, null), null, map);
 
         assertEquals("This is the upstairs", escapeRoom.inspectRoom());
 
