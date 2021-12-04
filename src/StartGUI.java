@@ -17,6 +17,7 @@ public class StartGUI extends JFrame implements ActionListener{
     public Color textColor = new Color(0xFFFFFF);
     public Color itemColor = new Color(0x383B3F);
     public Color terminalColor = new Color(0x2A3C5C);
+    public Color selectedColor = new Color(0x5F5F5F);
 
     private String escapeFile = null;
 
@@ -63,7 +64,15 @@ public class StartGUI extends JFrame implements ActionListener{
         setLocationRelativeTo(null);
     }
 
-    public StartGUI(String escapeFile){
+    public StartGUI(String filename, Color b, Color txt, Color item, Color out, Color sel){
+        this.escapeFile = filename;
+        
+        this.backgroundColor = b;
+        this.textColor = txt;
+        this.itemColor = item;
+        this.terminalColor = out;
+        this.selectedColor = sel;
+
         mainPanel = new JPanel();
         buttonPanel = new JPanel();
         titlePanel = new JPanel();
@@ -73,8 +82,6 @@ public class StartGUI extends JFrame implements ActionListener{
         exit = new JButton("Quit Game");
         start = new JButton("Start Game");
         options = new JButton("Options");
-
-        this.escapeFile = escapeFile;
 
         title.setFont(new Font("Sans-Serif", Font.PLAIN, 20));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,16 +127,12 @@ public class StartGUI extends JFrame implements ActionListener{
                 new GameGUI();
             }
             else{
-                new GameGUI(escapeFile);
+                new GameGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             }
             this.dispose();
         }
         if(options == comp){
-            if (escapeFile == null)
-                new OptionsGUI();
-            else{
-                new OptionsGUI(escapeFile);
-            }
+            new OptionsGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             this.dispose();
         }
     }

@@ -97,8 +97,44 @@ public class GameGUI extends JFrame implements ActionListener {
         setSize(750,750);
         setLocationRelativeTo(null);
     }
+    public GameGUI(Color b, Color txt, Color item, Color out, Color sel){
+        this.backgroundColor = b;
+        this.textColor = txt;
+        this.itemColor = item;
+        this.terminalColor = out;
+        this.selectedColor = sel;
 
-    public GameGUI(String filename) {
+        mainPanel = new JPanel();
+        helpInfo = new JLabel("It looks like an escape room isn't properly loaded.  Please go to options to load one");
+        options = new JButton("Options");
+        mainMenu = new JButton("Main Menu");
+
+        mainMenu.addActionListener(this);
+        options.addActionListener(this);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        mainPanel.setBackground(backgroundColor);
+
+        options.setBackground(itemColor);
+        mainMenu.setBackground(itemColor);
+        
+        options.setForeground(textColor);
+        mainMenu.setForeground(textColor);
+        helpInfo.setForeground(textColor);
+
+        mainPanel.add(helpInfo);
+        mainPanel.add(options);
+        mainPanel.add(mainMenu);
+
+        add(mainPanel);
+
+        setVisible(true);
+        setSize(750,750);
+        setLocationRelativeTo(null);
+    }
+
+    public GameGUI(String filename, Color b, Color txt, Color item, Color out, Color sel) {
         // try{
         //     escapeRoom = escapeRoom.buildEscapeRoom(filename);
         // }catch(Exception e){
@@ -108,6 +144,12 @@ public class GameGUI extends JFrame implements ActionListener {
 
         // player = escapeRoom.getPlayer();
         this.escapeFile = filename;
+
+        this.backgroundColor = b;
+        this.textColor = txt;
+        this.itemColor = item;
+        this.terminalColor = out;
+        this.selectedColor = sel;
 
         UIManager.put("TabbedPane.selected", selectedColor);
 
@@ -265,10 +307,7 @@ public class GameGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object comp = e.getSource();
         if (comp == mainMenu) {
-            if (escapeFile == null)
-                new StartGUI();
-            else
-                new StartGUI(escapeFile);
+            new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             this.dispose();
         }
         if (comp == saveProgress) {
@@ -397,7 +436,7 @@ public class GameGUI extends JFrame implements ActionListener {
                 outList.removeElementAt(0);
         }
         if (comp == options){
-            new OptionsGUI();
+            new OptionsGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             this.dispose();
         }
     }

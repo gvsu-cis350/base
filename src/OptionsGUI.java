@@ -39,10 +39,11 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
     final JFileChooser fileLoader;
 
-    public Color backgroundColor = new Color(0x222222);
-    public Color textColor = new Color(0xFFFFFF);
-    public Color itemColor = new Color(0x383B3F);
-    public Color terminalColor = new Color(0x2A3C5C);
+    protected Color backgroundColor = new Color(0x222222);
+    protected Color textColor = new Color(0xFFFFFF);
+    protected Color itemColor = new Color(0x383B3F);
+    protected Color terminalColor = new Color(0x2A3C5C);
+    protected Color selectedColor = new Color(0x5F5F5F);
 
     public OptionsGUI(){
         mainPanel = new JPanel();
@@ -170,8 +171,13 @@ public class OptionsGUI extends JFrame implements ActionListener{
         setSize(550,500);
         setLocationRelativeTo(null);
     }
-    public OptionsGUI(String filename){
+    public OptionsGUI(String filename, Color b, Color txt, Color item, Color out, Color sel){
         this.escapeFile = filename;
+        this.backgroundColor = b;
+        this.textColor = txt;
+        this.itemColor = item;
+        this.terminalColor = out;
+        this.selectedColor = sel;
 
         mainPanel = new JPanel();
         escapeRoomPanel = new JPanel();
@@ -306,21 +312,18 @@ public class OptionsGUI extends JFrame implements ActionListener{
                 new StartGUI();
             }
             else{
-                new StartGUI(escapeFile);
+                new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             }
             this.dispose();
         }
         if (comp == apply){
-            //Change color values and refresh
+            setColors((String)colors.getSelectedItem());
+            new OptionsGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
+            this.dispose();
         }
         if (comp == ok){
-            //create new constructors for GUI classes that take in colors and font styles
-            if (escapeFile == null){
-                new StartGUI();
-            }
-            else{
-                new StartGUI(escapeFile);
-            }
+            setColors((String)colors.getSelectedItem());
+            new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
             this.dispose();
         }
         if (comp == load){
@@ -330,11 +333,11 @@ public class OptionsGUI extends JFrame implements ActionListener{
                 File file = fileLoader.getSelectedFile();
                 escapeFile = file.getAbsolutePath();
             }
-            if (escapeFile.substring(escapeFile.lastIndexOf(".")).equals(".csv")){
+            if (escapeFile != null && escapeFile.substring(escapeFile.lastIndexOf(".")).equals(".txt")){
                 pathLabel.setText(escapeFile);
             }
             else{
-                JOptionPane.showMessageDialog(this, "Please choose a .csv file");
+                JOptionPane.showMessageDialog(this, "Please choose a .txt file");
                 escapeFile = null;
             }
         }
@@ -342,8 +345,34 @@ public class OptionsGUI extends JFrame implements ActionListener{
             //Show dialog box with example of csv (web link to google drive artifact???)
         }
         if (comp == defaultButton){
-            //change everything back to the default values including colors
+            //change everything back to the default values including text
             escapeFile = null;
+            pathLabel.setText("No escape room chosen");
+
+            this.backgroundColor = new Color(0x222222);
+            this.textColor = new Color(0xFFFFFF);
+            this.itemColor = new Color(0x383B3F);
+            this.terminalColor = new Color(0x2A3C5C);
+            this.selectedColor = new Color(0x5F5F5F); 
+        }
+    }
+
+    protected void setColors(String s){
+        switch(s){
+            case "Dark":
+                this.backgroundColor = new Color(0x222222);
+                this.textColor = new Color(0xFFFFFF);
+                this.itemColor = new Color(0x383B3F);
+                this.terminalColor = new Color(0x2A3C5C);
+                this.selectedColor = new Color(0x5F5F5F);
+                break;
+            case "Light":
+                backgroundColor = new Color(0xF2F2F2);
+                textColor = new Color(0x222222);
+                itemColor = new Color(0xC1C4C8);
+                terminalColor = new Color(0xDEEAFF);
+                selectedColor = new Color(0xC1CEE0);
+                break;
         }
     }
 }
