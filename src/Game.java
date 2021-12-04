@@ -48,10 +48,10 @@ public class Game {
             for( int i = 0; i < lines.size(); i++ ) {
                 switch(lines.get(i).toLowerCase().substring( 0, 1 ) ) {
                     case("b"):
-                        beginningScript = lines.get(i);
+                        beginningScript = lines.get(i).substring(11);
                         break;
                     case("e"):
-                        endingScript = lines.get(i);
+                        endingScript = lines.get(i).substring(5);
                         break;
                     case("r"): 
                     {
@@ -68,25 +68,21 @@ public class Game {
                 }
             }
 
-            // Creates all of the keys listed
             addKeys( k );
 
-            // At this point, all of the rooms and keys should be created
-            // What I need to do is add all of the keys that I've stored the names for into my rooms
-
-            ArrayList<Room> connectedRooms = new ArrayList<Room>();
             
             for( int i = 0; i < rooms.size(); i++ ) {
-                for( int j = 0; j < roomStrings.get(i).size(); i++ ) {
+                ArrayList<Room> connectedRooms = new ArrayList<Room>();
+                for( int j = 0; j < roomStrings.get(j).size(); j++ ) {
                     connectedRooms.add( getRoomByName( roomStrings.get(i).get(j) ) );
                 }
                 rooms.get( i ).setRooms( connectedRooms );
             }
 
-            ArrayList<Key> connectedKeys = new ArrayList<Key>();
-
+            
             for( int i = 0; i < rooms.size(); i++ ) {
-                for( int j = 0; j < keyStrings.get(i).size(); i++ ) {
+                ArrayList<Key> connectedKeys = new ArrayList<Key>();
+                for( int j = 0; j < keyStrings.get(j).size(); j++ ) {
                     connectedKeys.add( getKeyByName( keyStrings.get(i).get(j) ) );
                 }
                 rooms.get( i ).setKeys( connectedKeys ); 
@@ -94,7 +90,7 @@ public class Game {
 
             Player p = new Player( null, null, null );
 
-            EscapeRoom er = new EscapeRoom( null, p, mapLocationString, rooms );
+            EscapeRoom er = new EscapeRoom( beginningScript, endingScript, p, mapLocationString, rooms );
             return er;
 
         } catch(Exception e) {
@@ -129,19 +125,20 @@ public class Game {
                     break;
                 case 2:
                     if( room[i].toLowerCase().equals("true") ) {
+                        newRoom.setReqKey(true);
+                    } else {
+                        newRoom.setReqKey(false);
+                    }
+                    break;
+                case 3:
+                    if( room[i].toLowerCase().equals("true") ) {
                         newRoom.setIsEnd(true);
                     } else {
                         newRoom.setIsEnd(false);
                     }
                     break;
-                case 3:
-                    if( room[i].toLowerCase().equals("true") ) {
-                        newRoom.setReqKey(true);
-                    } else {
-                        newRoom.setReqKey(false);
-                    }
                 case 4:
-                    newRoom.setImage( room[i] );
+                    // newRoom.setImage( room[i] );
                     break;
                 case 5: 
                     newRoom.setCode( room[i] );
@@ -169,7 +166,11 @@ public class Game {
         return newRoom;
     }
 
-    public void addKeys( ArrayList<String> keyStrings ) {
+    /**
+     * Adds an array list of strings which are key names and turns them into key objects
+     * @param keyStrings
+     */
+    protected void addKeys( ArrayList<String> keyStrings ) {
         String name;
         ArrayList<Room> roomsKeyUnlocks = new ArrayList<Room>();
         
@@ -192,7 +193,12 @@ public class Game {
         }   
     }
 
-    protected Room getRoomByName( String name ) {
+    /**
+     * Searches through the arraylist of rooms and returns the one with the name you entered
+     * @param name
+     * @return
+     */
+    private Room getRoomByName( String name ) {
         for( int i = 0; i < rooms.size(); i++ ) {
             if( rooms.get( i ).getName().toLowerCase().equals( name.toLowerCase() ) ) {
                 return rooms.get( i );
@@ -201,7 +207,12 @@ public class Game {
         return null;
     }
 
-    protected Key getKeyByName( String name ) {
+    /**
+     * Searches through the arraylist of keys and returns the one with the name that you entered
+     * @param name
+     * @return
+     */
+    private Key getKeyByName( String name ) {
         for( int i = 0; i < rooms.size(); i++ ) {
             if( keys.get( i ).getName().toLowerCase().equals( name.toLowerCase() ) ) {
                 return keys.get( i );
@@ -210,34 +221,26 @@ public class Game {
         return null;
     }
 
-    public ArrayList<Room> getRooms() {
+    /**
+     * Returns the arrayList of rooms
+     * @return
+     */
+    protected ArrayList<Room> getRooms() {
         return rooms;
     }
 
-    public ArrayList<Key> getKeys() {
+    /**
+     * Returns the arrayList of keys
+     * @return
+     */
+    protected ArrayList<Key> getKeys() {
         return keys;
-    }
-
-    /**
-     * This method is just for testing so it is protected
-     * @return
-     */
-    protected ArrayList<ArrayList<String>> getKeyStrings() {
-        return keyStrings;
-    }
-
-    /**
-     * This method is just for testing so it is protected
-     * @return
-     */
-    protected ArrayList<ArrayList<String>> getRoomStrings() {
-        return roomStrings;
     }
 
     /**
      * Returns the script for the beginning of the escape room. 
      */
-    public String getBeginningScript() {
+    protected String getBeginningScript() {
         return beginningScript;
     }
 
@@ -245,11 +248,7 @@ public class Game {
      * Returns the script for the end of the escape room
      * @return
      */
-    public String getEndingScript() {
+    protected String getEndingScript() {
         return endingScript;
-    }
-
-    public void saveEscapeRoom(){
-        
     }
 }
