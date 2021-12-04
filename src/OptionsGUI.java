@@ -7,6 +7,7 @@ import java.io.*;
 public class OptionsGUI extends JFrame implements ActionListener{
     private JPanel mainPanel;
     private JPanel escapeRoomPanel;
+    private JPanel escapeButtonsPanel;
     private JPanel comboPanel;
     private JPanel visualPanel;
     private JPanel examplePanel;
@@ -21,8 +22,6 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private JLabel exampleLabel;
     private JLabel pathLabel;
 
-    private JTextArea exampleText;
-
     private JButton load;
     private JButton make;
     private JButton exampleButton;
@@ -33,21 +32,22 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
     private String escapeFile = null;
 
-    private String[] exampleString = {"test", "test2", "test3", "test4"};
-    private String[] sizeList = {"one", "two", "three", "four", "five"};
-    private String[] styleList = {"Style1", "Style2", "Style3", "Style4", "Style5"};
-    private String[] colorList = {"color1", "color2", "color3", "color4", "color5"};
+    private String[] exampleString = {"This is how the terminal looks", "2"};
+    private String[] sizeList = {"Small", "Medium", "Large"};
+    private String[] styleList = {"Serif", "Sans-Serif"};
+    private String[] colorList = {"Dark", "Light"};
 
     final JFileChooser fileLoader;
 
-    public Color backgroundColor = new Color(0xCB4335);
+    public Color backgroundColor = new Color(0x222222);
     public Color textColor = new Color(0xFFFFFF);
-    public Color selectionColor = new Color(0x313131);
-    public Color selectionText = new Color(0xFF00EBFF);
+    public Color itemColor = new Color(0x383B3F);
+    public Color terminalColor = new Color(0x2A3C5C);
 
     public OptionsGUI(){
         mainPanel = new JPanel();
         escapeRoomPanel = new JPanel();
+        escapeButtonsPanel = new JPanel();
         examplePanel = new JPanel();
         comboPanel = new JPanel();
         visualPanel = new JPanel();
@@ -61,13 +61,12 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
         exampleLabel = new JLabel("This is a label");
         if (escapeFile == null){
-            pathLabel = new JLabel("No escape room chosen");
+            pathLabel = new JLabel("No escape room chosen", SwingConstants.CENTER);
         }
         else{
-            pathLabel = new JLabel(escapeFile);
+            pathLabel = new JLabel(escapeFile, SwingConstants.CENTER);
         }
 
-        exampleText = new JTextArea("This is an area with text in it", 5, 30);
 
         load = new JButton("Load Escape Room");
         make = new JButton("Make your own!");
@@ -92,44 +91,91 @@ public class OptionsGUI extends JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         visualPanel.setLayout(new BoxLayout(visualPanel, BoxLayout.Y_AXIS));
+        escapeRoomPanel.setLayout(new BoxLayout(escapeRoomPanel, BoxLayout.Y_AXIS));
+
+        fontStyle.setBackground(backgroundColor);
+        fontStyle.setForeground(textColor);
+        exampleButton.setBackground(itemColor);
+
+        mainPanel.setBackground(backgroundColor);
+        escapeRoomPanel.setBackground(backgroundColor);
+        escapeButtonsPanel.setBackground(backgroundColor);
+        examplePanel.setBackground(backgroundColor);
+        comboPanel.setBackground(backgroundColor);
+        visualPanel.setBackground(backgroundColor);
+        navigationPanel.setBackground(backgroundColor);
+
+        load.setBackground(itemColor);
+        make.setBackground(itemColor);
+        exampleButton.setBackground(itemColor);
+        defaultButton.setBackground(itemColor);
+        apply.setBackground(itemColor);
+        ok.setBackground(itemColor);
+        mainMenu.setBackground(itemColor);
+
+        fontSize.setBackground(itemColor);
+        fontStyle.setBackground(itemColor);
+        colors.setBackground(itemColor);
+
+        exampleList.setBackground(terminalColor);
+        exampleList.setSelectionBackground(terminalColor);
+
+        exampleLabel.setForeground(textColor);
+        pathLabel.setForeground(textColor);
+
+        load.setForeground(textColor);
+        make.setForeground(textColor);
+        exampleButton.setForeground(textColor);
+        defaultButton.setForeground(textColor);
+        apply.setForeground(textColor);
+        ok.setForeground(textColor);
+        mainMenu.setForeground(textColor);
+
+        fontSize.setForeground(textColor);
+        fontStyle.setForeground(textColor);
+        colors.setForeground(textColor);
+
+        exampleList.setForeground(textColor);
+        exampleList.setSelectionForeground(textColor);
+
+        escapeButtonsPanel.add(load);
+        escapeButtonsPanel.add(make);
 
         escapeRoomPanel.add(pathLabel);
-        escapeRoomPanel.add(load);
-        escapeRoomPanel.add(make);
+        escapeRoomPanel.add(escapeButtonsPanel);
         mainPanel.add(escapeRoomPanel);
 
         examplePanel.add(exampleLabel);
-        examplePanel.add(exampleText);
         examplePanel.add(exampleList);
         examplePanel.add(exampleButton);
 
         comboPanel.add(fontStyle);
+        comboPanel.add(fontSize);
         comboPanel.add(colors);
 
         visualPanel.add(comboPanel);
         visualPanel.add(examplePanel);
 
-        mainPanel.add(visualPanel);
         navigationPanel.add(mainMenu);
         navigationPanel.add(defaultButton);
         navigationPanel.add(apply);
         navigationPanel.add(ok);
-        mainPanel.add(navigationPanel);
 
-        //fontStyle.setBackground(backgroundColor);
-        //fontStyle.setForeground(textColor);
-        //exampleList.setSelectionBackground(selectionColor);
-        //exampleList.setSelectionForeground(selectionText);
-       //mainPanel.setBackground(backgroundColor);
+        mainPanel.add(visualPanel);
+        mainPanel.add(navigationPanel);
 
         add(mainPanel);
 
         setVisible(true);
-        setSize(1000,500);
+        setSize(550,500);
+        setLocationRelativeTo(null);
     }
     public OptionsGUI(String filename){
+        this.escapeFile = filename;
+
         mainPanel = new JPanel();
         escapeRoomPanel = new JPanel();
+        escapeButtonsPanel = new JPanel();
         examplePanel = new JPanel();
         comboPanel = new JPanel();
         visualPanel = new JPanel();
@@ -141,17 +187,14 @@ public class OptionsGUI extends JFrame implements ActionListener{
         fontStyle = new JComboBox(styleList);
         colors = new JComboBox(colorList);
 
-        escapeFile = filename;
-
         exampleLabel = new JLabel("This is a label");
         if (escapeFile == null){
-            pathLabel = new JLabel("No escape room chosen");
+            pathLabel = new JLabel("No escape room chosen", SwingConstants.CENTER);
         }
         else{
-            pathLabel = new JLabel(escapeFile);
+            pathLabel = new JLabel(escapeFile, SwingConstants.CENTER);
         }
 
-        exampleText = new JTextArea("This is an area with text in it", 5, 30);
 
         load = new JButton("Load Escape Room");
         make = new JButton("Make your own!");
@@ -176,34 +219,84 @@ public class OptionsGUI extends JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         visualPanel.setLayout(new BoxLayout(visualPanel, BoxLayout.Y_AXIS));
+        escapeRoomPanel.setLayout(new BoxLayout(escapeRoomPanel, BoxLayout.Y_AXIS));
+
+        fontStyle.setBackground(backgroundColor);
+        fontStyle.setForeground(textColor);
+        exampleButton.setBackground(itemColor);
+
+        mainPanel.setBackground(backgroundColor);
+        escapeRoomPanel.setBackground(backgroundColor);
+        escapeButtonsPanel.setBackground(backgroundColor);
+        examplePanel.setBackground(backgroundColor);
+        comboPanel.setBackground(backgroundColor);
+        visualPanel.setBackground(backgroundColor);
+        navigationPanel.setBackground(backgroundColor);
+
+        load.setBackground(itemColor);
+        make.setBackground(itemColor);
+        exampleButton.setBackground(itemColor);
+        defaultButton.setBackground(itemColor);
+        apply.setBackground(itemColor);
+        ok.setBackground(itemColor);
+        mainMenu.setBackground(itemColor);
+
+        fontSize.setBackground(itemColor);
+        fontStyle.setBackground(itemColor);
+        colors.setBackground(itemColor);
+
+        exampleList.setBackground(terminalColor);
+        exampleList.setSelectionBackground(terminalColor);
+
+        exampleLabel.setForeground(textColor);
+        pathLabel.setForeground(textColor);
+
+        load.setForeground(textColor);
+        make.setForeground(textColor);
+        exampleButton.setForeground(textColor);
+        defaultButton.setForeground(textColor);
+        apply.setForeground(textColor);
+        ok.setForeground(textColor);
+        mainMenu.setForeground(textColor);
+
+        fontSize.setForeground(textColor);
+        fontStyle.setForeground(textColor);
+        colors.setForeground(textColor);
+
+        exampleList.setForeground(textColor);
+        exampleList.setSelectionForeground(textColor);
+
+        escapeButtonsPanel.add(load);
+        escapeButtonsPanel.add(make);
 
         escapeRoomPanel.add(pathLabel);
-        escapeRoomPanel.add(load);
-        escapeRoomPanel.add(make);
+        escapeRoomPanel.add(escapeButtonsPanel);
         mainPanel.add(escapeRoomPanel);
 
         examplePanel.add(exampleLabel);
-        examplePanel.add(exampleText);
         examplePanel.add(exampleList);
         examplePanel.add(exampleButton);
 
         comboPanel.add(fontStyle);
+        comboPanel.add(fontSize);
         comboPanel.add(colors);
 
         visualPanel.add(comboPanel);
         visualPanel.add(examplePanel);
 
-        mainPanel.add(visualPanel);
         navigationPanel.add(mainMenu);
         navigationPanel.add(defaultButton);
         navigationPanel.add(apply);
         navigationPanel.add(ok);
+
+        mainPanel.add(visualPanel);
         mainPanel.add(navigationPanel);
 
         add(mainPanel);
 
         setVisible(true);
-        setSize(1000,500);
+        setSize(550,500);
+        setLocationRelativeTo(null);
     }
 
     public void actionPerformed(ActionEvent e){

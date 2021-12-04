@@ -6,10 +6,17 @@ public class StartGUI extends JFrame implements ActionListener{
     private JPanel mainPanel;
     private JPanel buttonPanel;
     private JPanel titlePanel;
+
     private JLabel title;
+
     private JButton exit;
     private JButton start;
     private JButton options;
+
+    public Color backgroundColor = new Color(0x222222);
+    public Color textColor = new Color(0xFFFFFF);
+    public Color itemColor = new Color(0x383B3F);
+    public Color terminalColor = new Color(0x2A3C5C);
 
     private String escapeFile = null;
 
@@ -30,6 +37,19 @@ public class StartGUI extends JFrame implements ActionListener{
         start.addActionListener(this);
         options.addActionListener(this);
 
+        mainPanel.setBackground(backgroundColor);
+        buttonPanel.setBackground(backgroundColor);
+        titlePanel.setBackground(backgroundColor);
+
+        exit.setBackground(itemColor);
+        start.setBackground(itemColor);
+        options.setBackground(itemColor);
+
+        exit.setForeground(textColor);
+        start.setForeground(textColor);
+        options.setForeground(textColor);
+        title.setForeground(textColor);
+
         titlePanel.add(title);
         buttonPanel.add(start);
         buttonPanel.add(options);
@@ -40,6 +60,7 @@ public class StartGUI extends JFrame implements ActionListener{
 
         setVisible(true);
         setSize(500,500);
+        setLocationRelativeTo(null);
     }
 
     public StartGUI(String escapeFile){
@@ -63,6 +84,19 @@ public class StartGUI extends JFrame implements ActionListener{
         start.addActionListener(this);
         options.addActionListener(this);
 
+        mainPanel.setBackground(backgroundColor);
+        buttonPanel.setBackground(backgroundColor);
+        titlePanel.setBackground(backgroundColor);
+
+        exit.setBackground(itemColor);
+        start.setBackground(itemColor);
+        options.setBackground(itemColor);
+
+        exit.setForeground(textColor);
+        start.setForeground(textColor);
+        options.setForeground(textColor);
+        title.setForeground(textColor);
+
         titlePanel.add(title);
         buttonPanel.add(start);
         buttonPanel.add(options);
@@ -73,6 +107,7 @@ public class StartGUI extends JFrame implements ActionListener{
 
         setVisible(true);
         setSize(500,500);
+        setLocationRelativeTo(null);
     }
 
     public void actionPerformed(ActionEvent e){
