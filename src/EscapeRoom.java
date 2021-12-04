@@ -11,7 +11,22 @@ public class EscapeRoom {
     private String image;
     private ArrayList<Room> map;
 
-    public EscapeRoom(String beginText, String endText, Player player, String image, ArrayList<Room> map) {
+    public EscapeRoom( String filename ) {
+        Game g = new Game();
+        EscapeRoom e = g.buildEscapeRoom( filename );
+        this.setBeginText( e.getBeginText() );
+        this.setEndText( e.getEndText() );
+        this.setPlayer( e.getPlayer() );
+        this.setImage( e.getImage() );
+        this.map = new ArrayList<Room>();
+        this.map = e.getMap();
+
+        if( map != null && map.size() > 0 && player != null && player.getCurrentPosition() == null ) {
+            this.player.setCurrentPosition(map.get(0));
+        }
+    }
+
+    public EscapeRoom( String beginText, String endText, Player player, String image, ArrayList<Room> map ) {
         this.setBeginText(beginText);
         this.setEndText(endText);
         this.setPlayer(player);
