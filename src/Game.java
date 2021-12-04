@@ -49,9 +49,11 @@ public class Game {
                 switch(lines.get(i).toLowerCase().substring( 0, 1 ) ) {
                     case("b"):
                         beginningScript = lines.get(i).substring(11);
+                        beginningScript.replace("\n", "");
                         break;
                     case("e"):
                         endingScript = lines.get(i).substring(5);
+                        endingScript.replace("\n", "");
                         break;
                     case("r"): 
                     {
@@ -111,14 +113,8 @@ public class Game {
         Room newRoom = new Room();
         ArrayList<String> newRoomString = new ArrayList<String>();
         ArrayList<String> newKeyString = new ArrayList<String>();
-        
-        System.out.println(line);
 
         String[] room = line.split("\\|");
-
-        for(int i = 0; i < room.length; i++) {
-            System.out.println(room[i]);
-        }
 
         for( int i = 0; i < room.length; i++ ) {
             switch( i )
