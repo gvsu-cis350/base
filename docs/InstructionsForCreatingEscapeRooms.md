@@ -1,5 +1,5 @@
 # How to Create a Custom Escape Room
-In order to create an escape room, users must create a .txt file in a specific format. It is very important that users use the exact formatting required when creating an escape room because the program does not have must handling for incorrect formatting. It is the responsibility of the user to make sure they create the escape room file properly. Please refer to the end of this file for an example. 
+In order to create an escape room, users must create a .txt file in a specific format. It is very important that users use the exact formatting required when creating an escape room because the program does not have much handling for incorrect formatting. It is the responsibility of the user to make sure they create the escape room file properly. Please refer to the end of this file for an example. 
 ## Escape Room Elements Descriptions
 * An escape room is made up of several elements. These are:
     * Beginning Script. These lines will start with "Beginning: " which will set the script that is displayed at the beginning of the escape room. 
