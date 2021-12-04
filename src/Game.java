@@ -185,7 +185,7 @@ public class Game {
             name = line.split(":")[0];
             line = line.substring(name.length() + 1);
 
-            String[] keyRooms = line.split("\\|");
+            String[] keyRooms = line.split(",");
             for( int j = 0; j < keyRooms.length; j++ ) {
                 keyRooms[j] = keyRooms[j].replace(" ", "");
                 roomsKeyUnlocks.add( getRoomByName( keyRooms[j] ) );
