@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class Game {
     private ArrayList<Room> rooms;
