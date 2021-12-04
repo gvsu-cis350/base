@@ -10,6 +10,7 @@ public class Game {
     private String endingScript;
     private ArrayList<ArrayList<String>> roomStrings;
     private ArrayList<ArrayList<String>> keyStrings;
+    private String mapLocationString;
     
     /**
      * Default initializes all of the member variables of the 
@@ -22,6 +23,7 @@ public class Game {
         keyStrings = new ArrayList<ArrayList<String>>();
         beginningScript = "";
         endingScript = "";
+        mapLocationString = "";
     }
     
     /**
@@ -31,7 +33,7 @@ public class Game {
      * a functional escape room
      * @param filename
      */
-    public void buildEscapeRoom(String filename){
+    public EscapeRoom buildEscapeRoom(String filename){
         try {
             Scanner sc = new Scanner(new File(filename));
             ArrayList<String> lines = new ArrayList<String>();
@@ -61,6 +63,8 @@ public class Game {
                     case("k"):
                         k.add(lines.get( i ) );
                         break;
+                    case("m"):
+                        mapLocationString = lines.get( i );
                 }
             }
 
@@ -87,6 +91,11 @@ public class Game {
                 }
                 rooms.get( i ).setKeys( connectedKeys ); 
             }
+
+            Player p = new Player( null, null, null );
+
+            EscapeRoom er = new EscapeRoom( null, p, mapLocationString, rooms );
+            return er;
 
         } catch(Exception e) {
             throw new NoSuchElementException("The file which has been entered cannot be utilized.");

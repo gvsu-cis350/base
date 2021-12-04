@@ -56,7 +56,7 @@ public class TestGame extends Game {
     @Test
     public void parse_Room_Test() {
         Game g = new Game();
-        String line = "Room: Bathroom, This is a description of the bathroom, false, false, /image.png, ABC, Library Bedroom Kitchen, null";
+        String line = "Room: Bathroom, This is a description of the bathroom, false, false, \\image.png, ABC, Library Bedroom Kitchen, null";
         Room r = g.parseRoom( line );
 
         assertEquals( "Bathroom", r.getName() );
@@ -88,6 +88,18 @@ public class TestGame extends Game {
         System.out.println(key.getUnlocks());
         assertEquals( "Bathroom", key.getUnlocks().get( 0 ).getName() );
         assertEquals( "Bedroom", key.getUnlocks().get( 1 ).getName() );
+    }
+
+    @Test 
+    public void test_Beginning_And_Ending_Script() {
+        Game g = new Game();
+        g.buildEscapeRoom("bin/TestFile.txt");
+
+        String expectedBeginning = "This is a description of the beginning of the escape room. It will describe where I am and how I came to be unfortunately trapped there.";
+        String expectedEnging = "This is a description of the end. Whew! Glad I got out of that place...";
+
+        assertEquals( expectedBeginning, g.getBeginningScript() );
+        assertEquals( expectedEnging, g.getEndingScript() );
     }
 
     @Test ( expected = NoSuchElementException.class )
