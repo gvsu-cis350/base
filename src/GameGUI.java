@@ -135,14 +135,14 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     public GameGUI(String filename, Color b, Color txt, Color item, Color out, Color sel) {
-        // try{
-        //     escapeRoom = escapeRoom.buildEscapeRoom(filename);
-        // }catch(Exception e){
-        //     new GameGUI();
-        //     this.dispose();
-        // }
+        try{
+            escapeRoom = new EscapeRoom(filename);
+        }catch(Exception e){
+            new GameGUI();
+            this.dispose();
+        }
 
-        // player = escapeRoom.getPlayer();
+        player = escapeRoom.getPlayer();
         this.escapeFile = filename;
 
         this.backgroundColor = b;
@@ -175,7 +175,7 @@ public class GameGUI extends JFrame implements ActionListener {
         noteList = new DefaultListModel();
         keyList = new DefaultListModel();
 
-        outList.addElement("Welcome!"/*escapeRoom.getBeginningScript()*/);
+        outList.addElement(escapeRoom.getBeginningScript());
 
         outScreen = new JList(outList);
         notes = new JList(noteList);
@@ -185,8 +185,8 @@ public class GameGUI extends JFrame implements ActionListener {
         notesScroll = new JScrollPane(notes);
         inventoryScroll = new JScrollPane(inventory);
 
-        // mapFile = escapeRoom.getImage();
-        // imageFile = player.getCurrentPosition().getImage();
+        mapFile = escapeRoom.getImage();
+        imageFile = player.getCurrentPosition().getImage();
 
         try {
             mapPicture = ImageIO.read(new File(mapFile));
