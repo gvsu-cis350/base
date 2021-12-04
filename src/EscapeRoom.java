@@ -5,13 +5,15 @@ import java.util.regex.Pattern;
 
 
 public class EscapeRoom {
-    private String name;
+    private String beginText;
+    private String endText;
     private Player player;
     private String image;
     private ArrayList<Room> map;
 
-    public EscapeRoom(String name, Player player, String image, ArrayList<Room> map) {
-        this.setName(name);
+    public EscapeRoom(String beginText, String endText, Player player, String image, ArrayList<Room> map) {
+        this.setBeginText(beginText);
+        this.setEndText(endText);
         this.setPlayer(player);
         this.setImage(image);
         this.map = new ArrayList<Room>();
@@ -21,19 +23,34 @@ public class EscapeRoom {
             this.player.setCurrentPosition(map.get(0));
     }
 
-    public String getName(){
-        return name;
+    public String getBeginText(){
+        return beginText;
     }
 
-    public void setName(String name){
-        if (name == null)
-            throw new IllegalArgumentException("setName in class EscapeRoom: null input");
-        if (name.equals(""))
-            throw new IllegalArgumentException("setName in class EscapeRoom: empty string");
-        if (name.contains(System.getProperty("line.separator")))
-            throw new IllegalArgumentException("setName in class EscapeRoom: contains line separator");
+    public void setBeginText(String beginText){
+        if (beginText == null)
+            throw new IllegalArgumentException("setBeginText in class EscapeRoom: null input");
+        if (beginText.equals(""))
+            throw new IllegalArgumentException("setBeginText in class EscapeRoom: empty string");
+        if (beginText.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("setBeginText in class EscapeRoom: contains line separator");
 
-        this.name = name;
+        this.beginText = beginText;
+    }
+
+    public String getEndText(){
+        return endText;
+    }
+
+    public void setEndText(String endText){
+        if (endText == null)
+            throw new IllegalArgumentException("setEndText in class EscapeRoom: null input");
+        if (endText.equals(""))
+            throw new IllegalArgumentException("setEndText in class EscapeRoom: empty string");
+        if (endText.contains(System.getProperty("line.separator")))
+            throw new IllegalArgumentException("setEndText in class EscapeRoom: contains line separator");
+
+        this.endText = endText;
     }
 
     public Player getPlayer() {
@@ -233,8 +250,6 @@ public class EscapeRoom {
                     keysToDelete.add(k);
                     output += k.getName() + "\n";
                 }
-                // else 
-                //     keysToDelete.add(k);
             }
         }
 
