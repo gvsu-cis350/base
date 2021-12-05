@@ -64,7 +64,7 @@ public class Game {
                         k.add(lines.get( i ) );
                         break;
                     case("m"):
-                        mapLocationString = lines.get( i );
+                        mapLocationString = lines.get( i ).substring(5);
                 }
             }
 
@@ -107,12 +107,14 @@ public class Game {
     protected Room parseRoom( String line ) {
         line = line.substring( 6 );
         line = line.replace( "\n", "" );
-        line = line.replace( ", ", "," );
+        line = line.replace( "| ", "|" );
+        line = line.replace( " |", "|" );
+        line = line.replace(", ", ",");
         Room newRoom = new Room();
         ArrayList<String> newRoomString = new ArrayList<String>();
         ArrayList<String> newKeyString = new ArrayList<String>();
-        
-        String[] room = line.split(",");
+
+        String[] room = line.split("\\|");
 
         for( int i = 0; i < room.length; i++ ) {
             switch( i )
@@ -138,14 +140,18 @@ public class Game {
                     }
                     break;
                 case 4:
-                    // newRoom.setImage( room[i] );
+                    newRoom.setImage( room[i] );
                     break;
                 case 5: 
-                    newRoom.setCode( room[i] );
+                    if( room[i].equals( "null" ) ) {
+                        newRoom.setCode( null );
+                    } else {
+                        newRoom.setCode( room[i] );
+                    }
                     break;
                 case 6: 
                 {
-                    String[] str = room[i].split(" ");
+                    String[] str = room[i].split(",");
                     for(int j = 0; j < str.length; j++ ) {
                         newRoomString.add( str[j] );
                     }
@@ -153,7 +159,7 @@ public class Game {
                 }
                 case 7:
                 {
-                    String[] str = room[i].split(" ");
+                    String[] str = room[i].split(",");
                     for(int j = 0; j < str.length; j++) {
                         newKeyString.add( str[j] );
                     }
@@ -180,7 +186,7 @@ public class Game {
             line = line.substring( 5 );
             line.replace( " ", "" );
             
-            name = line.split(":")[0];
+            name = line.split("\\|")[0];
             line = line.substring(name.length() + 1);
 
             String[] keyRooms = line.split(",");

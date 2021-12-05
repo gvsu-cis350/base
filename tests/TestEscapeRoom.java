@@ -138,33 +138,12 @@ public class TestEscapeRoom {
     public void test_setImage() {
         EscapeRoom escapeRoom = new EscapeRoom("begin", "end", null, null, null);
         escapeRoom.setImage("/Desktop/1234/GVSU/pic.png");
-        escapeRoom.setImage("Z:/users/annac/docs/123.png");
-        escapeRoom.setImage("/Desktop/School/GVSU/\"fall 2021\"/\"CIS 350\"/GVSU_CIS350-ACK/image.png");
-        escapeRoom.setImage("c:/folder1/\"folder 2-_\"/___file---.png");
-        escapeRoom.setImage("D:\\CodingTests\\GUITests\\src\\pics\\map.png");
+        
+        assertEquals("/Desktop/1234/GVSU/pic.png", escapeRoom.getImage());
 
-        assertEquals("image not found", escapeRoom.setImage(""));
         assertEquals("image not found", escapeRoom.setImage(null));
-
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-            escapeRoom.setImage("Mult:/image.png");
-        });
-        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            escapeRoom.setImage("/image.pdf");
-        });
-        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            escapeRoom.setImage("/image/!/image.png");
-        });
-        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            escapeRoom.setImage("/image/a folder/image.png");
-        });
-        assertEquals("setImage in class EscapeRoom: invalid file path", exception.getMessage());
+        assertEquals("image not found", escapeRoom.setImage(""));
+        assertEquals("image not found", escapeRoom.setImage("\n"));
     }
 
     @Test

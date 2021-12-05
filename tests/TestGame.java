@@ -6,19 +6,9 @@ import org.junit.Test;
 
 public class TestGame extends Game {
     @Test
-    public void sample_Test(){
-
-    }
-
-    @Test
-    public void test_Contructor() {
-        
-    }
-
-    @Test
     public void build_Escape_Room_Test() {
         Game g = new Game();
-        g.buildEscapeRoom("bin/TestFile.txt");
+        EscapeRoom er = g.buildEscapeRoom("bin/TestFile.txt");
         ArrayList<Room> expectedArray = new ArrayList<Room>();
 
         ArrayList<Room> connectedRooms = new ArrayList<Room>();
@@ -43,12 +33,13 @@ public class TestGame extends Game {
             assertEquals( rooms.get(i).getName(), expectedArray.get(i).getName());
             assertEquals( rooms.get(i).getScript(), expectedArray.get(i).getScript());
             assertEquals( rooms.get(i).getIsEnd(), expectedArray.get(i).getIsEnd());
-            // assertEquals( rooms.get(i).getImage(), expectedArray.get(i).getImage());
+            assertEquals( rooms.get(i).getImage(), expectedArray.get(i).getImage());
             ArrayList<Room> actualConnectedRooms = new ArrayList<Room>();
             actualConnectedRooms = rooms.get(i).getRooms();
             for( int j = 0; j < actualConnectedRooms.size(); j++ ) {
                 assertEquals( connectedRooms.get(j).getName(), actualConnectedRooms.get(j).getName() );
             }
+            assertEquals( er.getImage(), "/image.png" );
             //need to add a test for keys
         }
     }
@@ -56,13 +47,13 @@ public class TestGame extends Game {
     @Test
     public void parse_Room_Test() {
         Game g = new Game();
-        String line = "Room: Bathroom, This is a description of the bathroom, false, false, \\image.png, ABC, Library Bedroom Kitchen, null";
+        String line = "Room: Bathroom| This is a description of the bathroom| false| false| \\image.png| ABC| Library,Bedroom,Kitchen| null";
         Room r = g.parseRoom( line );
 
         assertEquals( "Bathroom", r.getName() );
         assertEquals( "This is a description of the bathroom", r.getScript() );
         assertEquals( false, r.getIsEnd() );
-        // assertEquals( "/image.png", r.getImage() );
+        assertEquals( "\\image.png", r.getImage() );
         assertEquals( "ABC", r.getCode() );
         assertEquals( null, r.getKeys() );
         assertEquals( null, r.getRooms() );
@@ -75,7 +66,7 @@ public class TestGame extends Game {
 
         g.buildEscapeRoom("bin/TestFile.txt");
 
-        keyRooms.add("Key: Key1: Bathroom, Bedroom");
+        keyRooms.add("Key: Key1: Bathroom| Bedroom");
 
         g.addKeys( keyRooms );
 
