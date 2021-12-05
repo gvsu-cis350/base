@@ -50,10 +50,6 @@ public class TestPlayer {
         assertEquals("note1", player.getNotes().get(0));
         assertEquals("note2", player.getNotes().get(1));
 
-        player.addNote("");
-        player.addNote(null);
-        player.addNote("\n");
-
         assertEquals(2, player.getNotes().size());
     }
 
