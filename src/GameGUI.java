@@ -426,10 +426,21 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "input":
                         // Error checking should be done
                         if(sc.hasNext()){
-                            String code = sc.next();
+                            String roomName = sc.next();
                             if (sc.hasNext()){
-                                String roomName = commandInput.substring(7 + code.length());
-                                commandOutput = escapeRoom.unlock(roomName, code);
+                                String code = commandInput.substring(7 + roomName.length());
+                                for (Room room : escapeRoom.getPlayer().getCurrentPosition().getRooms()) {
+                                    if (room.getName().equalsIgnoreCase(roomName))
+                                        commandOutput = escapeRoom.unlock(roomName, code);
+                                }
+                                if (commandOutput == null) {
+                                    for (Room room : escapeRoom.getMap()) {
+                                        if (room.getName().equalsIgnoreCase(roomName))
+                                        commandOutput = roomName + " is not accessible from " + escapeRoom.getPlayer().getCurrentPosition().getName();
+                                    }
+                                }
+                                if (commandOutput == null)
+                                    commandOutput = roomName + " does not exist.";
                                 outList.addElement(commandOutput);
                             }
                             else{
