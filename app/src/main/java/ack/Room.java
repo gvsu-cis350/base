@@ -1,3 +1,5 @@
+package ack;
+
 import java.util.*;
 
 public class Room {

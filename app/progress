@@ -1,0 +1,17 @@
+notes:
+"first note"" note,,"
+"second ... , "note"
+"third__ &^%#@! note"
+
+inventory:
+key1:
+"room1"
+"room2"
+key2:
+"room3"
+"room4"
+key3:
+"room5"
+"room6"
+
+currentPosition: room7
