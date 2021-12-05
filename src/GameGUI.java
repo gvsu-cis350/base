@@ -190,10 +190,14 @@ public class GameGUI extends JFrame implements ActionListener {
         outList = new DefaultListModel();
         noteList = new DefaultListModel();
         keyList = new DefaultListModel();
-
+        
         outScreen = new JList(outList);
         notes = new JList(noteList);
         inventory = new JList(keyList);
+
+        outScreen.setCellRenderer(new MyCellRenderer(300));
+        notes.setCellRenderer(new MyCellRenderer(145));
+        inventory.setCellRenderer(new MyCellRenderer(145));
 
         outScroll = new JScrollPane(outScreen);
         notesScroll = new JScrollPane(notes);
@@ -495,3 +499,23 @@ public class GameGUI extends JFrame implements ActionListener {
         }
     }
 }
+class MyCellRenderer extends DefaultListCellRenderer {
+    public static final String HTML_1 = "<html><body style='width: ";
+    public static final String HTML_2 = "px'>";
+    public static final String HTML_3 = "</html>";
+    private int width;
+  
+    public MyCellRenderer(int width) {
+      this.width = width;
+    }
+  
+    @Override
+    public Component getListCellRendererComponent(JList list, Object value,
+        int index, boolean isSelected, boolean cellHasFocus) {
+      String text = HTML_1 + String.valueOf(width) + HTML_2 + value.toString()
+          + HTML_3;
+      return super.getListCellRendererComponent(list, text, index, isSelected,
+          cellHasFocus);
+    }
+  
+  }
