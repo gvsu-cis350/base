@@ -18,8 +18,8 @@ public class Room {
         isEnd = false;
         image = null;
         code = "";
-        name = null;
-        name = null;
+        rooms = new ArrayList<>();
+        keys = new ArrayList<>();
     }
     
     public Room(String name, String script, boolean reqKey, boolean isEnd, String image, String code, ArrayList<Room> rooms, ArrayList<Key> keys) {
