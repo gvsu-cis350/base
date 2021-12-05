@@ -387,21 +387,23 @@ public class GameGUI extends JFrame implements ActionListener {
                 switch(word){
                     case "list":
                         commandOutput = "";
-                        for (int i = 0; i < escapeRoom.getPlayer().getCurrentPosition().getRooms().size(); i++) {
-                            if (i == escapeRoom.getPlayer().getCurrentPosition().getRooms().size() - 1)
-                                commandOutput += escapeRoom.getPlayer().getCurrentPosition().getRooms().get(i).getName();
+                        for (int i = 0; i < player.getCurrentPosition().getRooms().size(); i++) {
+                            if (i == player.getCurrentPosition().getRooms().size() - 1)
+                                commandOutput += player.getCurrentPosition().getRooms().get(i).getName();
                             else
-                                commandOutput += escapeRoom.getPlayer().getCurrentPosition().getRooms().get(i).getName() + ", ";
+                                commandOutput += player.getCurrentPosition().getRooms().get(i).getName() + ", ";
                         }
                         outList.addElement(commandOutput);
                         command.setText(null);
                         break;
                     case "create":
-                        // Error checking should be done
                         if (sc.hasNext()){
                             commandOutput = commandInput.substring(7);
-                            noteList.addElement(commandOutput);
-                            player.addNote(commandOutput);
+                            if (!commandOutput.contains("\\n")) {
+                                player.addNote(commandOutput);
+                                noteList.addElement(commandOutput);
+                            } else
+                                outList.addElement("Notes cannot contain newline characters.");
                         }
                         else{
                             outList.addElement("Please add a note to create");
@@ -476,7 +478,7 @@ public class GameGUI extends JFrame implements ActionListener {
             }
             sc.close();
 
-            for(Key key: player.getInventory()){
+            for(Key key : escapeRoom.getPlayer().getInventory()){
                 keyList.addElement(key);
             }
 
