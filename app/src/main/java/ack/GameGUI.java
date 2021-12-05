@@ -1,3 +1,5 @@
+package ack;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -6,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class GameGUI extends JFrame implements ActionListener {
     private JPanel mainPanel;
@@ -211,6 +214,7 @@ public class GameGUI extends JFrame implements ActionListener {
             mapFile = escapeRoom.getImage();
             imageFile = player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
+            outList.addElement(escapeRoom.inspectRoom());
         }catch(Exception e){
             dispose = true;
         }
@@ -392,10 +396,12 @@ public class GameGUI extends JFrame implements ActionListener {
                 word.toLowerCase();
                 switch(word){
                     case "list":
-                        // Ask if this is the intended output of list command
                         commandOutput = "";
-                        for (Room room : escapeRoom.getMap()){
-                            commandOutput = commandOutput + ", " + room.getName();
+                        for (int i = 0; i < escapeRoom.getPlayer().getCurrentPosition().getRooms().size(); i++) {
+                            if (i == escapeRoom.getPlayer().getCurrentPosition().getRooms().size() - 1)
+                                commandOutput += escapeRoom.getPlayer().getCurrentPosition().getRooms().get(i).getName();
+                            else
+                                commandOutput += escapeRoom.getPlayer().getCurrentPosition().getRooms().get(i).getName() + ", ";
                         }
                         outList.addElement(commandOutput);
                         command.setText(null);
@@ -413,20 +419,17 @@ public class GameGUI extends JFrame implements ActionListener {
                         command.setText(null);
                         break;
                     case "delete":
-                        // Error checking should be done
-                        if(sc.hasNext()){
-                            commandOutput = commandInput.substring(7);
-                            for(int i = 0; i < noteList.getSize(); i++){
-                                if(commandOutput.equals(noteList.get(i))){
-                                    noteList.remove(i);
-                                    player.delNote(i);
-                                    break;
-                                }
+                        if (sc.hasNext()) {
+                            if (Integer.parseInt(commandInput.substring(7)) > player.getNotes().size() || 
+                                Integer.parseInt(commandInput.substring(7)) <= 0)
+                                outList.addElement("There is no note at index " + Integer.parseInt(commandInput.substring(7)));
+                            else {
+                                noteList.remove(Integer.parseInt(commandInput.substring(7)) - 1);
+                                player.delNote(Integer.parseInt(commandInput.substring(7)) - 1);
                             }
                         }
-                        else{
-                            outList.addElement("Please add a note to remove");
-                        }
+                        else
+                            outList.addElement("Please enter the index of the note you'd like to delete");
                         command.setText(null);
                         break;
                     case "help":
@@ -441,34 +444,29 @@ public class GameGUI extends JFrame implements ActionListener {
                         command.setText(null);
                         break;
                     case "input":
-                        // Error checking should be done
-                        if(sc.hasNext()){
-                            String code = sc.next();
-                            if (sc.hasNext()){
-                                String roomName = commandInput.substring(7 + code.length());
-                                commandOutput = escapeRoom.unlock(roomName, code);
-                                outList.addElement(commandOutput);
+                        if (sc.hasNext()) {
+                            String roomName = sc.findInLine(Pattern.compile("\"[\\w\\W]+\""));
+
+                            if (roomName == null) {
+                                outList.addElement("The room you enetered does not exist!");
+                                break;
                             }
-                            else{
+                            if (sc.hasNext()) {
+                                String code = commandInput.substring(7 + roomName.length());
+                                outList.addElement(escapeRoom.unlock(roomName.substring(1, roomName.length() - 1), code));
+                            }
+                            else 
                                 outList.addElement("Input requires a room name, then the code");
-                            }
                         }
-                        else{
+                        else
                             outList.addElement("Input requires a room name, then the code");
-                        }
                         command.setText(null);
                         break;
                     case "move":
-                        // Error checking should be done
-                        if(sc.hasNext()){
-                            commandOutput = escapeRoom.moveRoom(commandInput.substring(5));
-                            if(commandOutput == null)
-                                commandOutput = "You've moved to " + commandInput.substring(5);
-                            outList.addElement(commandOutput);
-                        }
-                        else{
+                        if (sc.hasNext())
+                            outList.addElement(escapeRoom.moveRoom(commandInput.substring(5)));
+                        else
                             outList.addElement("Please enter a room to move to");
-                        }
                         command.setText(null);
                         break;
                     case "inspect":

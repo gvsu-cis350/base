@@ -1,3 +1,5 @@
+package ack;
+
 import java.util.*;
 
 public class Player {
@@ -22,7 +24,6 @@ public class Player {
                 this.addToInventory(key);
             }
         }
-        
     }
 
     public ArrayList<String> getNotes() {
