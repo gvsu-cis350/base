@@ -24,7 +24,6 @@ public class Player {
                 this.addToInventory(key);
             }
         }
-        
     }
 
     public ArrayList<String> getNotes() {
