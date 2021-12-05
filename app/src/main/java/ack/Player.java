@@ -31,8 +31,6 @@ public class Player {
     }
 
     public void addNote(String note) {
-        if (note == null || note.equals("") || note.contains(System.getProperty("line.separator"))) 
-            return;
         notes.add(note);
     }
 
