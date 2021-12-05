@@ -382,8 +382,11 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "list":
                         // Ask if this is the intended output of list command
                         commandOutput = "";
-                        for (Room room : escapeRoom.getMap()){
-                            commandOutput = commandOutput + ", " + room.getName();
+                        for (int i = 0; i < escapeRoom.getMap().size(); i++) {
+                            if (i == escapeRoom.getMap().size() - 1)
+                                commandOutput += escapeRoom.getMap().get(i).getName();
+                            else
+                                commandOutput += escapeRoom.getMap().get(i).getName() + ", ";
                         }
                         outList.addElement(commandOutput);
                         command.setText(null);
@@ -403,17 +406,16 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "delete":
                         // Error checking should be done
                         if(sc.hasNext()){
-                            commandOutput = commandInput.substring(7);
-                            for(int i = 0; i < noteList.getSize(); i++){
-                                if(commandOutput.equals(noteList.get(i))){
-                                    noteList.remove(i);
-                                    player.delNote(i);
-                                    break;
-                                }
+                            if (Integer.parseInt(commandInput.substring(7)) > player.getNotes().size() || 
+                                Integer.parseInt(commandInput.substring(7)) <= 0)
+                                outList.addElement("There is no note at index " + Integer.parseInt(commandInput.substring(7)));
+                            else {
+                                noteList.remove(Integer.parseInt(commandInput.substring(7)) - 1);
+                                player.delNote(Integer.parseInt(commandInput.substring(7)) - 1);
                             }
                         }
                         else{
-                            outList.addElement("Please add a note to remove");
+                            outList.addElement("Please enter the index of the note you'd like to delete");
                         }
                         command.setText(null);
                         break;

@@ -277,7 +277,7 @@ public class TestEscapeRoom {
         assertEquals(null, escapeRoom.moveRoom("bedROOM"));
         assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
 
-        assertEquals("Bathroom requires a key and a code to enter.", escapeRoom.moveRoom("bathroom"));
+        assertEquals("Bathroom requires a code and a key to enter.", escapeRoom.moveRoom("bathroom"));
         assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
 
         bathroom.setCode(null);

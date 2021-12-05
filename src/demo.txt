@@ -1,0 +1,7 @@
+Beginning: Oh no! You’ve found yourself trapped in a dark room.
+End: Congratulations! You made it out!
+Room: Main Room|In front of you are three doors labeled 1, 2, and 3. On the ground is a note that reads: "Ther1e is no2thing suspicious3 about th4is not5e".|false|false|/image.png|null|Room 1,Room 2,Room 3||
+Room: Room 1|On the ground in front of you is a shiny, golden key.|true|false|\image.png|12345|Main Room|Golden Key|
+Room: Room 2|You're free!|true|true|\image.png|TSWU|Main Room||
+Room: Room 3|There is writing on the wall! It reads: “There iS no Way oUt!".|false|false|\image.png|Main Room||
+Key: Golden Key|Room 2, Room 3|

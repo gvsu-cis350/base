@@ -214,7 +214,7 @@ public class EscapeRoom {
                 return room.getName() + " requires a code to enter.";
             }
             if (room.getCode() != null && room.getReqKey()) {
-                return room.getName() + " requires a key and a code to enter.";
+                return room.getName() + " requires a code and a key to enter.";
             }
             player.setCurrentPosition(room);
             return null;
