@@ -144,7 +144,7 @@ public class StartGUI extends JFrame implements ActionListener{
         }
         if(start == comp){
             if (escapeFile == null){
-                new GameGUI();
+                new GameGUI(colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             }
             else{
                 new GameGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);

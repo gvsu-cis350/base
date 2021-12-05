@@ -208,6 +208,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
         comboPanel = new JPanel();
         visualPanel = new JPanel();
         navigationPanel = new JPanel();
+        font = new Font(fontName, Font.PLAIN, ftSize);
 
         exampleList = new JList(exampleString);
 
@@ -300,6 +301,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
         exampleList.setFont(font);
         fontSize.setFont(font);
+        fontStyle.setFont(font);
         colors.setFont(font);
         exampleLabel.setFont(font);
         pathLabel.setFont(font);
@@ -396,20 +398,19 @@ public class OptionsGUI extends JFrame implements ActionListener{
         if (comp == defaultButton){
             //change everything back to the default values including text
             escapeFile = null;
-            pathLabel.setText("No escape room chosen");
 
             this.fontName = "Sans-Serif";
             this.ftSize = 12;
-
-            fontSize.setSelectedItem("Medium");
-            fontStyle.setSelectedItem("Sans-Serif");
-            colors.setSelectedItem("Light");
+            this.colorName = "Light";
 
             this.backgroundColor = new Color(0xF2F2F2);
             this.textColor = new Color(0x222222);
             this.itemColor = new Color(0xC1C4C8);
             this.terminalColor = new Color(0xDEEAFF);
             this.selectedColor = new Color(0xC1CEE0); 
+
+            new OptionsGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
+            this.dispose();
         }
     }
 
