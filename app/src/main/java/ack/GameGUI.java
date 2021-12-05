@@ -36,7 +36,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     private DefaultListModel<String> noteList;
     private DefaultListModel<String> outList;
-    private DefaultListModel<Key> keyList;
+    private DefaultListModel<String> keyList;
 
     private JList outScreen;
     private JList notes;
@@ -359,7 +359,7 @@ public class GameGUI extends JFrame implements ActionListener {
             this.dispose();
         }
         if (comp == saveProgress) {
-            int returnVal = fileLoader.showOpenDialog(GameGUI.this);
+            int returnVal = fileLoader.showSaveDialog(GameGUI.this);
 
             if(returnVal == JFileChooser.APPROVE_OPTION){
                 File file = fileLoader.getSelectedFile();
@@ -369,11 +369,21 @@ public class GameGUI extends JFrame implements ActionListener {
         }
         if (comp == loadProgress) {
             int returnVal = fileLoader.showOpenDialog(GameGUI.this);
+            this.player = escapeRoom.getPlayer();
+            outList.clear();
+            keyList.clear();
+            noteList.clear();
 
             if(returnVal == JFileChooser.APPROVE_OPTION){
                 File file = fileLoader.getSelectedFile();
                 saveLoadFile = file.getAbsolutePath();
                 escapeRoom.loadProgress(saveLoadFile);
+            }
+            for(String note: player.getNotes()){
+                noteList.addElement(note);
+            }
+            for(Key key: player.getInventory()){
+                keyList.addElement(key.getName());
             }
         }
         if (comp == command){
@@ -430,7 +440,7 @@ public class GameGUI extends JFrame implements ActionListener {
                         "<b>\"create\"</b> allows you to create a note out of everything you've typed after create<br>" +
                         "<b>\"delete\"</b> allows you to delete the note you've typed after delete<br>" +
                         "<b>\"help\"</b> brings you to this list of commands<br>" +
-                        "<b>\"input\"</b> allows you to input a code to a room you can get to from your current room.  Remember to input the name of the room you want to unlock, then the code you want to try<br>" +
+                        "<b>\"input\"</b> allows you to input a code to a room you can get to from your current room.  Remember to input the name of the room you want to unlock in quotes, then the code you want to try<br>" +
                         "<b>\"inspect\"</b> allows you to investigate the room you're currently in<br>" +
                         "<b>\"list\"</b> shows a list of rooms you can get to from your current position");
                         command.setText(null);
@@ -478,8 +488,8 @@ public class GameGUI extends JFrame implements ActionListener {
             }
             sc.close();
 
-            for(Key key : escapeRoom.getPlayer().getInventory()){
-                keyList.addElement(key);
+            for(Key key: player.getInventory()){
+                keyList.addElement(key.getName());
             }
 
             while (outList.getSize() > 50)
