@@ -82,10 +82,12 @@ public class Game {
             
             for( int i = 0; i < rooms.size(); i++ ) {
                 ArrayList<Key> connectedKeys = new ArrayList<Key>();
-                for( int j = 0; j < keyStrings.get(j).size(); j++ ) {
-                    connectedKeys.add( getKeyByName( keyStrings.get(i).get(j) ) );
+                if( !keyStrings.get(0).equals(null) ) {
+                    for( int j = 0; j < keyStrings.get(j).size(); j++ ) {
+                        connectedKeys.add( getKeyByName( keyStrings.get(i).get(j) ) );
+                    }
+                    rooms.get( i ).setKeys( connectedKeys ); 
                 }
-                rooms.get( i ).setKeys( connectedKeys ); 
             }
 
             Player p = new Player( null, null, null );
@@ -143,7 +145,11 @@ public class Game {
                     newRoom.setImage( room[i] );
                     break;
                 case 5: 
-                    newRoom.setCode( room[i] );
+                    if( room[i].equals( "null" ) ) {
+                        newRoom.setCode( null );
+                    } else {
+                        newRoom.setCode( room[i] );
+                    }
                     break;
                 case 6: 
                 {
@@ -155,9 +161,13 @@ public class Game {
                 }
                 case 7:
                 {
-                    String[] str = room[i].split(",");
-                    for(int j = 0; j < str.length; j++) {
-                        newKeyString.add( str[j] );
+                    if( room[i].equals( "null" ) ) {
+                        newKeyString.add( null );
+                    } else {
+                        String[] str = room[i].split(",");
+                        for(int j = 0; j < str.length; j++) {
+                            newKeyString.add( str[j] );
+                        }
                     }
                     break;
                 }
@@ -182,10 +192,10 @@ public class Game {
             line = line.substring( 5 );
             line.replace( " ", "" );
             
-            name = line.split(":")[0];
+            name = line.split("\\|")[0];
             line = line.substring(name.length() + 1);
 
-            String[] keyRooms = line.split("\\|");
+            String[] keyRooms = line.split(",");
             for( int j = 0; j < keyRooms.length; j++ ) {
                 keyRooms[j] = keyRooms[j].replace(" ", "");
                 roomsKeyUnlocks.add( getRoomByName( keyRooms[j] ) );
