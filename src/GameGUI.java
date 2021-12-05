@@ -185,7 +185,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
         command = new JTextField();
 
-        helpInfo = new JLabel("Blurb about helpful things");
+        helpInfo = new JLabel("<html><body style='width: 145px'>If you're stuck, type \"help\" in the small box to the left and press enter!</body></html>");
 
         outList = new DefaultListModel();
         noteList = new DefaultListModel();
@@ -421,7 +421,13 @@ public class GameGUI extends JFrame implements ActionListener {
                         break;
                     case "help":
                         // Takes no input, if it starts with help, should print help string
-                        outList.addElement("This is a string where it specifies commands!");
+                        outList.addElement("<html>The following are possible commands:<br>" + 
+                        "<b>\"create\"</b> allows you to create a note out of everything you've typed after create<br>" +
+                        "<b>\"delete\"</b> allows you to delete the note you've typed after delete<br>" +
+                        "<b>\"help\"</b> brings you to this list of commands<br>" +
+                        "<b>\"input\"</b> allows you to input a code to a room you can get to from your current room.  Remember to input the name of the room you want to unlock, then the code you want to try<br>" +
+                        "<b>\"inspect\"</b> allows you to investigate the room you're currently in<br>" +
+                        "<b>\"list\"</b> shows a list of rooms you can get to from your current position");
                         command.setText(null);
                         break;
                     case "input":
