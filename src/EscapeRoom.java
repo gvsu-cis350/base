@@ -230,14 +230,15 @@ public class EscapeRoom {
                 if (room.getReqKey()) {
                     for (Key key : player.getInventory()) {
                         if (key.getUnlocks().contains(room)) {
-                            player.setCurrentPosition(room);
-                            return "You unlocked " + player.getCurrentPosition();
+                            room.setReqKey(false);
+                            room.setCode(null);
+                            return "You unlocked " + room.getName();
                         }
                     }
                     return room.getName() + " also requires a key!";
                 }
-                player.setCurrentPosition(room);
-                return "You unlocked " + player.getCurrentPosition();
+                room.setCode(null);
+                return "You unlocked " + room.getName();
             }
             return code + " is incorrect!";
         }
