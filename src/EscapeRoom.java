@@ -231,13 +231,13 @@ public class EscapeRoom {
                     for (Key key : player.getInventory()) {
                         if (key.getUnlocks().contains(room)) {
                             player.setCurrentPosition(room);
-                            return null;
+                            return "You unlocked " + player.getCurrentPosition();
                         }
                     }
                     return room.getName() + " also requires a key!";
                 }
                 player.setCurrentPosition(room);
-                return null;
+                return "You unlocked " + player.getCurrentPosition();
             }
             return code + " is incorrect!";
         }

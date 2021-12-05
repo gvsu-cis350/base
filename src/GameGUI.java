@@ -207,6 +207,7 @@ public class GameGUI extends JFrame implements ActionListener {
             mapFile = escapeRoom.getImage();
             imageFile = player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
+            outList.addElement(escapeRoom.inspectRoom());
         }catch(Exception e){
             // JOptionPane.showMessageDialog(this, "Looks like something went wrong with the escape room file");
             // new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
@@ -382,11 +383,11 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "list":
                         // Ask if this is the intended output of list command
                         commandOutput = "";
-                        for (int i = 0; i < escapeRoom.getMap().size(); i++) {
-                            if (i == escapeRoom.getMap().size() - 1)
-                                commandOutput += escapeRoom.getMap().get(i).getName();
+                        for (int i = 0; i < escapeRoom.getPlayer().getCurrentPosition().getRooms().size(); i++) {
+                            if (i == escapeRoom.getPlayer().getCurrentPosition().getRooms().size() - 1)
+                                commandOutput += escapeRoom.getPlayer().getCurrentPosition().getRooms().get(i).getName();
                             else
-                                commandOutput += escapeRoom.getMap().get(i).getName() + ", ";
+                            commandOutput += escapeRoom.getPlayer().getCurrentPosition().getRooms().get(i).getName() + ", ";
                         }
                         outList.addElement(commandOutput);
                         command.setText(null);
