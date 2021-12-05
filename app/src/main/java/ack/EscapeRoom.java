@@ -210,7 +210,7 @@ public class EscapeRoom {
                         for (Key key : player.getInventory()) {
                             if (key.getUnlocks().contains(room)) {
                                 player.setCurrentPosition(room);
-                                return "You've moved to " + room.getName();
+                                return "You've moved to " + room.getName() + ".";
                             }
                         }
                         return room.getName() + " requires a key to enter.";
@@ -222,10 +222,10 @@ public class EscapeRoom {
                         return room.getName() + " requires a key and a code to enter.";
                     }
                     player.setCurrentPosition(room);
-                    return "You've moved to " + room.getName();
+                    return "You've moved to " + room.getName() + ".";
                 }
             }
-            return roomName + " is not accessible from " + player.getCurrentPosition().getName();
+            return room.getName() + " is not accessible from " + player.getCurrentPosition().getName()+ ".";
         }
         return roomName + " does not exist!";
     }
@@ -242,18 +242,18 @@ public class EscapeRoom {
                                 if (key.getUnlocks().contains(room)) {
                                     room.setReqKey(false);
                                     room.setCode(null);
-                                    return "You unlocked " + room.getName();
+                                    return "You unlocked " + room.getName() + "!";
                                 }
                             }
                             return room.getName() + " also requires a key!";
                         }
                         room.setCode(null);
-                        return "You unlocked " + room.getName();
+                        return "You unlocked " + room.getName() + "!";
                     }
                     return code + " is incorrect!";
                 }
             }
-            return roomName + " is not accessible from " + player.getCurrentPosition().getName();
+            return room.getName() + " is not accessible from " + player.getCurrentPosition().getName() + ".";
         }
         return roomName + " does not exist!";
     }

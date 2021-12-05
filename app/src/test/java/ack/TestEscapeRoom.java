@@ -276,10 +276,11 @@ public class TestEscapeRoom {
 
         bedroom.setCode(null);
         bedroom.setReqKey(false);
-        assertEquals(null, escapeRoom.moveRoom("bedROOM"));
+        assertEquals("Bathroom is not accessible from Upstairs.", escapeRoom.moveRoom("bathroom"));
+        assertEquals("You've moved to Bedroom.", escapeRoom.moveRoom("bedROOM"));
         assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
 
-        assertEquals("Bathroom requires a code and a key to enter.", escapeRoom.moveRoom("bathroom"));
+        assertEquals("Bathroom requires a key and a code to enter.", escapeRoom.moveRoom("bathroom"));
         assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
 
         bathroom.setCode(null);
@@ -288,23 +289,26 @@ public class TestEscapeRoom {
         ArrayList<Room> unlocks = new ArrayList<>();
         unlocks.add(bathroom);
         escapeRoom.getPlayer().addToInventory(new Key("unlocks bathroom", unlocks));
-        assertEquals(null, escapeRoom.moveRoom("bathroom"));
+        assertEquals("You've moved to Bathroom.", escapeRoom.moveRoom("bathroom"));
         assertEquals(bathroom, escapeRoom.getPlayer().getCurrentPosition());
 
-        assertEquals("kitchen is not a valid name!", escapeRoom.moveRoom("kitchen"));
+        assertEquals("kitchen does not exist!", escapeRoom.moveRoom("kitchen"));
         assertEquals(bathroom, escapeRoom.getPlayer().getCurrentPosition());
     }
 
     @Test
-    @Ignore
     public void test_unlock() {
         ArrayList<Room> map = new ArrayList<>();
         Room upstairs = new Room("Upstairs", "This is the upstairs", false, false, null, null, null, null);
         Room bedroom = new Room("Bedroom", "This is the bedroom", true, false, null, "123", null, null);
+        Room bathroom = new Room("Bathroom", "This is the bathroom", false, false, null, "123", null, null);
         map.add(upstairs);
         map.add(bedroom);
+        map.add(bathroom);
         upstairs.addRoom(bedroom);
         bedroom.addRoom(upstairs);
+        bedroom.addRoom(bathroom);
+        bathroom.addRoom(bedroom);
         EscapeRoom escapeRoom = new EscapeRoom("begin", "end", new Player(null, null, null), null, map);
 
         assertEquals("Bedroom requires a key and a code to enter.", escapeRoom.moveRoom("bedroom"));
@@ -316,11 +320,12 @@ public class TestEscapeRoom {
         unlocks.add(bedroom);
         escapeRoom.getPlayer().addToInventory(new Key("unlocks bedroom", unlocks));
 
-        assertEquals(null, escapeRoom.unlock("bedroom", "123"));
-        assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
+        assertEquals("You unlocked Bedroom!", escapeRoom.unlock("bedroom", "123"));
+        assertEquals(upstairs, escapeRoom.getPlayer().getCurrentPosition());
 
-        assertEquals(null, escapeRoom.unlock("bathroom", "123"));
-        assertEquals(bedroom, escapeRoom.getPlayer().getCurrentPosition());
+        assertEquals("Bathroom is not accessible from Upstairs.", escapeRoom.unlock("bathroom", "123"));
+        escapeRoom.moveRoom("bedroom");
+        assertEquals("You unlocked Bathroom!", escapeRoom.unlock("bathroom", "123"));
     }
 
     @Test
