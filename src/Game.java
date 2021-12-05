@@ -143,7 +143,11 @@ public class Game {
                     newRoom.setImage( room[i] );
                     break;
                 case 5: 
-                    newRoom.setCode( room[i] );
+                    if( room[i].equals( "null" ) ) {
+                        newRoom.setCode( null );
+                    } else {
+                        newRoom.setCode( room[i] );
+                    }
                     break;
                 case 6: 
                 {
