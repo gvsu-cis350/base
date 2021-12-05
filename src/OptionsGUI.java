@@ -31,6 +31,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
     private JButton mainMenu;
 
     private String escapeFile = null;
+    private String colorName = "Light";
 
     private String[] exampleString = {"This is how the terminal looks", "2"};
     private String[] sizeList = {"Small", "Medium", "Large"};
@@ -39,11 +40,16 @@ public class OptionsGUI extends JFrame implements ActionListener{
 
     final JFileChooser fileLoader;
 
-    protected Color backgroundColor = new Color(0x222222);
-    protected Color textColor = new Color(0xFFFFFF);
-    protected Color itemColor = new Color(0x383B3F);
-    protected Color terminalColor = new Color(0x2A3C5C);
-    protected Color selectedColor = new Color(0x5F5F5F);
+    private Color backgroundColor = new Color(0xF2F2F2);
+    private Color textColor = new Color(0x222222);
+    private Color itemColor = new Color(0xC1C4C8);
+    private Color terminalColor = new Color(0xDEEAFF);
+    private Color selectedColor = new Color(0xC1CEE0);
+
+    private Font font;
+    private String fontName = "Sans-Serif";
+
+    private int ftSize = 12;
 
     public OptionsGUI(){
         mainPanel = new JPanel();
@@ -139,6 +145,19 @@ public class OptionsGUI extends JFrame implements ActionListener{
         exampleList.setForeground(textColor);
         exampleList.setSelectionForeground(textColor);
 
+        exampleList.setFont(font);
+        fontSize.setFont(font);
+        colors.setFont(font);
+        exampleLabel.setFont(font);
+        pathLabel.setFont(font);
+        load.setFont(font);
+        make.setFont(font);
+        exampleButton.setFont(font);
+        apply.setFont(font);
+        defaultButton.setFont(font);
+        ok.setFont(font);
+        mainMenu.setFont(font);
+
         escapeButtonsPanel.add(load);
         escapeButtonsPanel.add(make);
 
@@ -171,13 +190,16 @@ public class OptionsGUI extends JFrame implements ActionListener{
         setSize(550,500);
         setLocationRelativeTo(null);
     }
-    public OptionsGUI(String filename, Color b, Color txt, Color item, Color out, Color sel){
+    public OptionsGUI(String filename, String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz){
         this.escapeFile = filename;
+        this.colorName = name;
         this.backgroundColor = b;
         this.textColor = txt;
         this.itemColor = item;
         this.terminalColor = out;
         this.selectedColor = sel;
+        this.fontName = n;
+        this.ftSize = sz;
 
         mainPanel = new JPanel();
         escapeRoomPanel = new JPanel();
@@ -192,6 +214,10 @@ public class OptionsGUI extends JFrame implements ActionListener{
         fontSize = new JComboBox(sizeList);
         fontStyle = new JComboBox(styleList);
         colors = new JComboBox(colorList);
+
+        fontSize.setSelectedIndex(getFontSizeIndex());
+        fontStyle.setSelectedIndex(getFontStyleIndex());
+        colors.setSelectedIndex(getColorsIndex());
 
         exampleLabel = new JLabel("This is a label");
         if (escapeFile == null){
@@ -272,6 +298,19 @@ public class OptionsGUI extends JFrame implements ActionListener{
         exampleList.setForeground(textColor);
         exampleList.setSelectionForeground(textColor);
 
+        exampleList.setFont(font);
+        fontSize.setFont(font);
+        colors.setFont(font);
+        exampleLabel.setFont(font);
+        pathLabel.setFont(font);
+        load.setFont(font);
+        make.setFont(font);
+        exampleButton.setFont(font);
+        apply.setFont(font);
+        defaultButton.setFont(font);
+        ok.setFont(font);
+        mainMenu.setFont(font);
+
         escapeButtonsPanel.add(load);
         escapeButtonsPanel.add(make);
 
@@ -312,18 +351,28 @@ public class OptionsGUI extends JFrame implements ActionListener{
                 new StartGUI();
             }
             else{
-                new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
+                new StartGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             }
             this.dispose();
         }
         if (comp == apply){
-            setColors((String)colors.getSelectedItem());
-            new OptionsGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
+            this.colorName = (String)colors.getSelectedItem();
+            setColors(colorName);
+            this.fontName = (String)fontStyle.getSelectedItem();
+            setFontSize((String)fontSize.getSelectedItem());
+
+            fontSize.setSelectedIndex(getFontSizeIndex());
+            fontStyle.setSelectedIndex(getFontStyleIndex());
+            colors.setSelectedIndex(getColorsIndex());
+
+            new OptionsGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             this.dispose();
         }
         if (comp == ok){
             setColors((String)colors.getSelectedItem());
-            new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor);
+            this.fontName = (String)fontStyle.getSelectedItem();
+            setFontSize((String)fontSize.getSelectedItem());
+            new StartGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             this.dispose();
         }
         if (comp == load){
@@ -349,11 +398,18 @@ public class OptionsGUI extends JFrame implements ActionListener{
             escapeFile = null;
             pathLabel.setText("No escape room chosen");
 
-            this.backgroundColor = new Color(0x222222);
-            this.textColor = new Color(0xFFFFFF);
-            this.itemColor = new Color(0x383B3F);
-            this.terminalColor = new Color(0x2A3C5C);
-            this.selectedColor = new Color(0x5F5F5F); 
+            this.fontName = "Sans-Serif";
+            this.ftSize = 12;
+
+            fontSize.setSelectedItem("Medium");
+            fontStyle.setSelectedItem("Sans-Serif");
+            colors.setSelectedItem("Light");
+
+            this.backgroundColor = new Color(0xF2F2F2);
+            this.textColor = new Color(0x222222);
+            this.itemColor = new Color(0xC1C4C8);
+            this.terminalColor = new Color(0xDEEAFF);
+            this.selectedColor = new Color(0xC1CEE0); 
         }
     }
 
@@ -374,5 +430,59 @@ public class OptionsGUI extends JFrame implements ActionListener{
                 selectedColor = new Color(0xC1CEE0);
                 break;
         }
+    }
+    protected void setFontSize(String s){
+        switch(s){
+            case "Small":
+                this.ftSize = 10;
+                break;
+            case "Medium":
+                this.ftSize = 12;
+                break;
+            case "Large":
+                this.ftSize = 14;
+                break;
+        }
+    }
+    
+    protected int getFontSizeIndex(){
+        String s = "";
+        int result = 0;
+        switch(ftSize){
+            case 10:
+                s ="Small";
+                break;
+            case 12:
+                s = "Medium";
+                break;
+            case 14:
+                s = "Large";
+                break;
+        }
+
+        for(int i = 0; i < sizeList.length; i++){
+            if(s.equals(sizeList[i])){
+                result = i;
+            }
+        }
+        return result;
+    }
+    protected int getColorsIndex(){
+        int result = 0;
+        for(int i = 0; i < colorList.length;i++){
+            if(colorName.equals(colorList[i])){
+                result = i;
+            }
+        }
+        return result;
+    }
+    protected int getFontStyleIndex(){
+        int result = 0;
+        for(int i = 0; i < styleList.length; i++){
+            if(fontName.equals(styleList[i])){
+                result = i;
+            }
+        }
+        return result;
     }
 }
