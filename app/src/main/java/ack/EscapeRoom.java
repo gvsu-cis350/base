@@ -204,48 +204,58 @@ public class EscapeRoom {
         Room room = this.searchMap(roomName);
 
         if (room != null) {
-            if (room.getCode() == null && room.getReqKey()) {
-                for (Key key : player.getInventory()) {
-                    if (key.getUnlocks().contains(room)) {
-                        player.setCurrentPosition(room);
-                        return null;
+            for (Room r : player.getCurrentPosition().getRooms()) {
+                if (room.equals(r)) {
+                    if (room.getCode() == null && room.getReqKey()) {
+                        for (Key key : player.getInventory()) {
+                            if (key.getUnlocks().contains(room)) {
+                                player.setCurrentPosition(room);
+                                return "You've moved to " + room.getName();
+                            }
+                        }
+                        return room.getName() + " requires a key to enter.";
                     }
+                    if (room.getCode() != null && !room.getReqKey()) {
+                        return room.getName() + " requires a code to enter.";
+                    }
+                    if (room.getCode() != null && room.getReqKey()) {
+                        return room.getName() + " requires a key and a code to enter.";
+                    }
+                    player.setCurrentPosition(room);
+                    return "You've moved to " + room.getName();
                 }
-                return room.getName() + " requires a key to enter.";
             }
-            if (room.getCode() != null && !room.getReqKey()) {
-                return room.getName() + " requires a code to enter.";
-            }
-            if (room.getCode() != null && room.getReqKey()) {
-                return room.getName() + " requires a code and a key to enter.";
-            }
-            player.setCurrentPosition(room);
-            return null;
+            return roomName + " is not accessible from " + player.getCurrentPosition().getName();
         }
-        return roomName + " is not a valid name!";
+        return roomName + " does not exist!";
     }
 
     public String unlock(String roomName, String code) {
         Room room = this.searchMap(roomName);
 
         if (room != null) {
-            if (code.equals(room.getCode())) {
-                if (room.getReqKey()) {
-                    for (Key key : player.getInventory()) {
-                        if (key.getUnlocks().contains(room)) {
-                            room.setReqKey(false);
-                            room.setCode(null);
-                            return "You unlocked " + room.getName();
+            for (Room r : player.getCurrentPosition().getRooms()) {
+                if (room.equals(r)) {
+                    if (code.equals(room.getCode())) {
+                        if (room.getReqKey()) {
+                            for (Key key : player.getInventory()) {
+                                if (key.getUnlocks().contains(room)) {
+                                    room.setReqKey(false);
+                                    room.setCode(null);
+                                    return "You unlocked " + room.getName();
+                                }
+                            }
+                            return room.getName() + " also requires a key!";
                         }
+                        room.setCode(null);
+                        return "You unlocked " + room.getName();
                     }
-                    return room.getName() + " also requires a key!";
+                    return code + " is incorrect!";
                 }
-                room.setCode(null);
-                return "You unlocked " + room.getName();
             }
-            return code + " is incorrect!";
+            return roomName + " is not accessible from " + player.getCurrentPosition().getName();
         }
-        return null;
+        return roomName + " does not exist!";
     }
 
     public String inspectRoom() {
