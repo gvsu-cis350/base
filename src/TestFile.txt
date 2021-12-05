@@ -1,9 +1,9 @@
 Beginning: This is a description of the beginning of the escape room. It will describe where I am and how I came to be unfortunately trapped there.
 End: This is a description of the end. Whew! Glad I got out of that place...
-Room: Bathroom|This is a description of the bathroom|false|false|/image.png|ABC|Library Bedroom Kitchen|Key1 Key2|
-Room: Library|This is where they keep all of the books|true|false|/image.png|ABC|Library Bedroom Kitchen|Key1 Key2|
-Room: Kitchen|This is where they do all of the cooking|false|false|/image.png|ABC|Library Bedroom Kitchen|Key1 Key2|
-Room: Bedroom|This is where the person sleeps|true|true|/image.png|ABC|Library Bedroom Kitchen|Key1 Key2|
-Key: Key1: Bathroom| Bedroom
-Key: Key2: Kitchen
+Room: Bathroom|This is a description of the bathroom|false|false|/image.png|ABC|Library,Bedroom,Kitchen|Key1,Key2|
+Room: Library|This is where they keep all of the books|true|false|/image.png|ABC|Library,Bedroom,Kitchen|Key1,Key2|
+Room: Kitchen|This is where they do all of the cooking|false|false|/image.png|ABC|Library,Bedroom,Kitchen|Key1,Key2|
+Room: Bedroom|This is where the person sleeps|true|true|/image.png|ABC|Library,Bedroom,Kitchen|Key1,Key2|
+Key: Key1| Bathroom, Bedroom
+Key: Key2| Kitchen
 Map: /image.png
