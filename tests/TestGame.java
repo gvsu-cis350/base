@@ -40,7 +40,8 @@ public class TestGame extends Game {
                 assertEquals( connectedRooms.get(j).getName(), actualConnectedRooms.get(j).getName() );
             }
             assertEquals( er.getImage(), "/image.png" );
-            //need to add a test for keys
+            assertEquals(rooms.get(i).getKeys().get(0).getName(), "Key1");
+            assertEquals(rooms.get(i).getKeys().get(1).getName(), "Key2");
         }
     }
 
