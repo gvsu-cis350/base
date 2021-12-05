@@ -9,10 +9,9 @@ import org.junit.Test;
 
 public class TestGame extends Game {
     @Test
-    @Ignore
     public void build_Escape_Room_Test() {
         Game g = new Game();
-        EscapeRoom er = g.buildEscapeRoom("bin/TestFile.txt");
+        EscapeRoom er = g.buildEscapeRoom("bin/main/ack/TestFile.txt");
         ArrayList<Room> expectedArray = new ArrayList<Room>();
 
         ArrayList<Room> connectedRooms = new ArrayList<Room>();
@@ -65,12 +64,11 @@ public class TestGame extends Game {
     }
 
     @Test
-    @Ignore
     public void add_Keys_Test() {
         Game g = new Game();
         ArrayList<String> keyRooms = new ArrayList<String>();
 
-        g.buildEscapeRoom("bin/TestFile.txt");
+        g.buildEscapeRoom("bin/main/ack/TestFile.txt");
 
         keyRooms.add("Key: Key1: Bathroom| Bedroom");
 
@@ -88,10 +86,9 @@ public class TestGame extends Game {
     }
 
     @Test 
-    @Ignore
     public void test_Beginning_And_Ending_Script() {
         Game g = new Game();
-        g.buildEscapeRoom("bin/TestFile.txt");
+        g.buildEscapeRoom("bin/main/ack/TestFile.txt");
 
         String expectedBeginning = "This is a description of the beginning of the escape room. It will describe where I am and how I came to be unfortunately trapped there.";
         String expectedEnging = "This is a description of the end. Whew! Glad I got out of that place...";
