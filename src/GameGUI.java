@@ -190,14 +190,14 @@ public class GameGUI extends JFrame implements ActionListener {
         outList = new DefaultListModel();
         noteList = new DefaultListModel();
         keyList = new DefaultListModel();
-
-        MyCellRenderer textWrapper = new MyCellRenderer(300);
         
         outScreen = new JList(outList);
         notes = new JList(noteList);
         inventory = new JList(keyList);
 
-        outScreen.setCellRenderer(textWrapper);
+        outScreen.setCellRenderer(new MyCellRenderer(300));
+        notes.setCellRenderer(new MyCellRenderer(145));
+        inventory.setCellRenderer(new MyCellRenderer(145));
 
         outScroll = new JScrollPane(outScreen);
         notesScroll = new JScrollPane(notes);
