@@ -82,10 +82,12 @@ public class Game {
             
             for( int i = 0; i < rooms.size(); i++ ) {
                 ArrayList<Key> connectedKeys = new ArrayList<Key>();
-                for( int j = 0; j < keyStrings.get(j).size(); j++ ) {
-                    connectedKeys.add( getKeyByName( keyStrings.get(i).get(j) ) );
+                if( !keyStrings.get(0).equals(null) ) {
+                    for( int j = 0; j < keyStrings.get(j).size(); j++ ) {
+                        connectedKeys.add( getKeyByName( keyStrings.get(i).get(j) ) );
+                    }
+                    rooms.get( i ).setKeys( connectedKeys ); 
                 }
-                rooms.get( i ).setKeys( connectedKeys ); 
             }
 
             Player p = new Player( null, null, null );
@@ -159,9 +161,13 @@ public class Game {
                 }
                 case 7:
                 {
-                    String[] str = room[i].split(",");
-                    for(int j = 0; j < str.length; j++) {
-                        newKeyString.add( str[j] );
+                    if( room[i].equals( "null" ) ) {
+                        newKeyString.add( null );
+                    } else {
+                        String[] str = room[i].split(",");
+                        for(int j = 0; j < str.length; j++) {
+                            newKeyString.add( str[j] );
+                        }
                     }
                     break;
                 }
