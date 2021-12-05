@@ -208,8 +208,6 @@ public class GameGUI extends JFrame implements ActionListener {
             imageFile = player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
         }catch(Exception e){
-            // JOptionPane.showMessageDialog(this, "Looks like something went wrong with the escape room file");
-            // new StartGUI(escapeFile, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             dispose = true;
         }
 
