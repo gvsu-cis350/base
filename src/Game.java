@@ -73,7 +73,7 @@ public class Game {
             
             for( int i = 0; i < rooms.size(); i++ ) {
                 ArrayList<Room> connectedRooms = new ArrayList<Room>();
-                for( int j = 0; j < roomStrings.get(j).size(); j++ ) {
+                for( int j = 0; j < roomStrings.get(i).size(); j++ ) {
                     connectedRooms.add( getRoomByName( roomStrings.get(i).get(j) ) );
                 }
                 rooms.get( i ).setRooms( connectedRooms );
