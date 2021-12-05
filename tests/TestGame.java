@@ -47,13 +47,13 @@ public class TestGame extends Game {
     @Test
     public void parse_Room_Test() {
         Game g = new Game();
-        String line = "Room: Bathroom| This is a description of the bathroom| false| false| \\image.png| ABC| Library Bedroom Kitchen| null";
+        String line = "Room: Bathroom| This is a description of the bathroom| false| false| \\image.png| ABC| Library,Bedroom,Kitchen| null";
         Room r = g.parseRoom( line );
 
         assertEquals( "Bathroom", r.getName() );
         assertEquals( "This is a description of the bathroom", r.getScript() );
         assertEquals( false, r.getIsEnd() );
-        assertEquals( "/image.png", r.getImage() );
+        assertEquals( "\\image.png", r.getImage() );
         assertEquals( "ABC", r.getCode() );
         assertEquals( null, r.getKeys() );
         assertEquals( null, r.getRooms() );
