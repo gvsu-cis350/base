@@ -73,8 +73,8 @@ public class Room {
         return reqKey;
     }
 
-    public void setReqKey(boolean isLocked) {
-        this.reqKey = isLocked;
+    public void setReqKey(boolean reqKey) {
+        this.reqKey = reqKey;
     }
 
     public boolean getIsEnd() {
@@ -112,19 +112,15 @@ public class Room {
         return rooms;
     }
 
+    public void setRooms( ArrayList<Room> rooms ) {
+        this.rooms = rooms;
+    }
+
     public void addRoom(Room room) {
         if (room == null)
             throw new IllegalArgumentException("addRoom in class Room: null input");
 
         rooms.add(room);
-    }
-
-    public void setRooms( ArrayList<Room> rooms ) {
-        this.rooms = rooms;
-    }
-
-    public void setKeys( ArrayList<Key> keys ) {
-        this.keys = keys;
     }
 
     public void delRoom(int index) {
@@ -137,6 +133,10 @@ public class Room {
 
     public ArrayList<Key> getKeys() {
         return keys;
+    }
+
+    public void setKeys( ArrayList<Key> keys ) {
+        this.keys = keys;
     }
 
     public void addKey(Key key) {

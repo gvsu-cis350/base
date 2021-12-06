@@ -214,6 +214,7 @@ public class GameGUI extends JFrame implements ActionListener {
             mapFile = escapeRoom.getImage();
             imageFile = player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
+            outList.addElement("~");
             outList.addElement(escapeRoom.inspectRoom());
         }catch(Exception e){
             dispose = true;
@@ -394,6 +395,7 @@ public class GameGUI extends JFrame implements ActionListener {
             if(commandInput != null && !commandInput.equals("") && sc.hasNext()){
                 String word = sc.next();
                 word.toLowerCase();
+                outList.addElement("~");
                 switch(word){
                     case "list":
                         commandOutput = "";
@@ -481,7 +483,7 @@ public class GameGUI extends JFrame implements ActionListener {
                         outList.addElement("Looks like that command doesn't exist.  Try the \"help\" command!");
                         command.setText(null);
                         break;
-                }            
+                }     
             }
             else{
                 outList.addElement("Looks like we couldn't find that command.  Try typing \"help\"!");
