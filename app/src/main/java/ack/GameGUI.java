@@ -391,6 +391,8 @@ public class GameGUI extends JFrame implements ActionListener {
             for(Key key: player.getInventory()){
                 keyList.addElement(key.getName());
             }
+            outList.addElement("You are in " + player.getCurrentPosition().getName());
+            outList.addElement(player.getCurrentPosition().getScript());
         }
         if (comp == command){
             keyList.clear();
@@ -478,6 +480,11 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "move":
                         if (sc.hasNext()){
                             outList.addElement(escapeRoom.moveRoom(commandInput.substring(5)));
+                            if (player.getCurrentPosition().getIsEnd()) {
+                                outList.addElement("~");
+                                outList.addElement(player.getCurrentPosition().getScript());
+                                outList.addElement(escapeRoom.getEndText());
+                            }
                             imageFile = escapeFolder + player.getCurrentPosition().getImage();
                             try {
                                 imagePicture = ImageIO.read(new File(imageFile));
