@@ -419,6 +419,7 @@ public class GameGUI extends JFrame implements ActionListener {
                             if (!commandOutput.contains("\\n")) {
                                 player.addNote(commandOutput);
                                 noteList.addElement(commandOutput);
+                                outList.addElement("You created a new note!");
                             } else
                                 outList.addElement("Notes cannot contain newline characters.");
                         }
@@ -435,6 +436,7 @@ public class GameGUI extends JFrame implements ActionListener {
                             else {
                                 noteList.remove(Integer.parseInt(commandInput.substring(7)) - 1);
                                 player.delNote(Integer.parseInt(commandInput.substring(7)) - 1);
+                                outList.addElement("You deleted a note!");
                             }
                         }
                         else
