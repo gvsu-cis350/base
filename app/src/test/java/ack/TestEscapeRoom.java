@@ -290,7 +290,7 @@ public class TestEscapeRoom {
         assertEquals("You've moved to Bathroom.", escapeRoom.moveRoom("bathroom"));
         assertEquals(bathroom, escapeRoom.getPlayer().getCurrentPosition());
 
-        assertEquals("kitchen does not exist!", escapeRoom.moveRoom("kitchen"));
+        assertEquals("\"kitchen\" does not exist!", escapeRoom.moveRoom("kitchen"));
         assertEquals(bathroom, escapeRoom.getPlayer().getCurrentPosition());
     }
 
@@ -344,16 +344,16 @@ public class TestEscapeRoom {
         bathroom.addRoom(bedroom);
         EscapeRoom escapeRoom = new EscapeRoom("begin", "end", new Player(null, null, null), null, map);
 
-        assertEquals("This is the upstairs", escapeRoom.inspectRoom());
+        assertEquals("", escapeRoom.inspectRoom());
 
         assertEquals(1, bedroom.getKeys().size());
         escapeRoom.moveRoom("bedroom");
-        assertEquals("You found the following keys:\nunlocks bathroom\nThis is the bedroom", escapeRoom.inspectRoom());
+        assertEquals("You found the following keys:\nunlocks bathroom\n", escapeRoom.inspectRoom());
         assertEquals("unlocks bathroom", escapeRoom.getPlayer().getInventory().get(0).getName());
         assertEquals(0, bedroom.getKeys().size());
 
         escapeRoom.moveRoom("bathroom");
-        assertEquals("This is the bathroom", escapeRoom.inspectRoom());
+        assertEquals("", escapeRoom.inspectRoom());
 
         escapeRoom.moveRoom("bedroom");
         escapeRoom.inspectRoom();

@@ -58,6 +58,7 @@ public class GameGUI extends JFrame implements ActionListener {
     private String saveLoadFile = null;
     private String commandInput = null;
     private String escapeFile = null;
+    private String escapeFolder = null;
     private String colorName = "Light";
 
     private Color backgroundColor = new Color(0xF2F2F2);
@@ -158,8 +159,9 @@ public class GameGUI extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
     }
 
-    public GameGUI(String filename, String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz) {
+    public GameGUI(String filename, String folderName, String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz) {
         this.escapeFile = filename;
+        this.escapeFolder = folderName;
 
         this.colorName = name;
         this.backgroundColor = b;
@@ -198,7 +200,7 @@ public class GameGUI extends JFrame implements ActionListener {
         notes = new JList(noteList);
         inventory = new JList(keyList);
 
-        outScreen.setCellRenderer(new MyCellRenderer(300));
+        outScreen.setCellRenderer(new MyCellRenderer(290));
         notes.setCellRenderer(new MyCellRenderer(145));
         inventory.setCellRenderer(new MyCellRenderer(145));
 
@@ -211,10 +213,11 @@ public class GameGUI extends JFrame implements ActionListener {
         try{
             escapeRoom = new EscapeRoom(filename);
             player = escapeRoom.getPlayer();
-            mapFile = escapeRoom.getImage();
-            imageFile = player.getCurrentPosition().getImage();
+            mapFile = escapeFolder + escapeRoom.getImage();
+            imageFile = escapeFolder + player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
-            outList.addElement(escapeRoom.inspectRoom());
+            outList.addElement("~");
+            outList.addElement(player.getCurrentPosition().getScript());
             for(Key key: player.getInventory()){
                 keyList.addElement(key.getName());
             }
@@ -223,13 +226,25 @@ public class GameGUI extends JFrame implements ActionListener {
         }
 
         try {
-            mapPicture = ImageIO.read(new File(mapFile));
             imagePicture = ImageIO.read(new File(imageFile));
-            mapVisual = new JLabel(new ImageIcon(mapPicture));
             imageVisual = new JLabel(new ImageIcon(imagePicture));
+
+            if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+                throw new IllegalArgumentException("Image is wrong size");
+            }
         }catch(Exception e) {
-            mapVisual = new JLabel("Map image not found");
             imageVisual = new JLabel("Area image not found");
+        }
+
+        try{
+            mapPicture = ImageIO.read(new File(mapFile));
+            mapVisual = new JLabel(new ImageIcon(mapPicture));
+
+            if ((mapVisual.getIcon().getIconHeight() > 200 || mapVisual.getIcon().getIconWidth() > 250)){
+                throw new IllegalArgumentException("Map is wrong size");
+            }
+        }catch(Exception e){
+            mapVisual = new JLabel("Map image not found");
         }
 
         saveProgress = new JButton("Save");
@@ -244,8 +259,11 @@ public class GameGUI extends JFrame implements ActionListener {
         outScroll.setPreferredSize(new Dimension(400, 650));
         command.setPreferredSize(new Dimension(400,20));
 
-        inventoryScroll.setPreferredSize(new Dimension(200,100));
-        notesScroll.setPreferredSize(new Dimension(200,100));
+        inventoryScroll.setPreferredSize(new Dimension(250,150));
+        notesScroll.setPreferredSize(new Dimension(250,150));
+
+        mapImage.setPreferredSize(new Dimension(300, 150));
+        notesInventory.setPreferredSize(new Dimension(300,150));
 
         outScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -358,7 +376,7 @@ public class GameGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object comp = e.getSource();
         if (comp == mainMenu) {
-            new StartGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
+            new StartGUI(escapeFile, escapeFolder, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             this.dispose();
         }
         if (comp == saveProgress) {
@@ -388,6 +406,8 @@ public class GameGUI extends JFrame implements ActionListener {
             for(Key key: player.getInventory()){
                 keyList.addElement(key.getName());
             }
+            outList.addElement("You are in " + player.getCurrentPosition().getName());
+            outList.addElement(player.getCurrentPosition().getScript());
         }
         if (comp == command){
             keyList.clear();
@@ -397,6 +417,7 @@ public class GameGUI extends JFrame implements ActionListener {
             if(commandInput != null && !commandInput.equals("") && sc.hasNext()){
                 String word = sc.next();
                 word.toLowerCase();
+                outList.addElement("~");
                 switch(word){
                     case "list":
                         commandOutput = "";
@@ -415,6 +436,7 @@ public class GameGUI extends JFrame implements ActionListener {
                             if (!commandOutput.contains("\\n")) {
                                 player.addNote(commandOutput);
                                 noteList.addElement(commandOutput);
+                                outList.addElement("You created a new note!");
                             } else
                                 outList.addElement("Notes cannot contain newline characters.");
                         }
@@ -431,6 +453,7 @@ public class GameGUI extends JFrame implements ActionListener {
                             else {
                                 noteList.remove(Integer.parseInt(commandInput.substring(7)) - 1);
                                 player.delNote(Integer.parseInt(commandInput.substring(7)) - 1);
+                                outList.addElement("You deleted a note!");
                             }
                         }
                         else
@@ -440,12 +463,14 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "help":
                         // Takes no input, if it starts with help, should print help string
                         outList.addElement("<html>The following are possible commands:<br>" + 
+                        "<b>\"clear\"</b> will clear all text from the current screen<br>" +
                         "<b>\"create\"</b> allows you to create a note out of everything you've typed after create<br>" +
                         "<b>\"delete\"</b> allows you to delete the note you've typed after delete<br>" +
                         "<b>\"help\"</b> brings you to this list of commands<br>" +
                         "<b>\"input\"</b> allows you to input a code to a room you can get to from your current room.  Remember to input the name of the room you want to unlock in quotes, then the code you want to try<br>" +
                         "<b>\"inspect\"</b> allows you to investigate the room you're currently in<br>" +
-                        "<b>\"list\"</b> shows a list of rooms you can get to from your current position");
+                        "<b>\"list\"</b> shows a list of rooms you can get to from your current position<br>" +
+                        "<b>\"move\"</b> allows you to move to a room that you've typed the name of");
                         command.setText(null);
                         break;
                     case "input":
@@ -468,8 +493,24 @@ public class GameGUI extends JFrame implements ActionListener {
                         command.setText(null);
                         break;
                     case "move":
-                        if (sc.hasNext())
+                        if (sc.hasNext()){
                             outList.addElement(escapeRoom.moveRoom(commandInput.substring(5)));
+                            if (player.getCurrentPosition().getIsEnd()) {
+                                outList.addElement("~");
+                                outList.addElement(player.getCurrentPosition().getScript());
+                                outList.addElement(escapeRoom.getEndText());
+                            }
+                            imageFile = escapeFolder + player.getCurrentPosition().getImage();
+                            try {
+                                imagePicture = ImageIO.read(new File(imageFile));
+                                imageVisual.setIcon(new ImageIcon(imagePicture));
+                                if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+                                    throw new IllegalArgumentException("Image is wrong size");
+                                }
+                            }catch(Exception exception) {
+                                imageVisual = new JLabel("Area image not found");
+                            }
+                        }
                         else
                             outList.addElement("Please enter a room to move to");
                         command.setText(null);
@@ -477,14 +518,19 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "inspect":
                         // Error checking should be done, no inputs
                         commandOutput = escapeRoom.inspectRoom();
+                        outList.addElement(player.getCurrentPosition().getScript());
                         outList.addElement(commandOutput);
+                        command.setText(null);
+                        break;
+                    case "clear":
+                        outList.clear();
                         command.setText(null);
                         break;
                     default: 
                         outList.addElement("Looks like that command doesn't exist.  Try the \"help\" command!");
                         command.setText(null);
                         break;
-                }            
+                }     
             }
             else{
                 outList.addElement("Looks like we couldn't find that command.  Try typing \"help\"!");
@@ -498,9 +544,13 @@ public class GameGUI extends JFrame implements ActionListener {
 
             while (outList.getSize() > 50)
                 outList.removeElementAt(0);
+            
+            outScroll.validate();
+            JScrollBar toEnd = outScroll.getVerticalScrollBar();
+            toEnd.setValue(toEnd.getMaximum());
         }
         if (comp == options){
-            new OptionsGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
+            new OptionsGUI(escapeFile, escapeFolder, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             this.dispose();
         }
     }
