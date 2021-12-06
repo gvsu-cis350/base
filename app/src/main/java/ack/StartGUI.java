@@ -24,6 +24,7 @@ public class StartGUI extends JFrame implements ActionListener{
     private Font font;
 
     private String escapeFile = null;
+    private String escapeFolder = null;
     private String fontName = "Sans-Serif";
     private String colorName = "Light";
 
@@ -77,8 +78,9 @@ public class StartGUI extends JFrame implements ActionListener{
         setLocationRelativeTo(null);
     }
 
-    public StartGUI(String filename, String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz){
+    public StartGUI(String filename, String folderName, String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz){
         this.escapeFile = filename;
+        this.escapeFolder = folderName;
 
         this.colorName = name;
         this.backgroundColor = b;
@@ -149,12 +151,12 @@ public class StartGUI extends JFrame implements ActionListener{
                 new GameGUI(colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             }
             else{
-                new GameGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
+                new GameGUI(escapeFile, escapeFolder, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             }
             this.dispose();
         }
         if(options == comp){
-            new OptionsGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
+            new OptionsGUI(escapeFile, escapeFolder, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
             this.dispose();
         }
     }
