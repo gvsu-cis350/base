@@ -217,7 +217,7 @@ public class GameGUI extends JFrame implements ActionListener {
             imageFile = escapeFolder + player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
             outList.addElement("~");
-            outList.addElement(escapeRoom.inspectRoom());
+            outList.addElement(player.getCurrentPosition().getScript());
             for(Key key: player.getInventory()){
                 keyList.addElement(key.getName());
             }
@@ -491,6 +491,7 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "inspect":
                         // Error checking should be done, no inputs
                         commandOutput = escapeRoom.inspectRoom();
+                        outList.addElement(player.getCurrentPosition().getScript());
                         outList.addElement(commandOutput);
                         command.setText(null);
                         break;
