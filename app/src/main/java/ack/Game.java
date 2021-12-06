@@ -189,14 +189,14 @@ public class Game {
             String line = keyStrings.get( i );
 
             line = line.substring( 5 );
-            line.replace( " ", "" );
+            //line.replace( " ", "" );
             
             name = line.split("\\|")[0];
-            line = line.substring(name.length() + 1);
+            line = line.substring(name.length() + 1, line.length() - 1);
 
             String[] keyRooms = line.split(",");
             for( int j = 0; j < keyRooms.length; j++ ) {
-                keyRooms[j] = keyRooms[j].replace(" ", "");
+                keyRooms[j] = keyRooms[j].trim();
                 roomsKeyUnlocks.add( getRoomByName( keyRooms[j] ) );
             }
             Key newKey = new Key( name, roomsKeyUnlocks );

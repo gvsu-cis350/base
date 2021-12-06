@@ -227,7 +227,7 @@ public class EscapeRoom {
             }
             return room.getName() + " is not accessible from " + player.getCurrentPosition().getName()+ ".";
         }
-        return roomName + " does not exist!";
+        return "\"" + roomName + "\" does not exist!";
     }
 
     public String unlock(String roomName, String code) {
@@ -255,14 +255,14 @@ public class EscapeRoom {
             }
             return room.getName() + " is not accessible from " + player.getCurrentPosition().getName() + ".";
         }
-        return roomName + " does not exist!";
+        return "\"" + roomName + "\" does not exist!";
     }
 
     public String inspectRoom() {
         if (player.getCurrentPosition() == null)
             return null;
 
-        String output = "";
+        String output = player.getCurrentPosition().getScript();
         ArrayList<Key> keysToDelete = new ArrayList<>();
 
         if (player.getCurrentPosition().getKeys().size() > 0) {
@@ -279,6 +279,6 @@ public class EscapeRoom {
         for (Key k : keysToDelete)
             player.getCurrentPosition().delKey(k);
 
-        return output += player.getCurrentPosition().getScript();
+        return output;
     }
 }
