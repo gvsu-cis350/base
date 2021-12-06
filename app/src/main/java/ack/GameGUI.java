@@ -215,7 +215,7 @@ public class GameGUI extends JFrame implements ActionListener {
             imageFile = player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
             outList.addElement("~");
-            outList.addElement(escapeRoom.inspectRoom());
+            outList.addElement(player.getCurrentPosition().getScript());
         }catch(Exception e){
             dispose = true;
         }
