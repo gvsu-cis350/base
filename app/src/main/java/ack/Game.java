@@ -196,7 +196,6 @@ public class Game {
 
             String[] keyRooms = line.split(",");
             for( int j = 0; j < keyRooms.length; j++ ) {
-                keyRooms[j] = keyRooms[j].replace(" ", "");
                 roomsKeyUnlocks.add( getRoomByName( keyRooms[j] ) );
             }
             Key newKey = new Key( name, roomsKeyUnlocks );
