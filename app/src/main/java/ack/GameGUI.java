@@ -453,7 +453,7 @@ public class GameGUI extends JFrame implements ActionListener {
                             String roomName = sc.findInLine(Pattern.compile("\"[\\w\\W]+\""));
 
                             if (roomName == null) {
-                                outList.addElement("The room you enetered does not exist!");
+                                outList.addElement("The room you entered does not exist!");
                                 break;
                             }
                             if (sc.hasNext()) {
