@@ -236,6 +236,9 @@ public class EscapeRoom {
         if (room != null) {
             for (Room r : player.getCurrentPosition().getRooms()) {
                 if (room.equals(r)) {
+                    if (room.getCode() == null) {
+                        return room.getName() + " doesn't require a code!";
+                    }
                     if (code.equals(room.getCode())) {
                         if (room.getReqKey()) {
                             for (Key key : player.getInventory()) {
