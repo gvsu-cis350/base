@@ -1,6 +1,5 @@
 package ack;
 
-import javax.crypto.IllegalBlockSizeException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -239,7 +238,7 @@ public class GameGUI extends JFrame implements ActionListener {
         try{
             mapPicture = ImageIO.read(new File(mapFile));
             mapVisual = new JLabel(new ImageIcon(mapPicture));
-            
+
             if ((mapVisual.getIcon().getIconHeight() > 200 || mapVisual.getIcon().getIconWidth() > 250)){
                 throw new IllegalArgumentException("Map is wrong size");
             }
