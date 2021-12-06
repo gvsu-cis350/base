@@ -262,7 +262,7 @@ public class EscapeRoom {
         if (player.getCurrentPosition() == null)
             return null;
 
-        String output = player.getCurrentPosition().getScript();
+        String output = "";
         ArrayList<Key> keysToDelete = new ArrayList<>();
 
         if (player.getCurrentPosition().getKeys().size() > 0) {

@@ -476,6 +476,7 @@ public class GameGUI extends JFrame implements ActionListener {
                     case "inspect":
                         // Error checking should be done, no inputs
                         commandOutput = escapeRoom.inspectRoom();
+                        outList.addElement(player.getCurrentPosition().getScript());
                         outList.addElement(commandOutput);
                         command.setText(null);
                         break;

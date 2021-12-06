@@ -189,7 +189,6 @@ public class Game {
             String line = keyStrings.get( i );
 
             line = line.substring( 5 );
-            //line.replace( " ", "" );
             
             name = line.split("\\|")[0];
             line = line.substring(name.length() + 1, line.length() - 1);
