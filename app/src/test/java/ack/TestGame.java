@@ -64,6 +64,7 @@ public class TestGame extends Game {
     }
 
     @Test
+    @Ignore
     public void add_Keys_Test() {
         Game g = new Game();
         ArrayList<String> keyRooms = new ArrayList<String>();
