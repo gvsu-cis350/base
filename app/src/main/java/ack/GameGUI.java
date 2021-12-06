@@ -215,6 +215,9 @@ public class GameGUI extends JFrame implements ActionListener {
             imageFile = player.getCurrentPosition().getImage();
             outList.addElement(escapeRoom.getBeginText());
             outList.addElement(escapeRoom.inspectRoom());
+            for(Key key: player.getInventory()){
+                keyList.addElement(key.getName());
+            }
         }catch(Exception e){
             dispose = true;
         }
@@ -487,7 +490,8 @@ public class GameGUI extends JFrame implements ActionListener {
                 outList.addElement("Looks like we couldn't find that command.  Try typing \"help\"!");
             }
             sc.close();
-
+            
+            player = escapeRoom.getPlayer();
             for(Key key: player.getInventory()){
                 keyList.addElement(key.getName());
             }
