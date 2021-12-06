@@ -1,5 +1,6 @@
 package ack;
 
+import javax.crypto.IllegalBlockSizeException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -225,13 +226,25 @@ public class GameGUI extends JFrame implements ActionListener {
         }
 
         try {
-            mapPicture = ImageIO.read(new File(mapFile));
             imagePicture = ImageIO.read(new File(imageFile));
-            mapVisual = new JLabel(new ImageIcon(mapPicture));
             imageVisual = new JLabel(new ImageIcon(imagePicture));
+
+            if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+                throw new IllegalArgumentException("Image is wrong size");
+            }
         }catch(Exception e) {
-            mapVisual = new JLabel("Map image not found");
             imageVisual = new JLabel("Area image not found");
+        }
+
+        try{
+            mapPicture = ImageIO.read(new File(mapFile));
+            mapVisual = new JLabel(new ImageIcon(mapPicture));
+            
+            if ((mapVisual.getIcon().getIconHeight() > 200 || mapVisual.getIcon().getIconWidth() > 250)){
+                throw new IllegalArgumentException("Map is wrong size");
+            }
+        }catch(Exception e){
+            mapVisual = new JLabel("Map image not found");
         }
 
         saveProgress = new JButton("Save");
@@ -246,8 +259,11 @@ public class GameGUI extends JFrame implements ActionListener {
         outScroll.setPreferredSize(new Dimension(400, 650));
         command.setPreferredSize(new Dimension(400,20));
 
-        inventoryScroll.setPreferredSize(new Dimension(200,100));
-        notesScroll.setPreferredSize(new Dimension(200,100));
+        inventoryScroll.setPreferredSize(new Dimension(250,150));
+        notesScroll.setPreferredSize(new Dimension(250,150));
+
+        mapImage.setPreferredSize(new Dimension(300, 150));
+        notesInventory.setPreferredSize(new Dimension(300,150));
 
         outScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -478,6 +494,9 @@ public class GameGUI extends JFrame implements ActionListener {
                             try {
                                 imagePicture = ImageIO.read(new File(imageFile));
                                 imageVisual.setIcon(new ImageIcon(imagePicture));
+                                if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+                                    throw new IllegalArgumentException("Image is wrong size");
+                                }
                             }catch(Exception exception) {
                                 imageVisual = new JLabel("Area image not found");
                             }
