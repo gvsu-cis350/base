@@ -113,7 +113,6 @@ public class Game {
         line = line.replace( "\n", "" );
         line = line.replace( "| ", "|" );
         line = line.replace( " |", "|" );
-        line = line.replace(", ", ",");
         Room newRoom = new Room();
         ArrayList<String> newRoomString = new ArrayList<String>();
         ArrayList<String> newKeyString = new ArrayList<String>();
