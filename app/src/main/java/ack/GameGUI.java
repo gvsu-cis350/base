@@ -229,7 +229,7 @@ public class GameGUI extends JFrame implements ActionListener {
             imagePicture = ImageIO.read(new File(imageFile));
             imageVisual = new JLabel(new ImageIcon(imagePicture));
 
-            if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+            if (!(imageVisual.getIcon().getIconHeight() > 200) || !(imageVisual.getIcon().getIconWidth() > 250)){
                 throw new IllegalArgumentException("Image is wrong size");
             }
         }catch(Exception e) {
@@ -240,7 +240,7 @@ public class GameGUI extends JFrame implements ActionListener {
             mapPicture = ImageIO.read(new File(mapFile));
             mapVisual = new JLabel(new ImageIcon(mapPicture));
 
-            if ((mapVisual.getIcon().getIconHeight() > 200 || mapVisual.getIcon().getIconWidth() > 250)){
+            if (!(mapVisual.getIcon().getIconHeight() > 200) || !(mapVisual.getIcon().getIconWidth() > 250)){
                 throw new IllegalArgumentException("Map is wrong size");
             }
         }catch(Exception e){
@@ -390,7 +390,6 @@ public class GameGUI extends JFrame implements ActionListener {
         }
         if (comp == loadProgress) {
             int returnVal = fileLoader.showOpenDialog(GameGUI.this);
-            this.player = escapeRoom.getPlayer();
             outList.clear();
             keyList.clear();
             noteList.clear();
@@ -400,6 +399,8 @@ public class GameGUI extends JFrame implements ActionListener {
                 saveLoadFile = file.getAbsolutePath();
                 escapeRoom.loadProgress(saveLoadFile);
             }
+            this.player = escapeRoom.getPlayer();
+
             for(String note: player.getNotes()){
                 noteList.addElement(note);
             }
@@ -418,6 +419,7 @@ public class GameGUI extends JFrame implements ActionListener {
                 String word = sc.next();
                 word.toLowerCase();
                 outList.addElement("~");
+                outList.addElement(commandInput);
                 switch(word){
                     case "list":
                         commandOutput = "";
@@ -504,10 +506,11 @@ public class GameGUI extends JFrame implements ActionListener {
                             try {
                                 imagePicture = ImageIO.read(new File(imageFile));
                                 imageVisual.setIcon(new ImageIcon(imagePicture));
-                                if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+                                if (!(imageVisual.getIcon().getIconHeight() > 200) || !(imageVisual.getIcon().getIconWidth() > 250)){
                                     throw new IllegalArgumentException("Image is wrong size");
                                 }
                             }catch(Exception exception) {
+                                imageVisual.setIcon(null);
                                 imageVisual = new JLabel("Area image not found");
                             }
                         }
