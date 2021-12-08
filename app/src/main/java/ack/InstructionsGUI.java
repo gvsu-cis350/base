@@ -9,43 +9,9 @@ public class InstructionsGUI extends JFrame implements ActionListener{
     private JPanel instructionsPanel;
     private JScrollPane instructionsScroll;
     private JLabel instructions;
-    private JButton back;
-
-    private String escapeFile = null;
-
-    private Color backgroundColor = new Color(0xF2F2F2);
-    private Color textColor = new Color(0x222222);
-    private Color itemColor = new Color(0xC1C4C8);
-    private Color terminalColor = new Color(0xDEEAFF);
-    private Color selectedColor = new Color(0xC1CEE0);
-
-    private Font font;
-    private String fontName = "Sans-Serif";
-    private String colorName = "Light";
-
-    private int ftSize = 12;
-    
+    private JButton back;    
 
     public InstructionsGUI(){
-        
-
-        setVisible(true);
-        setSize(500,500);
-        setLocationRelativeTo(null);
-    }
-
-    public InstructionsGUI(String filename, String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz){
-        this.escapeFile = filename;
-
-        this.colorName = name;
-        this.backgroundColor = b;
-        this.textColor = txt;
-        this.itemColor = item;
-        this.terminalColor = out;
-        this.selectedColor = sel;
-        this.fontName = n;
-        this.ftSize = sz;
-
         mainPanel = new JPanel();
         instructionsPanel = new JPanel();
         instructions = new JLabel("<html><h1 id=\"how-to-create-a-custom-escape-room\">How to Create a Custom Escape Room</h1>"+ 
