@@ -512,7 +512,7 @@ public class GameGUI extends JFrame implements ActionListener {
                                 }
                             }catch(Exception exception) {
                                 imageVisual.setIcon(null);
-                                imageVisual = new JLabel("Area image not found");
+                                imageVisual.setText("Area image not found");
                             }
                         }
                         else
