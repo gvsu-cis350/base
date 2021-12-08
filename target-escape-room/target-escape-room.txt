@@ -12,4 +12,4 @@ Room: Checkout Area|You enter the checkout area now that you have the passcode t
 Room: Checkout Office|Once you get into the checkout office, you can see it: The counting room door. You see that it requries a passcode and a key.|false|false|/checkoutOffice.png|2613|Checkout Area,Counting Room|null|
 Room: Counting Room|Once you open the door to the counting room, you can see the manager keycard hanging on a hook. You grab it and head for the back door. It is 7:15am and your exam is at 8!|true|true|/keycard.png|9996352|Checkout Office|null|
 Key: Industrial Key|Counting Room|
-Map: /map.png
+Map: /Map.png
