@@ -269,12 +269,12 @@ public class EscapeRoom {
         ArrayList<Key> keysToDelete = new ArrayList<>();
 
         if (player.getCurrentPosition().getKeys().size() > 0) {
-            output += "You found the following keys:\n";
+            output += "You found the following items:";
             for (Key k : player.getCurrentPosition().getKeys()) {
                 if (this.searchKeys(k.getName()) == null) {
                     player.addToInventory(k);
                     keysToDelete.add(k);
-                    output += k.getName() + "\n";
+                    output += k.getName();
                 }
             }
         }
