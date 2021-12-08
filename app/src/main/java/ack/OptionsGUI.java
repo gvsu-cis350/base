@@ -399,7 +399,7 @@ public class OptionsGUI extends JFrame implements ActionListener{
             }
         }
         if (comp == make){
-            new InstructionsGUI(escapeFile, colorName, backgroundColor, textColor, itemColor, terminalColor, selectedColor, fontName, ftSize);
+            new InstructionsGUI();
         }
         if (comp == defaultButton){
             escapeFile = null;

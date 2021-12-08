@@ -8,8 +8,10 @@ public class StartGUI extends JFrame implements ActionListener{
     private JPanel mainPanel;
     private JPanel buttonPanel;
     private JPanel titlePanel;
+    private JPanel namePanel;
 
     private JLabel title;
+    private JLabel names;
 
     private JButton exit;
     private JButton start;
@@ -34,13 +36,16 @@ public class StartGUI extends JFrame implements ActionListener{
         mainPanel = new JPanel();
         buttonPanel = new JPanel();
         titlePanel = new JPanel();
-        title = new JLabel("Escape Room Title", SwingConstants.CENTER);
+        namePanel = new JPanel();
+        title = new JLabel("Escape Room Simulator", SwingConstants.CENTER);
+        names = new JLabel("Ack! - Anna, Cymbre, Kit");
         exit = new JButton("Quit Game");
         start = new JButton("Start Game");
         options = new JButton("Options");
         font = new Font(fontName, Font.PLAIN, ftSize);
 
         title.setFont(new Font(fontName, Font.PLAIN, 20));
+        names.setFont(new Font(fontName, Font.PLAIN, 14));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
@@ -51,6 +56,7 @@ public class StartGUI extends JFrame implements ActionListener{
         mainPanel.setBackground(backgroundColor);
         buttonPanel.setBackground(backgroundColor);
         titlePanel.setBackground(backgroundColor);
+        namePanel.setBackground(backgroundColor);
 
         exit.setBackground(itemColor);
         start.setBackground(itemColor);
@@ -60,21 +66,24 @@ public class StartGUI extends JFrame implements ActionListener{
         start.setForeground(textColor);
         options.setForeground(textColor);
         title.setForeground(textColor);
+        names.setForeground(textColor);
 
         exit.setFont(font);
         start.setFont(font);
         options.setFont(font);
 
         titlePanel.add(title);
+        namePanel.add(names);
         buttonPanel.add(start);
         buttonPanel.add(options);
         buttonPanel.add(exit);
         mainPanel.add(titlePanel);
+        mainPanel.add(namePanel);
         mainPanel.add(buttonPanel);
         add(mainPanel);
 
         setVisible(true);
-        setSize(500,500);
+        setSize(500,200);
         setLocationRelativeTo(null);
     }
 
@@ -94,16 +103,16 @@ public class StartGUI extends JFrame implements ActionListener{
         mainPanel = new JPanel();
         buttonPanel = new JPanel();
         titlePanel = new JPanel();
-
-        title = new JLabel("Escape Room Title", SwingConstants.CENTER);
-
+        namePanel = new JPanel();
+        title = new JLabel("Escape Room Simulator", SwingConstants.CENTER);
+        names = new JLabel("Ack! - Anna, Cymbre, Kit");
         exit = new JButton("Quit Game");
         start = new JButton("Start Game");
         options = new JButton("Options");
-
         font = new Font(fontName, Font.PLAIN, ftSize);
 
-        title.setFont(new Font("Sans-Serif", Font.PLAIN, 20));
+        title.setFont(new Font(fontName, Font.PLAIN, 20));
+        names.setFont(new Font(fontName, Font.PLAIN, 14));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
@@ -114,6 +123,7 @@ public class StartGUI extends JFrame implements ActionListener{
         mainPanel.setBackground(backgroundColor);
         buttonPanel.setBackground(backgroundColor);
         titlePanel.setBackground(backgroundColor);
+        namePanel.setBackground(backgroundColor);
 
         exit.setBackground(itemColor);
         start.setBackground(itemColor);
@@ -123,21 +133,24 @@ public class StartGUI extends JFrame implements ActionListener{
         start.setForeground(textColor);
         options.setForeground(textColor);
         title.setForeground(textColor);
+        names.setForeground(textColor);
 
         exit.setFont(font);
         start.setFont(font);
         options.setFont(font);
 
         titlePanel.add(title);
+        namePanel.add(names);
         buttonPanel.add(start);
         buttonPanel.add(options);
         buttonPanel.add(exit);
         mainPanel.add(titlePanel);
+        mainPanel.add(namePanel);
         mainPanel.add(buttonPanel);
         add(mainPanel);
 
         setVisible(true);
-        setSize(500,500);
+        setSize(500,200);
         setLocationRelativeTo(null);
     }
 
