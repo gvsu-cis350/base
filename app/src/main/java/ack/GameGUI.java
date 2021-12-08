@@ -229,7 +229,7 @@ public class GameGUI extends JFrame implements ActionListener {
             imagePicture = ImageIO.read(new File(imageFile));
             imageVisual = new JLabel(new ImageIcon(imagePicture));
 
-            if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+            if (!(imageVisual.getIcon().getIconHeight() > 200) || !(imageVisual.getIcon().getIconWidth() > 250)){
                 throw new IllegalArgumentException("Image is wrong size");
             }
         }catch(Exception e) {
@@ -240,7 +240,7 @@ public class GameGUI extends JFrame implements ActionListener {
             mapPicture = ImageIO.read(new File(mapFile));
             mapVisual = new JLabel(new ImageIcon(mapPicture));
 
-            if ((mapVisual.getIcon().getIconHeight() > 200 || mapVisual.getIcon().getIconWidth() > 250)){
+            if (!(mapVisual.getIcon().getIconHeight() > 200) || !(mapVisual.getIcon().getIconWidth() > 250)){
                 throw new IllegalArgumentException("Map is wrong size");
             }
         }catch(Exception e){
@@ -390,7 +390,6 @@ public class GameGUI extends JFrame implements ActionListener {
         }
         if (comp == loadProgress) {
             int returnVal = fileLoader.showOpenDialog(GameGUI.this);
-            this.player = escapeRoom.getPlayer();
             outList.clear();
             keyList.clear();
             noteList.clear();
@@ -400,6 +399,8 @@ public class GameGUI extends JFrame implements ActionListener {
                 saveLoadFile = file.getAbsolutePath();
                 escapeRoom.loadProgress(saveLoadFile);
             }
+            this.player = escapeRoom.getPlayer();
+
             for(String note: player.getNotes()){
                 noteList.addElement(note);
             }
@@ -418,6 +419,7 @@ public class GameGUI extends JFrame implements ActionListener {
                 String word = sc.next();
                 word.toLowerCase();
                 outList.addElement("~");
+                outList.addElement(commandInput);
                 switch(word){
                     case "list":
                         commandOutput = "";
@@ -462,15 +464,15 @@ public class GameGUI extends JFrame implements ActionListener {
                         break;
                     case "help":
                         // Takes no input, if it starts with help, should print help string
-                        outList.addElement("<html>The following are possible commands:<br>" + 
-                        "<b>\"clear\"</b> will clear all text from the current screen<br>" +
-                        "<b>\"create\"</b> allows you to create a note out of everything you've typed after create<br>" +
-                        "<b>\"delete\"</b> allows you to delete the note you've typed after delete<br>" +
-                        "<b>\"help\"</b> brings you to this list of commands<br>" +
-                        "<b>\"input\"</b> allows you to input a code to a room you can get to from your current room.  Remember to input the name of the room you want to unlock in quotes, then the code you want to try<br>" +
-                        "<b>\"inspect\"</b> allows you to investigate the room you're currently in<br>" +
-                        "<b>\"list\"</b> shows a list of rooms you can get to from your current position<br>" +
-                        "<b>\"move\"</b> allows you to move to a room that you've typed the name of");
+                        outList.addElement("<html>The following are possible commands with examples in bold italics:<br>" + 
+                        "<b>\"clear\"</b> will clear all text from the current screen. <i><b>clear</b></i><br>" +
+                        "<b>\"create\"</b> allows you to create a note out of everything you've typed after create. <i><b>create [note]</b></i><br>" +
+                        "<b>\"delete\"</b> allows you to delete the note you've typed after delete. <i><b>delete [note]</b></i><br>" +
+                        "<b>\"help\"</b> brings you to this list of commands. <i><b>help</b></i><br>" +
+                        "<b>\"input\"</b> allows you to input a code to a room you can get to from your current room.  Remember to input the name of the room you want to unlock in quotes, then the code you want to try. <i><b>input \"[room]\" [code]</b></i><br>" +
+                        "<b>\"inspect\"</b> allows you to investigate the room you're currently in <i><b>inspect</b></i><br>" +
+                        "<b>\"list\"</b> shows a list of rooms you can get to from your current position <i><b>list</b></i><br>" +
+                        "<b>\"move\"</b> allows you to move to a room that you've typed the name of <i><b>move [room]</b></i>");
                         command.setText(null);
                         break;
                     case "input":
@@ -504,10 +506,11 @@ public class GameGUI extends JFrame implements ActionListener {
                             try {
                                 imagePicture = ImageIO.read(new File(imageFile));
                                 imageVisual.setIcon(new ImageIcon(imagePicture));
-                                if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
+                                if (!(imageVisual.getIcon().getIconHeight() > 200) || !(imageVisual.getIcon().getIconWidth() > 250)){
                                     throw new IllegalArgumentException("Image is wrong size");
                                 }
                             }catch(Exception exception) {
+                                imageVisual.setIcon(null);
                                 imageVisual = new JLabel("Area image not found");
                             }
                         }
