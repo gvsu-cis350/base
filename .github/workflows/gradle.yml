@@ -35,4 +35,5 @@ jobs:
         name: build-artifacts
         path: |
           app/build/distributions
+          target-escape-room
           !app/build/distributions/app
