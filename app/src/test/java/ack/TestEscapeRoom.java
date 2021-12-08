@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertThrows;
 
 import org.junit.Test;
-import org.junit.Ignore;
 
 public class TestEscapeRoom {
     @Test
@@ -348,7 +347,8 @@ public class TestEscapeRoom {
 
         assertEquals(1, bedroom.getKeys().size());
         escapeRoom.moveRoom("bedroom");
-        assertEquals("You found the following keys:\nunlocks bathroom\n", escapeRoom.inspectRoom());
+        bedroom.addKey(new Key("test key", null));
+        assertEquals("You found the following items: unlocks bathroom, test key", escapeRoom.inspectRoom());
         assertEquals("unlocks bathroom", escapeRoom.getPlayer().getInventory().get(0).getName());
         assertEquals(0, bedroom.getKeys().size());
 
@@ -357,7 +357,7 @@ public class TestEscapeRoom {
 
         escapeRoom.moveRoom("bedroom");
         escapeRoom.inspectRoom();
-        assertEquals(1, escapeRoom.getPlayer().getInventory().size());
+        assertEquals(2, escapeRoom.getPlayer().getInventory().size());
 
         escapeRoom.getPlayer().setCurrentPosition(null);
         assertEquals(null, escapeRoom.inspectRoom());

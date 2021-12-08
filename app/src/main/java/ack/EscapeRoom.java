@@ -274,10 +274,14 @@ public class EscapeRoom {
                 if (this.searchKeys(k.getName()) == null) {
                     player.addToInventory(k);
                     keysToDelete.add(k);
-                    output += k.getName();
+                    output += " " + k.getName() + ",";
                 }
             }
         }
+
+        if (output.length() > 0 && output.charAt(output.length() - 1) == ',') {
+            output = output.substring(0, output.length() - 1);
+        } 
 
         for (Key k : keysToDelete)
             player.getCurrentPosition().delKey(k);
