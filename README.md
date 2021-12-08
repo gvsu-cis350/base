@@ -13,3 +13,4 @@ ACK!
 ## Prerequisites
 
 ## Run Instructions
+[Download the zip file here](https://drive.google.com/drive/folders/1XCjvWGcrZKxCAFza811Upxsn8-kMT9I5?usp=sharing)
