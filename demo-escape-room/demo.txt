@@ -5,4 +5,4 @@ Room: Room 1|On the ground in front of you is a shiny, golden key.|false|false|\
 Room: Room 2|You're free!|true|true|\lightDoor.png|TSWU|Main Room|null|
 Room: Room 3|There is writing on the wall! It reads: “There iS no Way oUt!".|true|false|\wallWriting.png|null|Main Room|null|
 Key: Golden Key|Room 2, Room 3|
-Map: \threeDoors.png
+Map: \mainRoom.png
