@@ -111,7 +111,7 @@ public class GameGUI extends JFrame implements ActionListener {
         add(mainPanel);
 
         setVisible(true);
-        setSize(750,750);
+        setSize(500,100);
         setLocationRelativeTo(null);
     }
     public GameGUI(String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz){
@@ -155,7 +155,7 @@ public class GameGUI extends JFrame implements ActionListener {
         add(mainPanel);
 
         setVisible(true);
-        setSize(750,750);
+        setSize(500,100);
         setLocationRelativeTo(null);
     }
 
