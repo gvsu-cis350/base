@@ -111,7 +111,7 @@ public class GameGUI extends JFrame implements ActionListener {
         add(mainPanel);
 
         setVisible(true);
-        setSize(750,750);
+        setSize(500,100);
         setLocationRelativeTo(null);
     }
     public GameGUI(String name, Color b, Color txt, Color item, Color out, Color sel, String n, int sz){
@@ -155,7 +155,7 @@ public class GameGUI extends JFrame implements ActionListener {
         add(mainPanel);
 
         setVisible(true);
-        setSize(750,750);
+        setSize(500,100);
         setLocationRelativeTo(null);
     }
 
@@ -229,7 +229,7 @@ public class GameGUI extends JFrame implements ActionListener {
             imagePicture = ImageIO.read(new File(imageFile));
             imageVisual = new JLabel(new ImageIcon(imagePicture));
 
-            if (!(imageVisual.getIcon().getIconHeight() > 200) || !(imageVisual.getIcon().getIconWidth() > 250)){
+            if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
                 throw new IllegalArgumentException("Image is wrong size");
             }
         }catch(Exception e) {
@@ -240,7 +240,7 @@ public class GameGUI extends JFrame implements ActionListener {
             mapPicture = ImageIO.read(new File(mapFile));
             mapVisual = new JLabel(new ImageIcon(mapPicture));
 
-            if (!(mapVisual.getIcon().getIconHeight() > 200) || !(mapVisual.getIcon().getIconWidth() > 250)){
+            if (mapVisual.getIcon().getIconHeight() > 200 || mapVisual.getIcon().getIconWidth() > 250){
                 throw new IllegalArgumentException("Map is wrong size");
             }
         }catch(Exception e){
@@ -505,13 +505,14 @@ public class GameGUI extends JFrame implements ActionListener {
                             imageFile = escapeFolder + player.getCurrentPosition().getImage();
                             try {
                                 imagePicture = ImageIO.read(new File(imageFile));
+                                imageVisual.setText(null);
                                 imageVisual.setIcon(new ImageIcon(imagePicture));
-                                if (!(imageVisual.getIcon().getIconHeight() > 200) || !(imageVisual.getIcon().getIconWidth() > 250)){
+                                if (imageVisual.getIcon().getIconHeight() > 200 || imageVisual.getIcon().getIconWidth() > 250){
                                     throw new IllegalArgumentException("Image is wrong size");
                                 }
                             }catch(Exception exception) {
                                 imageVisual.setIcon(null);
-                                imageVisual = new JLabel("Area image not found");
+                                imageVisual.setText("Area image not found");
                             }
                         }
                         else
