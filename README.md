@@ -9,3 +9,5 @@ Project description (~1 paragraph)
 ## Prerequisites
 
 ## Run Instructions
+
+![bender](https://media.tenor.com/vTNSLR0PB5YAAAAC/futurama-bender.gif)
