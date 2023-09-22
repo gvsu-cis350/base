@@ -13,3 +13,5 @@ Project description (~1 paragraph)
 ![bender](https://media.tenor.com/vTNSLR0PB5YAAAAC/futurama-bender.gif)
 
 ![tremors](https://i.imgur.com/4m3UPq3.jpeg)
+
+BENDER STAYS >:O
