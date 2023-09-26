@@ -8,7 +8,7 @@ ASP.NET core MVC sports betting app with Web API.  This application will display
 
 * [Alex Kaiser](https://github.com/alexkaiser34/CIS350-HW2-Kaiser)
 * [Svens Daukss](https://github.com/SvensDaukss/CIS350-HW2-Daukss)
-* Member 3 (Role 5, Role 6)
+* [Caleb Jordan](https://github.com/HyperAddicts/CIS350-HW2-JORDAN.git)
 * [Alex Cersosimo](https://github.com/AlexC200/CIS350-HW2-Cersosimo)
 
 ## Prerequisites
