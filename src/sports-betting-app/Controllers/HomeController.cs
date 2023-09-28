@@ -15,7 +15,8 @@ namespace sports_betting_app.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            string data = "this is some test data";
+            return View((object)data);
         }
 
         public IActionResult Privacy()
